@@ -8,6 +8,7 @@ import "./DrawingCanvas.css";
 
 const DrawingCanvas = () => {
 	const canvasRef = useRef(null);
+	const gridCanvasRef = useRef(null);
 	const [isDrawing, setIsDrawing] = useState(false);
 	const [elements, setElements] = useState([]);
 	const [currentElement, setCurrentElement] = useState(null);
@@ -22,8 +23,17 @@ const DrawingCanvas = () => {
 
 	useEffect(() => {
 		const canvas = canvasRef.current;
+		const gridCanvas = gridCanvasRef.current;
 		const ctx = canvas.getContext("2d");
+		const gridCtx = gridCanvas.getContext("2d");
+
+		gridCanvas.width = canvas.width;
+		gridCanvas.height = canvas.height;
+		drawGrid(gridCtx, gridCanvas.width, gridCanvas.height);
+
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		ctx.drawImage(gridCanvas, 0, 0);
+
 		elements.forEach((element, index) => {
 			element.draw(ctx);
 			if (index === hoveredElementIndex) {
@@ -86,6 +96,8 @@ const DrawingCanvas = () => {
 					element.isMoving = true;
 					setElements([...elements]);
 				}
+				setDimensions(element.getDimensions(ctx));
+				setPosition({ x: element.startX, y: element.startY });
 			} else if (selectedTool !== "select") {
 				setIsDrawing(true);
 				const newElement = ElementFactory.createElement(
@@ -126,7 +138,7 @@ const DrawingCanvas = () => {
 				const element = elements[selectedElementIndex];
 				if (element.isResizing) {
 					element.resize(offsetX, offsetY, resizeDirection);
-					setDimensions(element.getDimensions());
+					setDimensions(element.getDimensions(ctx));
 				} else if (element.isMoving) {
 					const deltaX = offsetX - (element.startX + clickOffset.x);
 					const deltaY = offsetY - (element.startY + clickOffset.y);
@@ -136,7 +148,7 @@ const DrawingCanvas = () => {
 						y: offsetY - element.startY,
 					});
 					setPosition({ x: offsetX, y: offsetY });
-					setDimensions(element.getDimensions());
+					setDimensions(element.getDimensions(ctx));
 				}
 				setElements([...elements]);
 			} else {
@@ -233,6 +245,24 @@ const DrawingCanvas = () => {
 		setElements((prevElements) => [...prevElements, newTextElement]);
 	}, []);
 
+	const drawGrid = (ctx, width, height) => {
+		const gridSize = 20;
+		ctx.strokeStyle = "#e0e0e0";
+		ctx.lineWidth = 0.5;
+		for (let x = gridSize; x < width; x += gridSize) {
+			ctx.beginPath();
+			ctx.moveTo(x, 0);
+			ctx.lineTo(x, height);
+			ctx.stroke();
+		}
+		for (let y = gridSize; y < height; y += gridSize) {
+			ctx.beginPath();
+			ctx.moveTo(0, y);
+			ctx.lineTo(width, y);
+			ctx.stroke();
+		}
+	};
+
 	return (
 		<div className="drawing-container">
 			<Toolbar selectedTool={selectedTool} selectTool={selectTool} />
@@ -246,6 +276,7 @@ const DrawingCanvas = () => {
 					onMouseMove={handleMouseMove}
 					onMouseUp={handleMouseUp}
 				/>
+				<canvas ref={gridCanvasRef} style={{ display: "none" }} />
 				{selectedElementIndex !== null && (
 					<InfoBox dimensions={dimensions} position={position} />
 				)}

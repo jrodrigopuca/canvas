@@ -1,21 +1,20 @@
-class TextElement {
+import ElementBase from "./ElementBase";
+
+class TextElement extends ElementBase {
 	constructor(text, x, y) {
+		super(x, y, x, y);
 		this.text = text;
-		this.x = x;
-		this.y = y;
-		this.isMoving = false;
-		this.isFocused = false;
 	}
 
 	draw(ctx) {
 		ctx.font = "16px Arial";
 		ctx.fillStyle = this.isFocused ? "green" : "black";
-		ctx.fillText(this.text, this.x, this.y);
+		ctx.fillText(this.text, this.startX, this.startY);
 	}
 
 	move(deltaX, deltaY) {
-		this.x += deltaX;
-		this.y += deltaY;
+		this.startX += deltaX;
+		this.startY += deltaY;
 	}
 
 	isPointInside(x, y, ctx) {
@@ -23,16 +22,21 @@ class TextElement {
 		const width = ctx.measureText(this.text).width;
 		const height = 16; // Approximate height based on font size
 		return (
-			x >= this.x && x <= this.x + width && y >= this.y - height && y <= this.y
+			x >= this.startX &&
+			x <= this.startX + width &&
+			y >= this.startY - height &&
+			y <= this.startY
 		);
 	}
 
-	focus() {
-		this.isFocused = true;
-	}
-
-	blur() {
-		this.isFocused = false;
+	getDimensions(ctx) {
+		ctx.font = "16px Arial"; // Asegúrate de que el font está definido
+		const width = ctx.measureText(this.text).width;
+		const height = 16; // Approximate height based on font size
+		return {
+			w: width,
+			h: height,
+		};
 	}
 }
 
