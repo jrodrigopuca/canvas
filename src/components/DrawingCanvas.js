@@ -96,6 +96,12 @@ const DrawingCanvas = () => {
 		if (isDrawing) {
 			currentElement.endX = offsetX;
 			currentElement.endY = offsetY;
+			setCurrentElement(
+				Object.assign(
+					Object.create(Object.getPrototypeOf(currentElement)),
+					currentElement
+				)
+			);
 			setDimensions({
 				w: Math.abs(currentElement.startX - offsetX),
 				h: Math.abs(currentElement.startY - offsetY),
