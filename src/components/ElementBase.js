@@ -1,5 +1,6 @@
 class ElementBase {
-	constructor(startX, startY, endX, endY) {
+	constructor(type, startX, startY, endX, endY) {
+		this.type = type;
 		this.startX = startX;
 		this.startY = startY;
 		this.endX = endX;
@@ -42,6 +43,16 @@ class ElementBase {
 		return {
 			w: Math.abs(this.endX - this.startX),
 			h: Math.abs(this.endY - this.startY),
+		};
+	}
+
+	toJSON() {
+		return {
+			type: this.type,
+			startX: this.startX,
+			startY: this.startY,
+			endX: this.endX,
+			endY: this.endY,
 		};
 	}
 }

@@ -1,6 +1,9 @@
 import ElementBase from "./ElementBase";
 
 class Oval extends ElementBase {
+	constructor(startX, startY, endX, endY) {
+		super("oval", startX, startY, endX, endY);
+	}
 	draw(ctx) {
 		ctx.beginPath();
 		ctx.ellipse(

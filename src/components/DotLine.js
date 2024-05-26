@@ -1,6 +1,9 @@
 import ElementBase from "./ElementBase";
 
 class DotLine extends ElementBase {
+	constructor(startX, startY, endX, endY) {
+		super("dotline", startX, startY, endX, endY);
+	}
 	draw(ctx) {
 		ctx.beginPath();
 		ctx.setLineDash([5, 5]); // Define el patrón de puntos

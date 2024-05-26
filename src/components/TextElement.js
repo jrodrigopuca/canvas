@@ -1,8 +1,8 @@
 import ElementBase from "./ElementBase";
 
 class TextElement extends ElementBase {
-	constructor(text, x, y) {
-		super(x, y, x, y);
+	constructor(text, startX, startY) {
+		super("text", startX, startY, startX, startY);
 		this.text = text;
 	}
 
@@ -36,6 +36,13 @@ class TextElement extends ElementBase {
 		return {
 			w: width,
 			h: height,
+		};
+	}
+
+	toJSON() {
+		return {
+			...super.toJSON(),
+			text: this.text,
 		};
 	}
 }

@@ -1,6 +1,9 @@
 import ElementBase from "./ElementBase";
 
 class Message extends ElementBase {
+	constructor(startX, startY, endX, endY) {
+		super("message", startX, startY, endX, endY);
+	}
 	draw(ctx) {
 		ctx.beginPath();
 		ctx.moveTo(this.startX, this.startY);

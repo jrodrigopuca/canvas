@@ -1,10 +1,10 @@
 import "./App.css";
-import Drawing from "./components/DrawingCanvas";
+import CanvasManager from "./components/CanvasManager";
 
 function App() {
 	return (
 		<div className="App">
-			<Drawing />
+			<CanvasManager />
 		</div>
 	);
 }

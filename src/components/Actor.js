@@ -1,6 +1,9 @@
 import ElementBase from "./ElementBase";
 
 class Actor extends ElementBase {
+	constructor(startX, startY, endX, endY) {
+		super("actor", startX, startY, endX, endY);
+	}
 	draw(ctx) {
 		ctx.beginPath();
 		// Dibujar un círculo para la cabeza del actor

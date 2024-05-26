@@ -1,6 +1,9 @@
 import ElementBase from "./ElementBase";
 
 class Rectangle extends ElementBase {
+	constructor(startX, startY, endX, endY) {
+		super("rectangle", startX, startY, endX, endY);
+	}
 	draw(ctx) {
 		ctx.beginPath();
 		ctx.rect(

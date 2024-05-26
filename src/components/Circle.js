@@ -1,6 +1,9 @@
 import ElementBase from "./ElementBase";
 
 class Circle extends ElementBase {
+	constructor(startX, startY, endX, endY) {
+		super("circle", startX, startY, endX, endY);
+	}
 	draw(ctx) {
 		const radius = Math.sqrt(
 			Math.pow(this.endX - this.startX, 2) +

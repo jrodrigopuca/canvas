@@ -1,6 +1,9 @@
 import ElementBase from "./ElementBase";
 
 class Diamond extends ElementBase {
+	constructor(startX, startY, endX, endY) {
+		super("diamond", startX, startY, endX, endY);
+	}
 	draw(ctx) {
 		ctx.beginPath();
 		ctx.moveTo((this.startX + this.endX) / 2, this.startY);

@@ -1,6 +1,9 @@
 import ElementBase from "./ElementBase";
 
 class Line extends ElementBase {
+	constructor(startX, startY, endX, endY) {
+		super("line", startX, startY, endX, endY);
+	}
 	draw(ctx) {
 		ctx.beginPath();
 		ctx.moveTo(this.startX, this.startY);

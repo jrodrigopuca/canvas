@@ -6,12 +6,11 @@ import Toolbar from "./Toolbar";
 import InfoBox from "./InfoBox";
 import "./DrawingCanvas.css";
 
-const DrawingCanvas = () => {
+const DrawingCanvas = ({ elements, setElements }) => {
 	const canvasRef = useRef(null);
-	const exportCanvasRef = useRef(null); // Nuevo canvas para exportar sin rejilla
+	const exportCanvasRef = useRef(null);
 	const gridCanvasRef = useRef(null);
 	const [isDrawing, setIsDrawing] = useState(false);
-	const [elements, setElements] = useState([]);
 	const [currentElement, setCurrentElement] = useState(null);
 	const [selectedTool, setSelectedTool] = useState("line");
 	const [selectedElementIndex, setSelectedElementIndex] = useState(null);

@@ -1,6 +1,9 @@
 import ElementBase from "./ElementBase";
 
 class ActivationBar extends ElementBase {
+	constructor(startX, startY, endX, endY) {
+		super("activationbar", startX, startY, endX, endY);
+	}
 	draw(ctx) {
 		ctx.beginPath();
 		ctx.rect(this.startX - 2.5, this.startY, 5, this.endY - this.startY);
