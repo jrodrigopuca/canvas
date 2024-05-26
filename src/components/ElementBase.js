@@ -9,7 +9,7 @@ class ElementBase {
 	}
 
 	draw(ctx) {
-		throw new Error("Method draw() must be implemented in subclasses");
+		throw new Error("Draw method not implemented!");
 	}
 
 	move(deltaX, deltaY) {
@@ -19,23 +19,15 @@ class ElementBase {
 		this.endY += deltaY;
 	}
 
-	resize(offsetX, offsetY, direction) {
-		if (direction.includes("top")) {
-			this.startY = offsetY;
-		}
-		if (direction.includes("bottom")) {
-			this.endY = offsetY;
-		}
-		if (direction.includes("left")) {
-			this.startX = offsetX;
-		}
-		if (direction.includes("right")) {
-			this.endX = offsetX;
-		}
+	resize(newX, newY, direction) {
+		if (direction.includes("right")) this.endX = newX;
+		if (direction.includes("left")) this.startX = newX;
+		if (direction.includes("bottom")) this.endY = newY;
+		if (direction.includes("top")) this.startY = newY;
 	}
 
 	isPointInside(x, y) {
-		throw new Error("Method isPointInside() must be implemented in subclasses");
+		throw new Error("isPointInside method not implemented!");
 	}
 
 	focus() {
@@ -50,8 +42,6 @@ class ElementBase {
 		return {
 			w: Math.abs(this.endX - this.startX),
 			h: Math.abs(this.endY - this.startY),
-			x: this.startX,
-			y: this.startY,
 		};
 	}
 }

@@ -5,6 +5,7 @@ import Actor from "./Actor";
 import Lifeline from "./Lifeline";
 import Message from "./Message";
 import ActivationBar from "./ActivationBar";
+import Circle from "./Circle";
 
 class ElementFactory {
 	static createElement(type, startX, startY, endX, endY) {
@@ -23,6 +24,8 @@ class ElementFactory {
 				return new Message(startX, startY, endX, endY);
 			case "activationbar":
 				return new ActivationBar(startX, startY, endX, endY);
+			case "circle":
+				return new Circle(startX, startY, endX, endY);
 			default:
 				throw new Error(`Unknown element type: ${type}`);
 		}

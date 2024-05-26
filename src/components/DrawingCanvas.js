@@ -16,6 +16,7 @@ const DrawingCanvas = () => {
 	const [focusedElementIndex, setFocusedElementIndex] = useState(null);
 	const [hoveredElementIndex, setHoveredElementIndex] = useState(null);
 	const [clickOffset, setClickOffset] = useState({ x: 0, y: 0 });
+	const [resizeDirection, setResizeDirection] = useState(null);
 	const [dimensions, setDimensions] = useState({ w: 0, h: 0 });
 	const [position, setPosition] = useState({ x: 0, y: 0 });
 
@@ -72,16 +73,19 @@ const DrawingCanvas = () => {
 				setSelectedElementIndex(index);
 				setFocusedElementIndex(index);
 				const element = elements[index];
-				if (element instanceof TextElement) {
-					setClickOffset({ x: offsetX - element.x, y: offsetY - element.y });
+				const resizeDir = getResizeDirection(element, offsetX, offsetY);
+				setResizeDirection(resizeDir);
+				if (resizeDir) {
+					element.isResizing = true;
+					setElements([...elements]);
 				} else {
 					setClickOffset({
 						x: offsetX - element.startX,
 						y: offsetY - element.startY,
 					});
+					element.isMoving = true;
+					setElements([...elements]);
 				}
-				elements[index].isMoving = true;
-				setElements([...elements]);
 			} else if (selectedTool !== "select") {
 				setIsDrawing(true);
 				const newElement = ElementFactory.createElement(
@@ -120,13 +124,10 @@ const DrawingCanvas = () => {
 				setPosition({ x: currentElement.startX, y: currentElement.startY });
 			} else if (selectedElementIndex !== null) {
 				const element = elements[selectedElementIndex];
-				if (element instanceof TextElement) {
-					const deltaX = offsetX - (element.x + clickOffset.x);
-					const deltaY = offsetY - (element.y + clickOffset.y);
-					element.move(deltaX, deltaY);
-					setClickOffset({ x: offsetX - element.x, y: offsetY - element.y });
-					setPosition({ x: offsetX, y: offsetY });
-				} else {
+				if (element.isResizing) {
+					element.resize(offsetX, offsetY, resizeDirection);
+					setDimensions(element.getDimensions());
+				} else if (element.isMoving) {
 					const deltaX = offsetX - (element.startX + clickOffset.x);
 					const deltaY = offsetY - (element.startY + clickOffset.y);
 					element.move(deltaX, deltaY);
@@ -142,8 +143,14 @@ const DrawingCanvas = () => {
 				const index = getElementAtPosition(offsetX, offsetY, ctx);
 				if (index !== null && selectedTool === "select") {
 					setHoveredElementIndex(index);
+					const element = elements[index];
+					const resizeDir = getResizeDirection(element, offsetX, offsetY);
+					canvas.style.cursor = resizeDir
+						? getCursorForDirection(resizeDir)
+						: "move";
 				} else {
 					setHoveredElementIndex(null);
+					canvas.style.cursor = "default";
 				}
 			}
 		},
@@ -154,6 +161,7 @@ const DrawingCanvas = () => {
 			elements,
 			clickOffset,
 			selectedTool,
+			resizeDirection,
 		]
 	);
 
@@ -164,10 +172,12 @@ const DrawingCanvas = () => {
 			setCurrentElement(null);
 		} else if (selectedElementIndex !== null) {
 			elements[selectedElementIndex].isMoving = false;
+			elements[selectedElementIndex].isResizing = false;
 			setElements([...elements]);
 		}
 		setSelectedElementIndex(null);
 		setHoveredElementIndex(null);
+		setResizeDirection(null);
 	}, [isDrawing, currentElement, selectedElementIndex, elements]);
 
 	const getElementAtPosition = (x, y, ctx) => {
@@ -175,6 +185,38 @@ const DrawingCanvas = () => {
 			element.isPointInside(x, y, ctx)
 		);
 		return index !== -1 ? index : null;
+	};
+
+	const getResizeDirection = (element, x, y) => {
+		const { startX, startY, endX, endY } = element;
+		const handleSize = 10;
+		let direction = "";
+		if (y >= startY - handleSize && y <= startY + handleSize)
+			direction += "top";
+		if (y >= endY - handleSize && y <= endY + handleSize) direction += "bottom";
+		if (x >= startX - handleSize && x <= startX + handleSize)
+			direction += "left";
+		if (x >= endX - handleSize && x <= endX + handleSize) direction += "right";
+		return direction;
+	};
+
+	const getCursorForDirection = (direction) => {
+		switch (direction) {
+			case "top":
+			case "bottom":
+				return "ns-resize";
+			case "left":
+			case "right":
+				return "ew-resize";
+			case "topleft":
+			case "bottomright":
+				return "nwse-resize";
+			case "topright":
+			case "bottomleft":
+				return "nesw-resize";
+			default:
+				return "default";
+		}
 	};
 
 	const selectTool = useCallback((tool) => {

@@ -15,10 +15,7 @@ class Rectangle extends ElementBase {
 
 	isPointInside(x, y) {
 		return (
-			x >= Math.min(this.startX, this.endX) &&
-			x <= Math.max(this.startX, this.endX) &&
-			y >= Math.min(this.startY, this.endY) &&
-			y <= Math.max(this.startY, this.endY)
+			x >= this.startX && x <= this.endX && y >= this.startY && y <= this.endY
 		);
 	}
 }
