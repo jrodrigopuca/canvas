@@ -2,6 +2,8 @@ import React, { useRef, useState, useEffect } from "react";
 import ElementFactory from "./ElementFactory";
 import TextElement from "./TextElement";
 import TextForm from "./TextForm";
+import Toolbar from "./Toolbar";
+import InfoBox from "./InfoBox";
 import "./DrawingCanvas.css";
 
 const DrawingCanvas = () => {
@@ -180,72 +182,7 @@ const DrawingCanvas = () => {
 
 	return (
 		<div className="drawing-container">
-			<div className="toolbar">
-				<button
-					className={`tool-button ${selectedTool === "line" ? "active" : ""}`}
-					onClick={() => selectTool("line")}
-				>
-					Línea
-				</button>
-				<button
-					className={`tool-button ${
-						selectedTool === "rectangle" ? "active" : ""
-					}`}
-					onClick={() => selectTool("rectangle")}
-				>
-					Rectángulo
-				</button>
-				<button
-					className={`tool-button ${
-						selectedTool === "dotline" ? "active" : ""
-					}`}
-					onClick={() => selectTool("dotline")}
-				>
-					Línea Punteada
-				</button>
-				<button
-					className={`tool-button ${selectedTool === "actor" ? "active" : ""}`}
-					onClick={() => selectTool("actor")}
-				>
-					Actor
-				</button>
-				<button
-					className={`tool-button ${
-						selectedTool === "lifeline" ? "active" : ""
-					}`}
-					onClick={() => selectTool("lifeline")}
-				>
-					Lifeline
-				</button>
-				<button
-					className={`tool-button ${
-						selectedTool === "message" ? "active" : ""
-					}`}
-					onClick={() => selectTool("message")}
-				>
-					Mensaje
-				</button>
-				<button
-					className={`tool-button ${
-						selectedTool === "activationbar" ? "active" : ""
-					}`}
-					onClick={() => selectTool("activationbar")}
-				>
-					Barra de Activación
-				</button>
-				<button
-					className={`tool-button ${selectedTool === "select" ? "active" : ""}`}
-					onClick={() => selectTool("select")}
-				>
-					Seleccionar
-				</button>
-				<button
-					className={`tool-button ${selectedTool === "text" ? "active" : ""}`}
-					onClick={() => selectTool("text")}
-				>
-					Texto
-				</button>
-			</div>
+			<Toolbar selectedTool={selectedTool} selectTool={selectTool} />
 			<div className="canvas-wrapper">
 				<canvas
 					ref={canvasRef}
@@ -257,12 +194,7 @@ const DrawingCanvas = () => {
 					onMouseUp={handleMouseUp}
 				/>
 				{selectedElementIndex !== null && (
-					<div className="info-box">
-						<div>W: {dimensions.w}px</div>
-						<div>H: {dimensions.h}px</div>
-						<div>X: {position.x}px</div>
-						<div>Y: {position.y}px</div>
-					</div>
+					<InfoBox dimensions={dimensions} position={position} />
 				)}
 				{selectedTool === "text" && <TextForm addText={addText} />}
 			</div>
