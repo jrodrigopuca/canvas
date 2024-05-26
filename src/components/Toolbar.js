@@ -1,7 +1,7 @@
 import React from "react";
 import "./Toolbar.css";
 
-const Toolbar = ({ selectedTool, selectTool }) => {
+const Toolbar = React.memo(({ selectedTool, selectTool }) => {
 	return (
 		<div className="toolbar">
 			<button
@@ -64,6 +64,6 @@ const Toolbar = ({ selectedTool, selectTool }) => {
 			</button>
 		</div>
 	);
-};
+});
 
 export default Toolbar;

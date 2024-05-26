@@ -1,16 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import "./TextForm.css";
 
-const TextForm = ({ addText }) => {
+const TextForm = React.memo(({ addText }) => {
 	const [text, setText] = useState("");
 
-	const handleSubmit = (e) => {
-		e.preventDefault();
-		if (text.trim()) {
-			addText(text);
-			setText("");
-		}
-	};
+	const handleSubmit = useCallback(
+		(e) => {
+			e.preventDefault();
+			if (text.trim()) {
+				addText(text);
+				setText("");
+			}
+		},
+		[text, addText]
+	);
 
 	return (
 		<form onSubmit={handleSubmit} className="text-form">
@@ -24,6 +27,6 @@ const TextForm = ({ addText }) => {
 			<button type="submit">Add Text</button>
 		</form>
 	);
-};
+});
 
 export default TextForm;

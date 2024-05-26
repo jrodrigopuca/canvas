@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import ElementFactory from "./ElementFactory";
 import TextElement from "./TextElement";
 import TextForm from "./TextForm";
@@ -14,10 +14,8 @@ const DrawingCanvas = () => {
 	const [selectedTool, setSelectedTool] = useState("line");
 	const [selectedElementIndex, setSelectedElementIndex] = useState(null);
 	const [focusedElementIndex, setFocusedElementIndex] = useState(null);
-	const [isResizing, setIsResizing] = useState(false);
 	const [hoveredElementIndex, setHoveredElementIndex] = useState(null);
 	const [clickOffset, setClickOffset] = useState({ x: 0, y: 0 });
-	const [resizeDirection, setResizeDirection] = useState(null);
 	const [dimensions, setDimensions] = useState({ w: 0, h: 0 });
 	const [position, setPosition] = useState({ x: 0, y: 0 });
 
@@ -64,89 +62,102 @@ const DrawingCanvas = () => {
 		};
 	}, [focusedElementIndex]);
 
-	const handleMouseDown = (e) => {
-		const { offsetX, offsetY } = e.nativeEvent;
-		const canvas = canvasRef.current;
-		const ctx = canvas.getContext("2d");
-		const index = getElementAtPosition(offsetX, offsetY, ctx);
-		if (index !== null && selectedTool === "select") {
-			setSelectedElementIndex(index);
-			setFocusedElementIndex(index);
-			const element = elements[index];
-			if (element instanceof TextElement) {
-				setClickOffset({ x: offsetX - element.x, y: offsetY - element.y });
-			} else {
-				setClickOffset({
-					x: offsetX - element.startX,
-					y: offsetY - element.startY,
-				});
-			}
-			elements[index].isMoving = true;
-			setElements([...elements]);
-		} else if (selectedTool !== "select") {
-			setIsDrawing(true);
-			const newElement = ElementFactory.createElement(
-				selectedTool,
-				offsetX,
-				offsetY,
-				offsetX,
-				offsetY
-			);
-			setCurrentElement(newElement);
-		} else {
-			setFocusedElementIndex(null);
-		}
-	};
-
-	const handleMouseMove = (e) => {
-		const { offsetX, offsetY } = e.nativeEvent;
-		const canvas = canvasRef.current;
-		const ctx = canvas.getContext("2d");
-		if (isDrawing) {
-			currentElement.endX = offsetX;
-			currentElement.endY = offsetY;
-			setCurrentElement(
-				Object.assign(
-					Object.create(Object.getPrototypeOf(currentElement)),
-					currentElement
-				)
-			);
-			setDimensions({
-				w: Math.abs(currentElement.startX - offsetX),
-				h: Math.abs(currentElement.startY - offsetY),
-			});
-			setPosition({ x: currentElement.startX, y: currentElement.startY });
-		} else if (selectedElementIndex !== null) {
-			const element = elements[selectedElementIndex];
-			if (element instanceof TextElement) {
-				const deltaX = offsetX - (element.x + clickOffset.x);
-				const deltaY = offsetY - (element.y + clickOffset.y);
-				element.move(deltaX, deltaY);
-				setClickOffset({ x: offsetX - element.x, y: offsetY - element.y });
-				setPosition({ x: offsetX, y: offsetY });
-			} else {
-				const deltaX = offsetX - (element.startX + clickOffset.x);
-				const deltaY = offsetY - (element.startY + clickOffset.y);
-				element.move(deltaX, deltaY);
-				setClickOffset({
-					x: offsetX - element.startX,
-					y: offsetY - element.startY,
-				});
-				setPosition({ x: offsetX, y: offsetY });
-				setDimensions(element.getDimensions());
-			}
-			setElements([...elements]);
-		} else {
+	const handleMouseDown = useCallback(
+		(e) => {
+			const { offsetX, offsetY } = e.nativeEvent;
+			const canvas = canvasRef.current;
+			const ctx = canvas.getContext("2d");
 			const index = getElementAtPosition(offsetX, offsetY, ctx);
 			if (index !== null && selectedTool === "select") {
-				setHoveredElementIndex(index);
+				setSelectedElementIndex(index);
+				setFocusedElementIndex(index);
+				const element = elements[index];
+				if (element instanceof TextElement) {
+					setClickOffset({ x: offsetX - element.x, y: offsetY - element.y });
+				} else {
+					setClickOffset({
+						x: offsetX - element.startX,
+						y: offsetY - element.startY,
+					});
+				}
+				elements[index].isMoving = true;
+				setElements([...elements]);
+			} else if (selectedTool !== "select") {
+				setIsDrawing(true);
+				const newElement = ElementFactory.createElement(
+					selectedTool,
+					offsetX,
+					offsetY,
+					offsetX,
+					offsetY
+				);
+				setCurrentElement(newElement);
 			} else {
-				setHoveredElementIndex(null);
+				setFocusedElementIndex(null);
 			}
-		}
-	};
+		},
+		[elements, selectedTool]
+	);
 
-	const handleMouseUp = () => {
+	const handleMouseMove = useCallback(
+		(e) => {
+			const { offsetX, offsetY } = e.nativeEvent;
+			const canvas = canvasRef.current;
+			const ctx = canvas.getContext("2d");
+			if (isDrawing) {
+				currentElement.endX = offsetX;
+				currentElement.endY = offsetY;
+				setCurrentElement(
+					Object.assign(
+						Object.create(Object.getPrototypeOf(currentElement)),
+						currentElement
+					)
+				);
+				setDimensions({
+					w: Math.abs(currentElement.startX - offsetX),
+					h: Math.abs(currentElement.startY - offsetY),
+				});
+				setPosition({ x: currentElement.startX, y: currentElement.startY });
+			} else if (selectedElementIndex !== null) {
+				const element = elements[selectedElementIndex];
+				if (element instanceof TextElement) {
+					const deltaX = offsetX - (element.x + clickOffset.x);
+					const deltaY = offsetY - (element.y + clickOffset.y);
+					element.move(deltaX, deltaY);
+					setClickOffset({ x: offsetX - element.x, y: offsetY - element.y });
+					setPosition({ x: offsetX, y: offsetY });
+				} else {
+					const deltaX = offsetX - (element.startX + clickOffset.x);
+					const deltaY = offsetY - (element.startY + clickOffset.y);
+					element.move(deltaX, deltaY);
+					setClickOffset({
+						x: offsetX - element.startX,
+						y: offsetY - element.startY,
+					});
+					setPosition({ x: offsetX, y: offsetY });
+					setDimensions(element.getDimensions());
+				}
+				setElements([...elements]);
+			} else {
+				const index = getElementAtPosition(offsetX, offsetY, ctx);
+				if (index !== null && selectedTool === "select") {
+					setHoveredElementIndex(index);
+				} else {
+					setHoveredElementIndex(null);
+				}
+			}
+		},
+		[
+			isDrawing,
+			currentElement,
+			selectedElementIndex,
+			elements,
+			clickOffset,
+			selectedTool,
+		]
+	);
+
+	const handleMouseUp = useCallback(() => {
 		if (isDrawing) {
 			setIsDrawing(false);
 			setElements((prevElements) => [...prevElements, currentElement]);
@@ -157,7 +168,7 @@ const DrawingCanvas = () => {
 		}
 		setSelectedElementIndex(null);
 		setHoveredElementIndex(null);
-	};
+	}, [isDrawing, currentElement, selectedElementIndex, elements]);
 
 	const getElementAtPosition = (x, y, ctx) => {
 		const index = elements.findIndex((element) =>
@@ -166,11 +177,11 @@ const DrawingCanvas = () => {
 		return index !== -1 ? index : null;
 	};
 
-	const selectTool = (tool) => {
+	const selectTool = useCallback((tool) => {
 		setSelectedTool(tool);
-	};
+	}, []);
 
-	const addText = (text) => {
+	const addText = useCallback((text) => {
 		const canvas = canvasRef.current;
 		const newTextElement = new TextElement(
 			text,
@@ -178,7 +189,7 @@ const DrawingCanvas = () => {
 			canvas.height / 2
 		);
 		setElements((prevElements) => [...prevElements, newTextElement]);
-	};
+	}, []);
 
 	return (
 		<div className="drawing-container">

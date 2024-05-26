@@ -1,7 +1,7 @@
 import React from "react";
 import "./InfoBox.css";
 
-const InfoBox = ({ dimensions, position }) => {
+const InfoBox = React.memo(({ dimensions, position }) => {
 	return (
 		<div className="info-box">
 			<div>W: {dimensions.w}px</div>
@@ -10,6 +10,6 @@ const InfoBox = ({ dimensions, position }) => {
 			<div>Y: {position.y}px</div>
 		</div>
 	);
-};
+});
 
 export default InfoBox;
