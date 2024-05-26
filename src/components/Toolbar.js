@@ -51,10 +51,16 @@ const Toolbar = React.memo(({ selectedTool, selectTool }) => {
 				Barra de Activación
 			</button>
 			<button
-				className={`tool-button ${selectedTool === "circle" ? "active" : ""}`}
-				onClick={() => selectTool("circle")}
+				className={`tool-button ${selectedTool === "oval" ? "active" : ""}`}
+				onClick={() => selectTool("oval")}
 			>
-				Círculo
+				Oval
+			</button>
+			<button
+				className={`tool-button ${selectedTool === "diamond" ? "active" : ""}`}
+				onClick={() => selectTool("diamond")}
+			>
+				Rombo
 			</button>
 			<button
 				className={`tool-button ${selectedTool === "select" ? "active" : ""}`}
