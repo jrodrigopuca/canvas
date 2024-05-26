@@ -228,6 +228,36 @@ const DrawingCanvas = () => {
 					Línea Punteada
 				</button>
 				<button
+					className={`tool-button ${selectedTool === "actor" ? "active" : ""}`}
+					onClick={() => selectTool("actor")}
+				>
+					Actor
+				</button>
+				<button
+					className={`tool-button ${
+						selectedTool === "lifeline" ? "active" : ""
+					}`}
+					onClick={() => selectTool("lifeline")}
+				>
+					Lifeline
+				</button>
+				<button
+					className={`tool-button ${
+						selectedTool === "message" ? "active" : ""
+					}`}
+					onClick={() => selectTool("message")}
+				>
+					Mensaje
+				</button>
+				<button
+					className={`tool-button ${
+						selectedTool === "activationbar" ? "active" : ""
+					}`}
+					onClick={() => selectTool("activationbar")}
+				>
+					Barra de Activación
+				</button>
+				<button
 					className={`tool-button ${selectedTool === "select" ? "active" : ""}`}
 					onClick={() => selectTool("select")}
 				>
