@@ -220,6 +220,14 @@ const DrawingCanvas = () => {
 					Rectángulo
 				</button>
 				<button
+					className={`tool-button ${
+						selectedTool === "dotline" ? "active" : ""
+					}`}
+					onClick={() => selectTool("dotline")}
+				>
+					Línea Punteada
+				</button>
+				<button
 					className={`tool-button ${selectedTool === "select" ? "active" : ""}`}
 					onClick={() => selectTool("select")}
 				>
