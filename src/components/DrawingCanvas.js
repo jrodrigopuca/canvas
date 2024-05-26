@@ -1,5 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import ElementFactory from "./ElementFactory";
+import TextElement from "./TextElement";
+import TextForm from "./TextForm";
 import "./DrawingCanvas.css";
 
 const DrawingCanvas = () => {
@@ -62,22 +64,23 @@ const DrawingCanvas = () => {
 
 	const handleMouseDown = (e) => {
 		const { offsetX, offsetY } = e.nativeEvent;
-		const index = getElementAtPosition(offsetX, offsetY);
+		const canvas = canvasRef.current;
+		const ctx = canvas.getContext("2d");
+		const index = getElementAtPosition(offsetX, offsetY, ctx);
 		if (index !== null && selectedTool === "select") {
 			setSelectedElementIndex(index);
 			setFocusedElementIndex(index);
 			const element = elements[index];
-			const resizeDir = getResizeDirection(element, offsetX, offsetY);
-			setResizeDirection(resizeDir);
-			setIsResizing(!!resizeDir);
-			if (!resizeDir) {
+			if (element instanceof TextElement) {
+				setClickOffset({ x: offsetX - element.x, y: offsetY - element.y });
+			} else {
 				setClickOffset({
 					x: offsetX - element.startX,
 					y: offsetY - element.startY,
 				});
-				elements[index].isMoving = true;
-				setElements([...elements]);
 			}
+			elements[index].isMoving = true;
+			setElements([...elements]);
 		} else if (selectedTool !== "select") {
 			setIsDrawing(true);
 			const newElement = ElementFactory.createElement(
@@ -96,6 +99,7 @@ const DrawingCanvas = () => {
 	const handleMouseMove = (e) => {
 		const { offsetX, offsetY } = e.nativeEvent;
 		const canvas = canvasRef.current;
+		const ctx = canvas.getContext("2d");
 		if (isDrawing) {
 			currentElement.endX = offsetX;
 			currentElement.endY = offsetY;
@@ -112,10 +116,12 @@ const DrawingCanvas = () => {
 			setPosition({ x: currentElement.startX, y: currentElement.startY });
 		} else if (selectedElementIndex !== null) {
 			const element = elements[selectedElementIndex];
-			if (isResizing) {
-				element.resize(offsetX, offsetY, resizeDirection);
-				setDimensions(element.getDimensions());
-				canvas.style.cursor = getCursorForDirection(resizeDirection);
+			if (element instanceof TextElement) {
+				const deltaX = offsetX - (element.x + clickOffset.x);
+				const deltaY = offsetY - (element.y + clickOffset.y);
+				element.move(deltaX, deltaY);
+				setClickOffset({ x: offsetX - element.x, y: offsetY - element.y });
+				setPosition({ x: offsetX, y: offsetY });
 			} else {
 				const deltaX = offsetX - (element.startX + clickOffset.x);
 				const deltaY = offsetY - (element.startY + clickOffset.y);
@@ -126,21 +132,14 @@ const DrawingCanvas = () => {
 				});
 				setPosition({ x: offsetX, y: offsetY });
 				setDimensions(element.getDimensions());
-				canvas.style.cursor = "move";
 			}
 			setElements([...elements]);
 		} else {
-			const index = getElementAtPosition(offsetX, offsetY);
+			const index = getElementAtPosition(offsetX, offsetY, ctx);
 			if (index !== null && selectedTool === "select") {
 				setHoveredElementIndex(index);
-				const element = elements[index];
-				const resizeDir = getResizeDirection(element, offsetX, offsetY);
-				canvas.style.cursor = resizeDir
-					? getCursorForDirection(resizeDir)
-					: "move";
 			} else {
 				setHoveredElementIndex(null);
-				canvas.style.cursor = "default";
 			}
 		}
 	};
@@ -156,50 +155,27 @@ const DrawingCanvas = () => {
 		}
 		setSelectedElementIndex(null);
 		setHoveredElementIndex(null);
-		setIsResizing(false);
-		setResizeDirection(null);
-		canvasRef.current.style.cursor = "default";
 	};
 
-	const getElementAtPosition = (x, y) => {
-		const index = elements.findIndex((element) => element.isPointInside(x, y));
+	const getElementAtPosition = (x, y, ctx) => {
+		const index = elements.findIndex((element) =>
+			element.isPointInside(x, y, ctx)
+		);
 		return index !== -1 ? index : null;
-	};
-
-	const getResizeDirection = (element, x, y) => {
-		const { startX, startY, endX, endY } = element;
-		const handleSize = 10;
-		let direction = "";
-		if (y >= startY - handleSize && y <= startY + handleSize)
-			direction += "top";
-		if (y >= endY - handleSize && y <= endY + handleSize) direction += "bottom";
-		if (x >= startX - handleSize && x <= startX + handleSize)
-			direction += "left";
-		if (x >= endX - handleSize && x <= endX + handleSize) direction += "right";
-		return direction;
-	};
-
-	const getCursorForDirection = (direction) => {
-		switch (direction) {
-			case "top":
-			case "bottom":
-				return "ns-resize";
-			case "left":
-			case "right":
-				return "ew-resize";
-			case "topleft":
-			case "bottomright":
-				return "nwse-resize";
-			case "topright":
-			case "bottomleft":
-				return "nesw-resize";
-			default:
-				return "default";
-		}
 	};
 
 	const selectTool = (tool) => {
 		setSelectedTool(tool);
+	};
+
+	const addText = (text) => {
+		const canvas = canvasRef.current;
+		const newTextElement = new TextElement(
+			text,
+			canvas.width / 2,
+			canvas.height / 2
+		);
+		setElements((prevElements) => [...prevElements, newTextElement]);
 	};
 
 	return (
@@ -263,7 +239,14 @@ const DrawingCanvas = () => {
 				>
 					Seleccionar
 				</button>
+				<button
+					className={`tool-button ${selectedTool === "text" ? "active" : ""}`}
+					onClick={() => selectTool("text")}
+				>
+					Texto
+				</button>
 			</div>
+			{selectedTool === "text" && <TextForm addText={addText} />}
 			<div className="canvas-wrapper">
 				<canvas
 					ref={canvasRef}
