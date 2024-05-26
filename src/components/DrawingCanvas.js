@@ -246,7 +246,6 @@ const DrawingCanvas = () => {
 					Texto
 				</button>
 			</div>
-			{selectedTool === "text" && <TextForm addText={addText} />}
 			<div className="canvas-wrapper">
 				<canvas
 					ref={canvasRef}
@@ -265,6 +264,7 @@ const DrawingCanvas = () => {
 						<div>Y: {position.y}px</div>
 					</div>
 				)}
+				{selectedTool === "text" && <TextForm addText={addText} />}
 			</div>
 		</div>
 	);

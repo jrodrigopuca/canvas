@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./TextForm.css";
 
 const TextForm = ({ addText }) => {
 	const [text, setText] = useState("");
