@@ -1,5 +1,5 @@
 import "./App.css";
-import Drawing from "./original-canvas/Drawing";
+import Drawing from "./components/DrawingCanvas";
 
 function App() {
 	return (
