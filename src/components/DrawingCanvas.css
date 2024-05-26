@@ -13,3 +13,18 @@
   border: 1px solid #ccc;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
+
+.export-button {
+  background-color: #6200ea;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.export-button:hover {
+  background-color: #3700b3;
+}

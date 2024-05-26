@@ -8,6 +8,7 @@ import "./DrawingCanvas.css";
 
 const DrawingCanvas = () => {
 	const canvasRef = useRef(null);
+	const exportCanvasRef = useRef(null); // Nuevo canvas para exportar sin rejilla
 	const gridCanvasRef = useRef(null);
 	const [isDrawing, setIsDrawing] = useState(false);
 	const [elements, setElements] = useState([]);
@@ -263,6 +264,26 @@ const DrawingCanvas = () => {
 		}
 	};
 
+	const exportAsImage = () => {
+		const canvas = exportCanvasRef.current;
+		const ctx = canvas.getContext("2d");
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+		// Fondo blanco
+		ctx.fillStyle = "white";
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+		elements.forEach((element) => {
+			element.draw(ctx);
+		});
+
+		const dataUrl = canvas.toDataURL("image/jpeg");
+		const link = document.createElement("a");
+		link.href = dataUrl;
+		link.download = "canvas-export.jpg";
+		link.click();
+	};
+
 	return (
 		<div className="drawing-container">
 			<Toolbar selectedTool={selectedTool} selectTool={selectTool} />
@@ -277,11 +298,20 @@ const DrawingCanvas = () => {
 					onMouseUp={handleMouseUp}
 				/>
 				<canvas ref={gridCanvasRef} style={{ display: "none" }} />
+				<canvas
+					ref={exportCanvasRef}
+					width={800}
+					height={600}
+					style={{ display: "none" }}
+				/>
 				{selectedElementIndex !== null && (
 					<InfoBox dimensions={dimensions} position={position} />
 				)}
 				{selectedTool === "text" && <TextForm addText={addText} />}
 			</div>
+			<button onClick={exportAsImage} className="export-button">
+				Exportar como JPG
+			</button>
 		</div>
 	);
 };
