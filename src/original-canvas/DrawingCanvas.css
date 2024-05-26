@@ -1,0 +1,55 @@
+.drawing-container {
+  display: flex;
+  align-items: flex-start;
+  padding: 20px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  margin-right: 20px;
+}
+
+.tool-button {
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 16px;
+}
+
+.tool-button:hover {
+  background-color: #f0f0f0;
+}
+
+.tool-button.active {
+  background-color: #6200ea;
+  color: #ffffff;
+  border-color: #6200ea;
+}
+
+.canvas-wrapper {
+  position: relative;
+}
+
+.drawing-canvas {
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.info-box {
+  position: absolute;
+  right: -150px;
+  top: 0;
+  width: 140px;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+}
