@@ -12,9 +12,7 @@ class ElementBase {
 		throw new Error("Method draw() must be implemented in subclasses");
 	}
 
-	move(offsetX, offsetY) {
-		const deltaX = offsetX - this.startX;
-		const deltaY = offsetY - this.startY;
+	move(deltaX, deltaY) {
 		this.startX += deltaX;
 		this.startY += deltaY;
 		this.endX += deltaX;

@@ -12,7 +12,7 @@ const DrawingCanvas = () => {
 	const [focusedElementIndex, setFocusedElementIndex] = useState(null);
 	const [isResizing, setIsResizing] = useState(false);
 	const [hoveredElementIndex, setHoveredElementIndex] = useState(null);
-	const [offset, setOffset] = useState({ x: 0, y: 0 });
+	const [clickOffset, setClickOffset] = useState({ x: 0, y: 0 });
 	const [resizeDirection, setResizeDirection] = useState(null);
 	const [dimensions, setDimensions] = useState({ w: 0, h: 0 });
 	const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -71,7 +71,10 @@ const DrawingCanvas = () => {
 			setResizeDirection(resizeDir);
 			setIsResizing(!!resizeDir);
 			if (!resizeDir) {
-				setOffset({ x: offsetX - element.startX, y: offsetY - element.startY });
+				setClickOffset({
+					x: offsetX - element.startX,
+					y: offsetY - element.startY,
+				});
 				elements[index].isMoving = true;
 				setElements([...elements]);
 			}
@@ -114,8 +117,14 @@ const DrawingCanvas = () => {
 				setDimensions(element.getDimensions());
 				canvas.style.cursor = getCursorForDirection(resizeDirection);
 			} else {
-				element.move(offsetX, offsetY);
-				setPosition({ x: offsetX - offset.x, y: offsetY - offset.y });
+				const deltaX = offsetX - (element.startX + clickOffset.x);
+				const deltaY = offsetY - (element.startY + clickOffset.y);
+				element.move(deltaX, deltaY);
+				setClickOffset({
+					x: offsetX - element.startX,
+					y: offsetY - element.startY,
+				});
+				setPosition({ x: offsetX, y: offsetY });
 				setDimensions(element.getDimensions());
 				canvas.style.cursor = "move";
 			}
