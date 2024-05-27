@@ -21,6 +21,7 @@ const DrawingCanvas = ({ elements, setElements }) => {
 	const [dimensions, setDimensions] = useState({ w: 0, h: 0 });
 	const [position, setPosition] = useState({ x: 0, y: 0 });
 
+	// Redibujar el lienzo
 	useEffect(() => {
 		const canvas = canvasRef.current;
 		const gridCanvas = gridCanvasRef.current;
@@ -54,6 +55,7 @@ const DrawingCanvas = ({ elements, setElements }) => {
 		focusedElementIndex,
 	]);
 
+	// Eliminar elementos
 	useEffect(() => {
 		const handleKeyDown = (e) => {
 			if (
@@ -73,6 +75,7 @@ const DrawingCanvas = ({ elements, setElements }) => {
 		};
 	}, [focusedElementIndex]);
 
+	// Click (Seleccionar o Crear Elemento)
 	const handleMouseDown = useCallback(
 		(e) => {
 			const { offsetX, offsetY } = e.nativeEvent;
@@ -115,6 +118,7 @@ const DrawingCanvas = ({ elements, setElements }) => {
 		[elements, selectedTool]
 	);
 
+	// Cuando se mueve el mouse
 	const handleMouseMove = useCallback(
 		(e) => {
 			const { offsetX, offsetY } = e.nativeEvent;
@@ -177,6 +181,7 @@ const DrawingCanvas = ({ elements, setElements }) => {
 		]
 	);
 
+	// Cuando el usuario suelta el mouse
 	const handleMouseUp = useCallback(() => {
 		if (isDrawing) {
 			setIsDrawing(false);
@@ -192,6 +197,7 @@ const DrawingCanvas = ({ elements, setElements }) => {
 		setResizeDirection(null);
 	}, [isDrawing, currentElement, selectedElementIndex, elements]);
 
+	// Determinar si existe un elemento
 	const getElementAtPosition = (x, y, ctx) => {
 		const index = elements.findIndex((element) =>
 			element.isPointInside(x, y, ctx)
@@ -199,6 +205,7 @@ const DrawingCanvas = ({ elements, setElements }) => {
 		return index !== -1 ? index : null;
 	};
 
+	// Redimensionar
 	const getResizeDirection = (element, x, y) => {
 		const { startX, startY, endX, endY } = element;
 		const handleSize = 10;
@@ -212,6 +219,7 @@ const DrawingCanvas = ({ elements, setElements }) => {
 		return direction;
 	};
 
+	// determinar el cursor
 	const getCursorForDirection = (direction) => {
 		switch (direction) {
 			case "top":
@@ -245,6 +253,7 @@ const DrawingCanvas = ({ elements, setElements }) => {
 		setElements((prevElements) => [...prevElements, newTextElement]);
 	}, []);
 
+	// dibujar la grilla
 	const drawGrid = (ctx, width, height) => {
 		const gridSize = 20;
 		ctx.strokeStyle = "#e0e0e0";
@@ -263,6 +272,7 @@ const DrawingCanvas = ({ elements, setElements }) => {
 		}
 	};
 
+	// Exportar con JPEG
 	const exportAsImage = () => {
 		const canvas = exportCanvasRef.current;
 		const ctx = canvas.getContext("2d");
