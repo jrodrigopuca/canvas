@@ -6,6 +6,14 @@ import Toolbar from "./Toolbar";
 import InfoBox from "./InfoBox";
 import "./DrawingCanvas.css";
 
+/**
+ * Represents a drawing canvas component.
+ *
+ * @component
+ * @param {Object[]} elements - The array of elements to be drawn on the canvas.
+ * @param {Function} setElements - The function to update the array of elements.
+ * @returns {JSX.Element} The JSX element representing the drawing canvas.
+ */
 const DrawingCanvas = ({ elements, setElements }) => {
 	const canvasRef = useRef(null);
 	const exportCanvasRef = useRef(null);
