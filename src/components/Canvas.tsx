@@ -1,14 +1,15 @@
 // Canvas component
 // Main component that combines providers and drawing canvas
 
-import React, { forwardRef, useImperativeHandle, useRef } from 'react';
+import React, { forwardRef, useImperativeHandle, useRef, useCallback } from 'react';
 import type { CanvasElement, Connection, ElementType } from '@/types/elements';
 import type { CanvasConfig, ViewportState } from '@/types/canvas';
 import type { Theme } from '@/types/theme';
 import { CombinedCanvasProvider, useCanvas, useSelection, useViewport } from '@/core/context';
 import { useCanvasActions, useCanvasKeyboardShortcuts } from '@/core/hooks';
 import { DrawingCanvas } from './DrawingCanvas';
-import { cx } from '@/core/utils';
+import { cx, deserializeFromJSON, exportToImage } from '@/core/utils';
+import type { ExportImageOptions, CanvasData } from '@/core/utils';
 
 export interface CanvasProps {
   // Data (controlled mode)
@@ -82,6 +83,10 @@ export interface CanvasRef {
   // Export
   toJSON: () => { elements: CanvasElement[]; connections: Connection[] };
   toSVG: () => string;
+  toImage: (options?: ExportImageOptions) => Promise<Blob>;
+
+  // Import
+  fromJSON: (json: string) => CanvasData;
 }
 
 // Inner component that uses the contexts
@@ -151,6 +156,19 @@ const CanvasInner = forwardRef<CanvasRef, CanvasProps>(
           connections: canvas.connections,
         }),
         toSVG: () => svgRef.current?.outerHTML ?? '',
+        toImage: async (options?: ExportImageOptions) => {
+          if (!svgRef.current) {
+            throw new Error('SVG element not available');
+          }
+          return exportToImage(svgRef.current, options);
+        },
+        fromJSON: (json: string) => {
+          const data = deserializeFromJSON(json);
+          canvas.setElements(data.elements);
+          canvas.setConnections(data.connections);
+          selection.clearSelection();
+          return data;
+        },
       }),
       [canvas, selection, viewport, actions]
     );

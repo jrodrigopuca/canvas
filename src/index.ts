@@ -136,6 +136,10 @@ export {
 	serializeToJSON,
 	deserializeFromJSON,
 	exportToSVG,
+	exportToImage,
 	downloadAsFile,
+	downloadAsImage,
 	validateCanvasData,
 } from "./core/utils";
+
+export type { CanvasData, ImageFormat, ExportImageOptions } from "./core/utils";

@@ -62,14 +62,14 @@ function App() {
 
 ### Shapes
 
-| Element   | Type        | Description                                     |
-| --------- | ----------- | ----------------------------------------------- |
-| Rectangle | `rectangle` | Basic rectangle with optional rounded corners   |
-| Ellipse   | `ellipse`   | Ellipse/oval shape                              |
-| Circle    | `circle`    | Perfect circle (ellipse with equal dimensions)  |
-| Diamond   | `diamond`   | Rhombus/diamond shape                           |
-| Text      | `text`      | Text element with font customization            |
-| Line      | `line`      | Line with endpoint handles, solid/dashed/dotted |
+| Element   | Type        | Description                                       |
+| --------- | ----------- | ------------------------------------------------- |
+| Rectangle | `rectangle` | Basic rectangle with optional rounded corners     |
+| Ellipse   | `ellipse`   | Ellipse/oval shape                                |
+| Circle    | `circle`    | Perfect circle (ellipse with equal dimensions)    |
+| Diamond   | `diamond`   | Rhombus/diamond shape                             |
+| Text      | `text`      | Text with inline editing (double-click to edit)   |
+| Line      | `line`      | Line with endpoint handles, solid/dashed/dotted   |
 
 ### UML Elements
 

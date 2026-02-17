@@ -350,12 +350,22 @@ Rhombus/diamond shape for decision nodes.
 
 ### TextElement
 
-Editable text element with font customization.
+Editable text element with font customization and inline editing support.
+
+#### Behavior
+
+- **Double-click to edit**: Double-click on text to enter inline editing mode
+- **Save**: Press **Enter** to save changes (Shift+Enter for multi-line)
+- **Cancel**: Press **Escape** to cancel editing
+- **Auto-save**: Click outside the text to save and exit editing mode
+- **Disabled during edit**: Drag and resize are disabled while editing
 
 #### SVG Output
 
 ```xml
 <g transform="translate({x}, {y})">
+  <!-- Normal mode -->
+  <rect width="{width}" height="{height}" fill="transparent" />
   <text
     font-size="{fontSize}"
     font-family="{fontFamily}"
@@ -365,6 +375,11 @@ Editable text element with font customization.
   >
     {text}
   </text>
+
+  <!-- Edit mode (uses foreignObject for HTML input) -->
+  <foreignObject width="{width}" height="{height}">
+    <textarea>...</textarea>
+  </foreignObject>
 </g>
 ```
 
@@ -377,6 +392,15 @@ Editable text element with font customization.
 | `fontFamily` | `string`                        | `'sans-serif'` | Font family         |
 | `fontWeight` | `'normal' \| 'bold'`            | `'normal'`     | Font weight         |
 | `textAlign`  | `'left' \| 'center' \| 'right'` | `'left'`       | Text alignment      |
+
+#### Component Props
+
+| Prop             | Type          | Description                      |
+| ---------------- | ------------- | -------------------------------- |
+| `element`        | `TextElement` | Text element data                |
+| `onTextChange`   | `Function`    | Callback when text is modified   |
+| `showHandles`    | `boolean`     | Show resize and rotation handles |
+| `enableRotation` | `boolean`     | Enable rotation handle           |
 
 #### Example
 
@@ -395,6 +419,7 @@ Editable text element with font customization.
 		fontWeight: "bold",
 		textAlign: "center",
 	}}
+	onTextChange={(newText) => console.log("Text changed:", newText)}
 />
 ```
 
@@ -826,11 +851,10 @@ export const MyShape = withElementBehavior(MyShapeRender);
 
 ## Known Issues
 
-| Issue                                        | Severity  | Workaround          | Status       |
-| -------------------------------------------- | --------- | ------------------- | ------------ |
-| Text editing on double-click not implemented | 🟡 Medium | Use controlled mode | Planned      |
-| Connection auto-routing not implemented      | 🟢 Low    | Manual positioning  | Planned v0.2 |
-| Touch events not fully supported             | 🟡 Medium | Use mouse events    | In Progress  |
+| Issue                                   | Severity  | Workaround         | Status       |
+| --------------------------------------- | --------- | ------------------ | ------------ |
+| Connection auto-routing not implemented | 🟢 Low    | Manual positioning | Planned v0.2 |
+| Touch events not fully supported        | 🟡 Medium | Use mouse events   | In Progress  |
 
 ---
 

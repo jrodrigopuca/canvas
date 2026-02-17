@@ -35,9 +35,11 @@ export {
 	serializeToJSON,
 	deserializeFromJSON,
 	exportToSVG,
+	exportToImage,
 	downloadAsFile,
+	downloadAsImage,
 } from "./serialization";
-export type { CanvasData } from "./serialization";
+export type { CanvasData, ImageFormat, ExportImageOptions } from "./serialization";
 export {
 	validateCanvasData,
 	validateElement,

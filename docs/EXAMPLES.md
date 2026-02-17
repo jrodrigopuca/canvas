@@ -883,7 +883,7 @@ function CustomElementsDemo() {
 
 ## Export and Import
 
-Save and load canvas state.
+Save and load canvas state, export to images.
 
 ```tsx
 import { useRef, useState } from "react";
@@ -893,6 +893,7 @@ import {
 	serializeToJSON,
 	deserializeFromJSON,
 	downloadAsFile,
+	downloadAsImage,
 } from "@jrodrigopuca/canvas";
 
 function ExportImportDemo() {
@@ -910,9 +911,9 @@ function ExportImportDemo() {
 
 	const handleLoadFromJSON = () => {
 		if (savedState) {
-			const { elements, connections } = deserializeFromJSON(savedState);
-			// In controlled mode, you'd setElements(elements)
-			console.log("Loaded:", elements.length, "elements");
+			// Use fromJSON to load directly into canvas
+			canvasRef.current?.fromJSON(savedState);
+			console.log("Loaded from saved state");
 		}
 	};
 
@@ -931,6 +932,62 @@ function ExportImportDemo() {
 		}
 	};
 
+	const handleDownloadPNG = async () => {
+		try {
+			const blob = await canvasRef.current?.toImage({ format: "png" });
+			if (blob) {
+				const url = URL.createObjectURL(blob);
+				const link = document.createElement("a");
+				link.href = url;
+				link.download = "canvas-export.png";
+				link.click();
+				URL.revokeObjectURL(url);
+			}
+		} catch (error) {
+			console.error("Failed to export PNG:", error);
+		}
+	};
+
+	const handleDownloadJPEG = async () => {
+		try {
+			const blob = await canvasRef.current?.toImage({
+				format: "jpeg",
+				quality: 0.9,
+				backgroundColor: "#ffffff",
+			});
+			if (blob) {
+				const url = URL.createObjectURL(blob);
+				const link = document.createElement("a");
+				link.href = url;
+				link.download = "canvas-export.jpg";
+				link.click();
+				URL.revokeObjectURL(url);
+			}
+		} catch (error) {
+			console.error("Failed to export JPEG:", error);
+		}
+	};
+
+	const handleDownloadHiResPNG = async () => {
+		try {
+			// Export at 2x resolution for high-DPI displays
+			const blob = await canvasRef.current?.toImage({
+				format: "png",
+				scale: 2,
+			});
+			if (blob) {
+				const url = URL.createObjectURL(blob);
+				const link = document.createElement("a");
+				link.href = url;
+				link.download = "canvas-export-2x.png";
+				link.click();
+				URL.revokeObjectURL(url);
+			}
+		} catch (error) {
+			console.error("Failed to export hi-res PNG:", error);
+		}
+	};
+
 	const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
 		if (file) {
@@ -938,9 +995,9 @@ function ExportImportDemo() {
 			reader.onload = (event) => {
 				const json = event.target?.result as string;
 				try {
-					const { elements, connections } = deserializeFromJSON(json);
-					console.log("Imported:", elements.length, "elements");
-					// Load into canvas...
+					// Use fromJSON to load directly into canvas
+					canvasRef.current?.fromJSON(json);
+					console.log("Imported from file");
 				} catch (error) {
 					console.error("Invalid JSON:", error);
 				}
@@ -951,13 +1008,16 @@ function ExportImportDemo() {
 
 	return (
 		<div>
-			<div style={{ marginBottom: 16, display: "flex", gap: 8 }}>
+			<div style={{ marginBottom: 16, display: "flex", gap: 8, flexWrap: "wrap" }}>
 				<button onClick={handleSaveToJSON}>Save State</button>
 				<button onClick={handleLoadFromJSON} disabled={!savedState}>
 					Load State
 				</button>
 				<button onClick={handleDownloadJSON}>Download JSON</button>
 				<button onClick={handleDownloadSVG}>Download SVG</button>
+				<button onClick={handleDownloadPNG}>Download PNG</button>
+				<button onClick={handleDownloadJPEG}>Download JPEG</button>
+				<button onClick={handleDownloadHiResPNG}>Download PNG @2x</button>
 				<label>
 					Import:
 					<input type="file" accept=".json" onChange={handleFileUpload} />

@@ -66,13 +66,13 @@ export const DrawingCanvas = forwardRef<SVGSVGElement, DrawingCanvasProps>(
     // Sort elements by z-index
     const sortedElements = useMemo(() => sortByZIndex(elements), [elements]);
 
-    // Handle click on canvas background (deselect)
-    const handleBackgroundClick = useCallback(
+    // Handle mousedown on canvas background (deselect)
+    const handleBackgroundMouseDown = useCallback(
       (e: React.MouseEvent) => {
-        if (e.target === e.currentTarget) {
-          clearSelection();
-          onCanvasClick?.(e);
-        }
+        // Only deselect on direct click, not during drag operations
+        // stopPropagation from elements prevents this from firing on element clicks
+        clearSelection();
+        onCanvasClick?.(e);
       },
       [clearSelection, onCanvasClick]
     );
@@ -109,8 +109,20 @@ export const DrawingCanvas = forwardRef<SVGSVGElement, DrawingCanvasProps>(
           width: '100%',
           height: '100%',
           fill: `url(#${patternId})`,
+          pointerEvents: 'none', // Let clicks pass through to background
         })
       );
+    };
+
+    // Render background rect for capturing clicks on empty areas
+    const renderBackground = () => {
+      return React.createElement('rect', {
+        className: 'canvas-background',
+        width: '100%',
+        height: '100%',
+        fill: 'transparent',
+        onMouseDown: handleBackgroundMouseDown,
+      });
     };
 
     // Render a single element
@@ -137,7 +149,6 @@ export const DrawingCanvas = forwardRef<SVGSVGElement, DrawingCanvasProps>(
           userSelect: 'none',
           ...style,
         },
-        onClick: handleBackgroundClick,
         onDoubleClick: onCanvasDoubleClick,
       },
       // Transform group for zoom and pan
@@ -146,7 +157,10 @@ export const DrawingCanvas = forwardRef<SVGSVGElement, DrawingCanvasProps>(
         {
           transform: `translate(${viewport.pan.x}, ${viewport.pan.y}) scale(${viewport.zoom})`,
         },
-        // Grid
+        // Background rect for capturing clicks on empty areas
+        renderBackground(),
+
+        // Grid (pointer-events: none, so clicks pass through)
         renderGrid(),
 
         // Elements

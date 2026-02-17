@@ -1,13 +1,13 @@
-import v, { useMemo as Z, useContext as me, createContext as ye, useReducer as xe, useCallback as c, useState as ve, useRef as re, useEffect as lt, forwardRef as ie, useImperativeHandle as dt } from "react";
-import { jsx as te, jsxs as ut } from "react/jsx-runtime";
-const Ee = () => typeof crypto < "u" && typeof crypto.randomUUID == "function" ? crypto.randomUUID() : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 11)}`, pe = (...e) => {
+import E, { useMemo as V, useContext as ye, createContext as ge, useReducer as ve, useCallback as i, useState as ue, useRef as se, useEffect as De, forwardRef as ie, useImperativeHandle as ht } from "react";
+import { jsx as oe, jsxs as mt } from "react/jsx-runtime";
+const Ee = () => typeof crypto < "u" && typeof crypto.randomUUID == "function" ? crypto.randomUUID() : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 11)}`, fe = (...e) => {
   const t = [];
   for (const n of e)
     if (n) {
       if (typeof n == "string" || typeof n == "number")
         t.push(String(n));
       else if (Array.isArray(n)) {
-        const s = pe(...n);
+        const s = fe(...n);
         s && t.push(s);
       } else if (typeof n == "object")
         for (const [s, o] of Object.entries(n))
@@ -15,22 +15,22 @@ const Ee = () => typeof crypto < "u" && typeof crypto.randomUUID == "function" ?
     }
   return t.join(" ");
 };
-function De(e, t) {
+function Ae(e, t) {
   const n = { ...e };
   for (const s in t)
     if (Object.prototype.hasOwnProperty.call(t, s)) {
       const o = t[s], r = e[s];
-      o !== null && typeof o == "object" && !Array.isArray(o) && r !== null && typeof r == "object" && !Array.isArray(r) ? n[s] = De(
+      o !== null && typeof o == "object" && !Array.isArray(o) && r !== null && typeof r == "object" && !Array.isArray(r) ? n[s] = Ae(
         r,
         o
       ) : o !== void 0 && (n[s] = o);
     }
   return n;
 }
-const sn = (e, t) => {
+const rn = (e, t) => {
   const n = t.x - e.x, s = t.y - e.y;
   return Math.sqrt(n * n + s * s);
-}, rn = (e, t) => e.x >= t.x && e.x <= t.x + t.width && e.y >= t.y && e.y <= t.y + t.height, an = (e, t) => !(e.x + e.width < t.x || t.x + t.width < e.x || e.y + e.height < t.y || t.y + t.height < e.y), cn = (e, t) => Math.round(e / t) * t, ht = (e, t) => {
+}, an = (e, t) => e.x >= t.x && e.x <= t.x + t.width && e.y >= t.y && e.y <= t.y + t.height, cn = (e, t) => !(e.x + e.width < t.x || t.x + t.width < e.x || e.y + e.height < t.y || t.y + t.height < e.y), ln = (e, t) => Math.round(e / t) * t, pt = (e, t) => {
   const { x: n, y: s, width: o, height: r } = e, a = t / 2;
   return [
     { position: "nw", x: n - a, y: s - a },
@@ -50,60 +50,60 @@ const sn = (e, t) => {
     { position: "sw", x: n - a, y: s + r - a },
     { position: "w", x: n - a, y: s + r / 2 - a }
   ];
-}, Te = (e) => [...e].sort((t, n) => t.zIndex - n.zIndex), mt = (e) => e.length === 0 ? 0 : Math.max(...e.map((t) => t.zIndex)), yt = (e) => e.length === 0 ? 0 : Math.min(...e.map((t) => t.zIndex)), pt = (e, t) => {
-  const n = mt(e);
+}, Ie = (e) => [...e].sort((t, n) => t.zIndex - n.zIndex), yt = (e) => e.length === 0 ? 0 : Math.max(...e.map((t) => t.zIndex)), gt = (e) => e.length === 0 ? 0 : Math.min(...e.map((t) => t.zIndex)), ft = (e, t) => {
+  const n = yt(e);
   return e.map(
     (s) => s.id === t ? { ...s, zIndex: n + 1 } : s
   );
-}, gt = (e, t) => {
-  const n = yt(e);
+}, xt = (e, t) => {
+  const n = gt(e);
   return e.map(
     (s) => s.id === t ? { ...s, zIndex: n - 1 } : s
   );
-}, ft = (e, t) => {
-  const n = Te(e), s = n.findIndex((a) => a.id === t);
+}, Et = (e, t) => {
+  const n = Ie(e), s = n.findIndex((a) => a.id === t);
   if (s === -1 || s === n.length - 1) return e;
   const o = n[s], r = n[s + 1];
   return e.map((a) => a.id === o.id ? { ...a, zIndex: r.zIndex + 1 } : a);
-}, Et = (e, t) => {
-  const n = Te(e), s = n.findIndex((a) => a.id === t);
+}, vt = (e, t) => {
+  const n = Ie(e), s = n.findIndex((a) => a.id === t);
   if (s <= 0) return e;
   const o = n[s], r = n[s - 1];
   return e.map((a) => a.id === o.id ? { ...a, zIndex: r.zIndex - 1 } : a);
-}, xt = (e) => {
+}, wt = (e) => {
   const t = [];
   if (!e || typeof e != "object")
     return { valid: !1, errors: ["Data must be an object"] };
   const n = e;
   return typeof n.version != "string" && t.push("Missing or invalid version field"), Array.isArray(n.elements) ? n.elements.forEach((s, o) => {
-    const r = vt(s, o);
+    const r = St(s, o);
     t.push(...r);
   }) : t.push("Elements must be an array"), Array.isArray(n.connections) ? n.connections.forEach((s, o) => {
-    const r = wt(s, o);
+    const r = kt(s, o);
     t.push(...r);
   }) : t.push("Connections must be an array"), {
     valid: t.length === 0,
     errors: t
   };
-}, vt = (e, t) => {
+}, St = (e, t) => {
   const n = [], s = `Element[${t}]`;
   if (!e || typeof e != "object")
     return [`${s}: Must be an object`];
   const o = e;
   return (typeof o.id != "string" || o.id.length === 0) && n.push(`${s}: Missing or invalid id`), (typeof o.type != "string" || o.type.length === 0) && n.push(`${s}: Missing or invalid type`), (typeof o.x != "number" || isNaN(o.x)) && n.push(`${s}: Missing or invalid x coordinate`), (typeof o.y != "number" || isNaN(o.y)) && n.push(`${s}: Missing or invalid y coordinate`), (typeof o.width != "number" || isNaN(o.width) || o.width < 0) && n.push(`${s}: Missing or invalid width`), (typeof o.height != "number" || isNaN(o.height) || o.height < 0) && n.push(`${s}: Missing or invalid height`), (typeof o.zIndex != "number" || isNaN(o.zIndex)) && n.push(`${s}: Missing or invalid zIndex`), n;
-}, wt = (e, t) => {
+}, kt = (e, t) => {
   const n = [], s = `Connection[${t}]`;
   if (!e || typeof e != "object")
     return [`${s}: Must be an object`];
   const o = e;
   return (typeof o.id != "string" || o.id.length === 0) && n.push(`${s}: Missing or invalid id`), (typeof o.fromId != "string" || o.fromId.length === 0) && n.push(`${s}: Missing or invalid fromId`), (typeof o.toId != "string" || o.toId.length === 0) && n.push(`${s}: Missing or invalid toId`), n;
-}, St = "1.0.0", ln = (e, t, n) => JSON.stringify({
-  version: St,
+}, Rt = "1.0.0", dn = (e, t, n) => JSON.stringify({
+  version: Rt,
   elements: e,
   connections: t,
   metadata: n
-}, null, 2), dn = (e) => {
-  const t = JSON.parse(e), n = xt(t);
+}, null, 2), bt = (e) => {
+  const t = JSON.parse(e), n = wt(t);
   if (!n.valid)
     throw new Error(`Invalid canvas data: ${n.errors.join(", ")}`);
   return t;
@@ -111,10 +111,10 @@ const sn = (e, t) => {
   const n = e.cloneNode(!0);
   if (n.getAttribute("xmlns") || n.setAttribute("xmlns", "http://www.w3.org/2000/svg"), t?.includeStyles) {
     const o = document.createElement("style");
-    o.textContent = kt(e), n.insertBefore(o, n.firstChild);
+    o.textContent = Le(e), n.insertBefore(o, n.firstChild);
   }
   return new XMLSerializer().serializeToString(n);
-}, kt = (e) => {
+}, Le = (e) => {
   const t = /* @__PURE__ */ new Set();
   return e.querySelectorAll("*").forEach((n) => t.add(n.tagName.toLowerCase())), `
     svg { font-family: system-ui, sans-serif; }
@@ -123,6 +123,37 @@ const sn = (e, t) => {
 }, hn = (e, t, n) => {
   const s = new Blob([e], { type: n }), o = URL.createObjectURL(s), r = document.createElement("a");
   r.href = o, r.download = t, document.body.appendChild(r), r.click(), document.body.removeChild(r), URL.revokeObjectURL(o);
+}, Oe = async (e, t = {}) => {
+  const { format: n = "png", quality: s = 0.92, backgroundColor: o, scale: r = 1 } = t, a = e.getBoundingClientRect(), u = a.width * r, m = a.height * r, f = e.cloneNode(!0);
+  f.setAttribute("xmlns", "http://www.w3.org/2000/svg"), f.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
+  const h = document.createElementNS("http://www.w3.org/2000/svg", "style");
+  h.textContent = Le(e), f.insertBefore(h, f.firstChild);
+  const S = new XMLSerializer().serializeToString(f), x = new Blob([S], { type: "image/svg+xml;charset=utf-8" }), g = URL.createObjectURL(x);
+  return new Promise((l, R) => {
+    const v = new Image();
+    v.onload = () => {
+      const c = document.createElement("canvas");
+      c.width = u, c.height = m;
+      const b = c.getContext("2d");
+      if (!b) {
+        URL.revokeObjectURL(g), R(new Error("Failed to get canvas context"));
+        return;
+      }
+      const d = o ?? (n === "jpeg" ? "#ffffff" : "transparent");
+      d !== "transparent" && (b.fillStyle = d, b.fillRect(0, 0, u, m)), b.scale(r, r), b.drawImage(v, 0, 0), c.toBlob(
+        (y) => {
+          URL.revokeObjectURL(g), y ? l(y) : R(new Error("Failed to create image blob"));
+        },
+        n === "jpeg" ? "image/jpeg" : "image/png",
+        n === "jpeg" ? s : void 0
+      );
+    }, v.onerror = () => {
+      URL.revokeObjectURL(g), R(new Error("Failed to load SVG as image"));
+    }, v.src = g;
+  });
+}, mn = async (e, t, n = {}) => {
+  const { format: s = "png" } = n, o = await Oe(e, n), r = URL.createObjectURL(o), a = document.createElement("a");
+  a.href = r, a.download = `${t}.${s}`, document.body.appendChild(a), a.click(), document.body.removeChild(a), URL.revokeObjectURL(r);
 }, ce = {
   name: "light",
   colors: {
@@ -188,7 +219,7 @@ const sn = (e, t) => {
     element: "0 2px 4px rgba(0,0,0,0.1)",
     handle: "0 1px 2px rgba(0,0,0,0.1)"
   }
-}, Rt = {
+}, It = {
   name: "dark",
   colors: {
     background: "#1e1e1e",
@@ -233,21 +264,21 @@ const sn = (e, t) => {
     element: "0 2px 4px rgba(0,0,0,0.3)",
     handle: "0 1px 2px rgba(0,0,0,0.3)"
   }
-}, Ce = ye({
+}, _e = ge({
   theme: ce,
   themeName: "light"
-}), F = () => {
-  const e = me(Ce);
+}), te = () => {
+  const e = ye(_e);
   if (!e)
     throw new Error("useTheme must be used within a ThemeProvider");
   return e;
-}, It = ({ children: e, theme: t = "light" }) => {
-  const n = Z(() => t === "light" ? { theme: ce, themeName: "light" } : t === "dark" ? { theme: Rt, themeName: "dark" } : {
-    theme: De(ce, t),
+}, Tt = ({ children: e, theme: t = "light" }) => {
+  const n = V(() => t === "light" ? { theme: ce, themeName: "light" } : t === "dark" ? { theme: It, themeName: "dark" } : {
+    theme: Ae(ce, t),
     themeName: "custom"
   }, [t]);
-  return v.createElement(Ce.Provider, { value: n }, e);
-}, mn = (e) => ({
+  return E.createElement(_e.Provider, { value: n }, e);
+}, pn = (e) => ({
   "--canvas-bg": e.colors.background,
   "--canvas-surface": e.colors.surface,
   "--canvas-border": e.colors.border,
@@ -287,12 +318,12 @@ const sn = (e, t) => {
   "--canvas-shadow-lg": e.shadows.lg,
   "--canvas-shadow-element": e.shadows.element,
   "--canvas-shadow-handle": e.shadows.handle
-}), Ae = {
+}), Pe = {
   zoom: 1,
   pan: { x: 0, y: 0 },
   minZoom: 0.1,
   maxZoom: 5
-}, Tt = (e, t) => {
+}, zt = (e, t) => {
   switch (t.type) {
     case "SET_ZOOM": {
       const n = Math.max(e.minZoom, Math.min(e.maxZoom, t.payload));
@@ -324,7 +355,7 @@ const sn = (e, t) => {
         }
       };
     case "RESET":
-      return { ...Ae, minZoom: e.minZoom, maxZoom: e.maxZoom };
+      return { ...Pe, minZoom: e.minZoom, maxZoom: e.maxZoom };
     case "SET_CONSTRAINTS":
       return {
         ...e,
@@ -334,8 +365,8 @@ const sn = (e, t) => {
     default:
       return e;
   }
-}, _e = ye(null), de = () => {
-  const e = me(_e);
+}, $e = ge(null), he = () => {
+  const e = ye($e);
   if (!e)
     throw new Error("useViewport must be used within a ViewportProvider");
   return e;
@@ -343,73 +374,73 @@ const sn = (e, t) => {
   children: e,
   initialViewport: t
 }) => {
-  const [n, s] = xe(Tt, {
-    ...Ae,
+  const [n, s] = ve(zt, {
+    ...Pe,
     ...t
-  }), o = c((i) => {
-    s({ type: "SET_ZOOM", payload: i });
-  }, []), r = c(() => {
+  }), o = i((l) => {
+    s({ type: "SET_ZOOM", payload: l });
+  }, []), r = i(() => {
     s({ type: "ZOOM_IN" });
-  }, []), a = c(() => {
+  }, []), a = i(() => {
     s({ type: "ZOOM_OUT" });
-  }, []), l = c((i, R) => {
-    s({ type: "ZOOM_TO_FIT", payload: { bounds: i, padding: R } });
-  }, []), u = c((i) => {
-    s({ type: "SET_PAN", payload: i });
-  }, []), g = c((i) => {
-    s({ type: "PAN_BY", payload: i });
-  }, []), h = c(() => {
+  }, []), u = i((l, R) => {
+    s({ type: "ZOOM_TO_FIT", payload: { bounds: l, padding: R } });
+  }, []), m = i((l) => {
+    s({ type: "SET_PAN", payload: l });
+  }, []), f = i((l) => {
+    s({ type: "PAN_BY", payload: l });
+  }, []), h = i(() => {
     s({ type: "RESET" });
-  }, []), x = c(
-    (i) => {
-      s({ type: "SET_CONSTRAINTS", payload: i });
+  }, []), w = i(
+    (l) => {
+      s({ type: "SET_CONSTRAINTS", payload: l });
     },
     []
-  ), w = c(
-    (i) => ({
-      x: (i.x - n.pan.x) / n.zoom,
-      y: (i.y - n.pan.y) / n.zoom
+  ), S = i(
+    (l) => ({
+      x: (l.x - n.pan.x) / n.zoom,
+      y: (l.y - n.pan.y) / n.zoom
     }),
     [n.zoom, n.pan]
-  ), f = c(
-    (i) => ({
-      x: i.x * n.zoom + n.pan.x,
-      y: i.y * n.zoom + n.pan.y
+  ), x = i(
+    (l) => ({
+      x: l.x * n.zoom + n.pan.x,
+      y: l.y * n.zoom + n.pan.y
     }),
     [n.zoom, n.pan]
-  ), E = Z(
+  ), g = V(
     () => ({
       viewport: n,
       setZoom: o,
       zoomIn: r,
       zoomOut: a,
-      zoomToFit: l,
-      setPan: u,
-      panBy: g,
+      zoomToFit: u,
+      setPan: m,
+      panBy: f,
       resetViewport: h,
-      setConstraints: x,
-      screenToCanvas: w,
-      canvasToScreen: f
+      setConstraints: w,
+      screenToCanvas: S,
+      canvasToScreen: x
     }),
     [
       n,
       o,
       r,
       a,
-      l,
       u,
-      g,
+      m,
+      f,
       h,
-      x,
       w,
-      f
+      S,
+      x
     ]
   );
-  return v.createElement(_e.Provider, { value: E }, e);
-}, zt = {
+  return E.createElement($e.Provider, { value: g }, e);
+}, Ct = {
   selectedIds: /* @__PURE__ */ new Set(),
   lastSelectedId: null
-}, bt = (e, t) => {
+}, Nt = (e, t) => {
   switch (t.type) {
     case "SELECT":
       return {
@@ -446,7 +477,7 @@ const sn = (e, t) => {
       });
     }
     case "CLEAR_SELECTION":
-      return zt;
+      return Ct;
     case "SELECT_ALL":
       return {
         selectedIds: new Set(t.payload),
@@ -455,71 +486,71 @@ const sn = (e, t) => {
     default:
       return e;
   }
-}, Oe = ye(null), we = () => {
-  const e = me(Oe);
+}, Be = ge(null), we = () => {
+  const e = ye(Be);
   if (!e)
     throw new Error("useSelection must be used within a SelectionProvider");
   return e;
-}, Nt = ({
+}, Dt = ({
   children: e,
   initialSelection: t,
   onSelectionChange: n
 }) => {
-  const [s, o] = xe(bt, {
+  const [s, o] = ve(Nt, {
     selectedIds: new Set(t ?? []),
     lastSelectedId: t?.[t.length - 1] ?? null
-  }), r = Z(() => Array.from(s.selectedIds), [s.selectedIds]);
-  v.useEffect(() => {
+  }), r = V(() => Array.from(s.selectedIds), [s.selectedIds]);
+  E.useEffect(() => {
     n?.(r);
   }, [r, n]);
-  const a = c(
-    (i) => s.selectedIds.has(i),
+  const a = i(
+    (l) => s.selectedIds.has(l),
     [s.selectedIds]
-  ), l = c((i) => {
-    o({ type: "SELECT", payload: i });
-  }, []), u = c((i) => {
-    o({ type: "SELECT_MULTIPLE", payload: i });
-  }, []), g = c((i) => {
-    o({ type: "ADD_TO_SELECTION", payload: i });
-  }, []), h = c((i) => {
-    o({ type: "REMOVE_FROM_SELECTION", payload: i });
-  }, []), x = c((i) => {
-    o({ type: "TOGGLE_SELECTION", payload: i });
-  }, []), w = c(() => {
+  ), u = i((l) => {
+    o({ type: "SELECT", payload: l });
+  }, []), m = i((l) => {
+    o({ type: "SELECT_MULTIPLE", payload: l });
+  }, []), f = i((l) => {
+    o({ type: "ADD_TO_SELECTION", payload: l });
+  }, []), h = i((l) => {
+    o({ type: "REMOVE_FROM_SELECTION", payload: l });
+  }, []), w = i((l) => {
+    o({ type: "TOGGLE_SELECTION", payload: l });
+  }, []), S = i(() => {
     o({ type: "CLEAR_SELECTION" });
-  }, []), f = c((i) => {
-    o({ type: "SELECT_ALL", payload: i });
-  }, []), E = Z(
+  }, []), x = i((l) => {
+    o({ type: "SELECT_ALL", payload: l });
+  }, []), g = V(
     () => ({
       selectedIds: r,
       lastSelectedId: s.lastSelectedId,
       selectionCount: s.selectedIds.size,
       hasSelection: s.selectedIds.size > 0,
       isSelected: a,
-      select: l,
-      selectMultiple: u,
-      addToSelection: g,
+      select: u,
+      selectMultiple: m,
+      addToSelection: f,
       removeFromSelection: h,
-      toggleSelection: x,
-      clearSelection: w,
-      selectAll: f
+      toggleSelection: w,
+      clearSelection: S,
+      selectAll: x
     }),
     [
       r,
       s.lastSelectedId,
       s.selectedIds.size,
       a,
-      l,
       u,
-      g,
+      m,
+      f,
       h,
-      x,
       w,
-      f
+      S,
+      x
     ]
   );
-  return v.createElement(Oe.Provider, { value: E }, e);
-}, Dt = (e, t) => {
+  return E.createElement(Be.Provider, { value: g }, e);
+}, At = (e, t) => {
   switch (t.type) {
     case "PUSH": {
       const n = [...e.past, e.present];
@@ -571,19 +602,19 @@ const sn = (e, t) => {
     default:
       return e;
   }
-}, Le = ye(null), Ct = () => {
-  const e = me(Le);
+}, We = ge(null), Lt = () => {
+  const e = ye(We);
   if (!e)
     throw new Error("useHistory must be used within a HistoryProvider");
   return e;
-}, At = ({
+}, Ot = ({
   children: e,
   initialElements: t = [],
   initialConnections: n = [],
   maxHistorySize: s = 50,
   onStateChange: o
 }) => {
-  const [r, a] = xe(Dt, {
+  const [r, a] = ve(At, {
     past: [],
     present: {
       elements: t,
@@ -593,52 +624,52 @@ const sn = (e, t) => {
     future: [],
     maxHistorySize: s
   });
-  v.useEffect(() => {
+  E.useEffect(() => {
     o?.(r.present.elements, r.present.connections);
   }, [r.present, o]);
-  const l = c((E, i) => {
+  const u = i((g, l) => {
     a({
       type: "PUSH",
       payload: {
-        elements: E,
-        connections: i,
+        elements: g,
+        connections: l,
         timestamp: Date.now()
       }
     });
-  }, []), u = c(() => {
+  }, []), m = i(() => {
     a({ type: "UNDO" });
-  }, []), g = c(() => {
+  }, []), f = i(() => {
     a({ type: "REDO" });
-  }, []), h = c(() => {
+  }, []), h = i(() => {
     a({ type: "CLEAR" });
-  }, []), x = c((E, i) => {
+  }, []), w = i((g, l) => {
     a({
       type: "SET_PRESENT",
       payload: {
-        elements: E,
-        connections: i,
+        elements: g,
+        connections: l,
         timestamp: Date.now()
       }
     });
-  }, []), w = c((E) => {
-    a({ type: "SET_MAX_SIZE", payload: E });
-  }, []), f = Z(
+  }, []), S = i((g) => {
+    a({ type: "SET_MAX_SIZE", payload: g });
+  }, []), x = V(
     () => ({
       canUndo: r.past.length > 0,
       canRedo: r.future.length > 0,
       historySize: r.past.length,
       futureSize: r.future.length,
       present: r.present,
-      pushState: l,
-      undo: u,
-      redo: g,
+      pushState: u,
+      undo: m,
+      redo: f,
       clearHistory: h,
-      setPresent: x,
-      setMaxHistorySize: w
+      setPresent: w,
+      setMaxHistorySize: S
     }),
-    [r.past.length, r.future.length, r.present, l, u, g, h, x, w]
+    [r.past.length, r.future.length, r.present, u, m, f, h, w, S]
   );
-  return v.createElement(Le.Provider, { value: f }, e);
+  return E.createElement(We.Provider, { value: x }, e);
 }, _t = {
   width: 800,
   height: 600,
@@ -649,7 +680,7 @@ const sn = (e, t) => {
     visible: !1
   },
   readonly: !1
-}, Ot = (e, t) => {
+}, Pt = (e, t) => {
   switch (t.type) {
     // Element actions
     case "ADD_ELEMENT":
@@ -727,22 +758,22 @@ const sn = (e, t) => {
     case "BRING_TO_FRONT":
       return {
         ...e,
-        elements: pt(e.elements, t.payload)
+        elements: ft(e.elements, t.payload)
       };
     case "SEND_TO_BACK":
       return {
         ...e,
-        elements: gt(e.elements, t.payload)
+        elements: xt(e.elements, t.payload)
       };
     case "MOVE_UP":
       return {
         ...e,
-        elements: ft(e.elements, t.payload)
+        elements: Et(e.elements, t.payload)
       };
     case "MOVE_DOWN":
       return {
         ...e,
-        elements: Et(e.elements, t.payload)
+        elements: vt(e.elements, t.payload)
       };
     case "SET_ELEMENTS":
       return {
@@ -794,171 +825,171 @@ const sn = (e, t) => {
     default:
       return e;
   }
-}, Pe = ye(null), ge = () => {
-  const e = me(Pe);
+}, Ue = ge(null), me = () => {
+  const e = ye(Ue);
   if (!e)
     throw new Error("useCanvas must be used within a CanvasProvider");
   return e;
-}, Lt = ({
+}, $t = ({
   children: e,
   initialElements: t = [],
   initialConnections: n = [],
   config: s,
   onChange: o
 }) => {
-  const [r, a] = xe(Ot, {
+  const [r, a] = ve(Pt, {
     elements: t,
     connections: n,
     config: { ..._t, ...s }
   });
-  v.useEffect(() => {
+  E.useEffect(() => {
     o?.(r.elements, r.connections);
   }, [r.elements, r.connections, o]);
-  const l = c(
-    (m) => r.elements.find((M) => M.id === m),
+  const u = i(
+    (p) => r.elements.find((T) => T.id === p),
     [r.elements]
-  ), u = c(
-    (m) => r.elements.filter((M) => M.type === m),
+  ), m = i(
+    (p) => r.elements.filter((T) => T.type === p),
     [r.elements]
-  ), g = c(
-    (m) => {
-      const M = m.id ?? Ee(), _ = r.elements.length > 0 ? Math.max(...r.elements.map((U) => U.zIndex)) : 0;
+  ), f = i(
+    (p) => {
+      const T = p.id ?? Ee(), _ = r.elements.length > 0 ? Math.max(...r.elements.map((Z) => Z.zIndex)) : 0;
       return a({
         type: "ADD_ELEMENT",
-        payload: { ...m, id: M, zIndex: m.zIndex ?? _ + 1 }
-      }), M;
+        payload: { ...p, id: T, zIndex: p.zIndex ?? _ + 1 }
+      }), T;
     },
     [r.elements]
-  ), h = c(
-    (m) => {
-      const M = r.elements.length > 0 ? Math.max(...r.elements.map((U) => U.zIndex)) : 0, _ = m.map((U, ne) => ({
-        ...U,
-        id: U.id ?? Ee(),
-        zIndex: U.zIndex ?? M + 1 + ne
+  ), h = i(
+    (p) => {
+      const T = r.elements.length > 0 ? Math.max(...r.elements.map((Z) => Z.zIndex)) : 0, _ = p.map((Z, G) => ({
+        ...Z,
+        id: Z.id ?? Ee(),
+        zIndex: Z.zIndex ?? T + 1 + G
       }));
-      return a({ type: "ADD_ELEMENTS", payload: _ }), _.map((U) => U.id);
+      return a({ type: "ADD_ELEMENTS", payload: _ }), _.map((Z) => Z.id);
     },
     [r.elements]
-  ), x = c((m, M) => {
-    a({ type: "UPDATE_ELEMENT", payload: { id: m, updates: M } });
-  }, []), w = c((m, M) => {
-    a({ type: "UPDATE_ELEMENTS", payload: { ids: m, updates: M } });
-  }, []), f = c((m) => {
-    a({ type: "REMOVE_ELEMENT", payload: m });
-  }, []), E = c((m) => {
-    a({ type: "REMOVE_ELEMENTS", payload: m });
-  }, []), i = c((m, M, _) => {
-    a({ type: "MOVE_ELEMENT", payload: { id: m, x: M, y: _ } });
-  }, []), R = c((m, M, _) => {
-    a({ type: "MOVE_ELEMENTS", payload: { ids: m, deltaX: M, deltaY: _ } });
-  }, []), k = c(
-    (m, M, _, U, ne) => {
-      a({ type: "RESIZE_ELEMENT", payload: { id: m, width: M, height: _, x: U, y: ne } });
+  ), w = i((p, T) => {
+    a({ type: "UPDATE_ELEMENT", payload: { id: p, updates: T } });
+  }, []), S = i((p, T) => {
+    a({ type: "UPDATE_ELEMENTS", payload: { ids: p, updates: T } });
+  }, []), x = i((p) => {
+    a({ type: "REMOVE_ELEMENT", payload: p });
+  }, []), g = i((p) => {
+    a({ type: "REMOVE_ELEMENTS", payload: p });
+  }, []), l = i((p, T, _) => {
+    a({ type: "MOVE_ELEMENT", payload: { id: p, x: T, y: _ } });
+  }, []), R = i((p, T, _) => {
+    a({ type: "MOVE_ELEMENTS", payload: { ids: p, deltaX: T, deltaY: _ } });
+  }, []), v = i(
+    (p, T, _, Z, G) => {
+      a({ type: "RESIZE_ELEMENT", payload: { id: p, width: T, height: _, x: Z, y: G } });
     },
     []
-  ), d = c((m) => {
-    a({ type: "BRING_TO_FRONT", payload: m });
-  }, []), I = c((m) => {
-    a({ type: "SEND_TO_BACK", payload: m });
-  }, []), y = c((m) => {
-    a({ type: "MOVE_UP", payload: m });
-  }, []), p = c((m) => {
-    a({ type: "MOVE_DOWN", payload: m });
-  }, []), S = c((m) => {
-    a({ type: "SET_ELEMENTS", payload: m });
-  }, []), T = c(
-    (m) => r.connections.find((M) => M.id === m),
+  ), c = i((p) => {
+    a({ type: "BRING_TO_FRONT", payload: p });
+  }, []), b = i((p) => {
+    a({ type: "SEND_TO_BACK", payload: p });
+  }, []), d = i((p) => {
+    a({ type: "MOVE_UP", payload: p });
+  }, []), y = i((p) => {
+    a({ type: "MOVE_DOWN", payload: p });
+  }, []), k = i((p) => {
+    a({ type: "SET_ELEMENTS", payload: p });
+  }, []), I = i(
+    (p) => r.connections.find((T) => T.id === p),
     [r.connections]
-  ), D = c(
-    (m) => r.connections.filter(
-      (M) => M.fromId === m || M.toId === m
+  ), C = i(
+    (p) => r.connections.filter(
+      (T) => T.fromId === p || T.toId === p
     ),
     [r.connections]
-  ), b = c(
-    (m) => {
-      const M = m.id ?? Ee();
+  ), M = i(
+    (p) => {
+      const T = p.id ?? Ee();
       return a({
         type: "ADD_CONNECTION",
-        payload: { ...m, id: M }
-      }), M;
+        payload: { ...p, id: T }
+      }), T;
     },
     []
-  ), $ = c((m, M) => {
-    a({ type: "UPDATE_CONNECTION", payload: { id: m, updates: M } });
-  }, []), P = c((m) => {
-    a({ type: "REMOVE_CONNECTION", payload: m });
-  }, []), L = c((m) => {
-    a({ type: "SET_CONNECTIONS", payload: m });
-  }, []), A = c((m) => {
-    a({ type: "UPDATE_CONFIG", payload: m });
-  }, []), X = c(() => {
+  ), B = i((p, T) => {
+    a({ type: "UPDATE_CONNECTION", payload: { id: p, updates: T } });
+  }, []), $ = i((p) => {
+    a({ type: "REMOVE_CONNECTION", payload: p });
+  }, []), L = i((p) => {
+    a({ type: "SET_CONNECTIONS", payload: p });
+  }, []), O = i((p) => {
+    a({ type: "UPDATE_CONFIG", payload: p });
+  }, []), W = i(() => {
     a({ type: "CLEAR_CANVAS" });
-  }, []), K = c((m, M) => {
-    a({ type: "LOAD_STATE", payload: { elements: m, connections: M } });
-  }, []), oe = Z(
+  }, []), F = i((p, T) => {
+    a({ type: "LOAD_STATE", payload: { elements: p, connections: T } });
+  }, []), Y = V(
     () => ({
       elements: r.elements,
       connections: r.connections,
       config: r.config,
-      getElementById: l,
-      getElementsByType: u,
-      addElement: g,
+      getElementById: u,
+      getElementsByType: m,
+      addElement: f,
       addElements: h,
-      updateElement: x,
-      updateElements: w,
-      removeElement: f,
-      removeElements: E,
-      moveElement: i,
+      updateElement: w,
+      updateElements: S,
+      removeElement: x,
+      removeElements: g,
+      moveElement: l,
       moveElements: R,
-      resizeElement: k,
-      bringToFront: d,
-      sendToBack: I,
-      moveUp: y,
-      moveDown: p,
-      setElements: S,
-      getConnectionById: T,
-      getConnectionsForElement: D,
-      addConnection: b,
-      updateConnection: $,
-      removeConnection: P,
+      resizeElement: v,
+      bringToFront: c,
+      sendToBack: b,
+      moveUp: d,
+      moveDown: y,
+      setElements: k,
+      getConnectionById: I,
+      getConnectionsForElement: C,
+      addConnection: M,
+      updateConnection: B,
+      removeConnection: $,
       setConnections: L,
-      updateConfig: A,
-      clearCanvas: X,
-      loadState: K
+      updateConfig: O,
+      clearCanvas: W,
+      loadState: F
     }),
     [
       r.elements,
       r.connections,
       r.config,
-      l,
       u,
-      g,
-      h,
-      x,
-      w,
+      m,
       f,
-      E,
-      i,
-      R,
-      k,
-      d,
-      I,
-      y,
-      p,
+      h,
+      w,
       S,
-      T,
-      D,
+      x,
+      g,
+      l,
+      R,
+      v,
+      c,
       b,
+      d,
+      y,
+      k,
+      I,
+      C,
+      M,
+      B,
       $,
-      P,
       L,
-      A,
-      X,
-      K
+      O,
+      W,
+      F
     ]
   );
-  return v.createElement(Pe.Provider, { value: oe }, e);
-}, Pt = ({
+  return E.createElement(Ue.Provider, { value: Y }, e);
+}, Bt = ({
   children: e,
   initialElements: t = [],
   initialConnections: n = [],
@@ -966,31 +997,31 @@ const sn = (e, t) => {
   theme: o = "light",
   initialViewport: r,
   maxHistorySize: a = 50,
-  onElementsChange: l,
-  onSelectionChange: u,
-  elements: g,
+  onElementsChange: u,
+  onSelectionChange: m,
+  elements: f,
   connections: h,
-  selectedIds: x
+  selectedIds: w
 }) => {
-  const w = g ?? t, f = h ?? n;
-  return /* @__PURE__ */ te(It, { theme: o, children: /* @__PURE__ */ te(Mt, { initialViewport: r, children: /* @__PURE__ */ te(
-    Nt,
+  const S = f ?? t, x = h ?? n;
+  return /* @__PURE__ */ oe(Tt, { theme: o, children: /* @__PURE__ */ oe(Mt, { initialViewport: r, children: /* @__PURE__ */ oe(
+    Dt,
     {
-      initialSelection: x,
-      onSelectionChange: u,
-      children: /* @__PURE__ */ te(
-        At,
+      initialSelection: w,
+      onSelectionChange: m,
+      children: /* @__PURE__ */ oe(
+        Ot,
         {
-          initialElements: w,
-          initialConnections: f,
+          initialElements: S,
+          initialConnections: x,
           maxHistorySize: a,
-          children: /* @__PURE__ */ te(
-            Lt,
+          children: /* @__PURE__ */ oe(
+            $t,
             {
-              initialElements: w,
-              initialConnections: f,
+              initialElements: S,
+              initialConnections: x,
               config: s,
-              onChange: l,
+              onChange: u,
               children: e
             }
           )
@@ -998,95 +1029,95 @@ const sn = (e, t) => {
       )
     }
   ) }) });
-}, $e = (e = {}) => {
+}, Ze = (e = {}) => {
   const {
     onDragStart: t,
     onDrag: n,
     onDragEnd: s,
     disabled: o = !1,
     threshold: r = 3
-  } = e, [a, l] = ve({
+  } = e, [a, u] = ue({
     isDragging: !1,
     startPosition: null,
     currentPosition: null,
     delta: { x: 0, y: 0 }
-  }), u = re(null), g = re(!1), { screenToCanvas: h } = de(), x = c(
-    (k) => {
-      if ("touches" in k) {
-        const d = k.touches[0] || k.changedTouches[0];
-        return h({ x: d.clientX, y: d.clientY });
+  }), m = se(null), f = se(!1), { screenToCanvas: h } = he(), w = i(
+    (v) => {
+      if ("touches" in v) {
+        const c = v.touches[0] || v.changedTouches[0];
+        return h({ x: c.clientX, y: c.clientY });
       }
-      return h({ x: k.clientX, y: k.clientY });
+      return h({ x: v.clientX, y: v.clientY });
     },
     [h]
-  ), w = c(
-    (k) => {
-      if (!u.current) return;
-      const d = x(k), I = {
-        x: d.x - u.current.x,
-        y: d.y - u.current.y
+  ), S = i(
+    (v) => {
+      if (!m.current) return;
+      const c = w(v), b = {
+        x: c.x - m.current.x,
+        y: c.y - m.current.y
       };
-      if (!g.current) {
-        if (Math.sqrt(I.x ** 2 + I.y ** 2) < r) return;
-        g.current = !0, t?.(u.current);
+      if (!f.current) {
+        if (Math.sqrt(b.x ** 2 + b.y ** 2) < r) return;
+        f.current = !0, t?.(m.current);
       }
-      l({
+      u({
         isDragging: !0,
-        startPosition: u.current,
-        currentPosition: d,
-        delta: I
-      }), n?.(d, I);
+        startPosition: m.current,
+        currentPosition: c,
+        delta: b
+      }), n?.(c, b);
     },
-    [x, r, t, n]
-  ), f = c(
-    (k) => {
-      if (!u.current) return;
-      const d = x(k), I = {
-        x: d.x - u.current.x,
-        y: d.y - u.current.y
+    [w, r, t, n]
+  ), x = i(
+    (v) => {
+      if (!m.current) return;
+      const c = w(v), b = {
+        x: c.x - m.current.x,
+        y: c.y - m.current.y
       };
-      g.current && s?.(d, I), l({
+      f.current && s?.(c, b), u({
         isDragging: !1,
         startPosition: null,
         currentPosition: null,
         delta: { x: 0, y: 0 }
-      }), u.current = null, g.current = !1, document.removeEventListener("mousemove", w), document.removeEventListener("mouseup", f), document.removeEventListener("touchmove", w), document.removeEventListener("touchend", f);
+      }), m.current = null, f.current = !1, document.removeEventListener("mousemove", S), document.removeEventListener("mouseup", x), document.removeEventListener("touchmove", S), document.removeEventListener("touchend", x);
     },
-    [x, w, s]
-  ), E = c(
-    (k, d) => {
+    [w, S, s]
+  ), g = i(
+    (v, c) => {
       if (o) return;
-      const I = h({ x: k, y: d });
-      u.current = I, g.current = !1, l({
+      const b = h({ x: v, y: c });
+      m.current = b, f.current = !1, u({
         isDragging: !1,
-        startPosition: I,
-        currentPosition: I,
+        startPosition: b,
+        currentPosition: b,
         delta: { x: 0, y: 0 }
-      }), document.addEventListener("mousemove", w), document.addEventListener("mouseup", f), document.addEventListener("touchmove", w, { passive: !1 }), document.addEventListener("touchend", f);
+      }), document.addEventListener("mousemove", S), document.addEventListener("mouseup", x), document.addEventListener("touchmove", S, { passive: !1 }), document.addEventListener("touchend", x);
     },
-    [o, h, w, f]
-  ), i = c(
-    (k) => {
-      k.button === 0 && (k.preventDefault(), k.stopPropagation(), E(k.clientX, k.clientY));
+    [o, h, S, x]
+  ), l = i(
+    (v) => {
+      v.button === 0 && (v.preventDefault(), v.stopPropagation(), g(v.clientX, v.clientY));
     },
-    [E]
-  ), R = c(
-    (k) => {
-      if (k.touches.length !== 1) return;
-      const d = k.touches[0];
-      E(d.clientX, d.clientY);
+    [g]
+  ), R = i(
+    (v) => {
+      if (v.touches.length !== 1) return;
+      const c = v.touches[0];
+      g(c.clientX, c.clientY);
     },
-    [E]
+    [g]
   );
   return {
     dragState: a,
     handlers: {
-      onMouseDown: i,
+      onMouseDown: l,
       onTouchStart: R
     },
     isDragging: a.isDragging
   };
-}, $t = (e = {}) => {
+}, Wt = (e = {}) => {
   const {
     onResizeStart: t,
     onResize: n,
@@ -1094,233 +1125,233 @@ const sn = (e, t) => {
     disabled: o = !1,
     minWidth: r = 20,
     minHeight: a = 20,
-    maxWidth: l = 1 / 0,
-    maxHeight: u = 1 / 0,
-    maintainAspectRatio: g = !1,
+    maxWidth: u = 1 / 0,
+    maxHeight: m = 1 / 0,
+    maintainAspectRatio: f = !1,
     aspectRatio: h
-  } = e, [x, w] = ve({
+  } = e, [w, S] = ue({
     isResizing: !1,
     handle: null,
     startBounds: null,
     currentBounds: null
-  }), f = re(null), { screenToCanvas: E } = de(), i = c(
-    (y) => {
-      if ("touches" in y) {
-        const p = y.touches[0] || y.changedTouches[0];
-        return E({ x: p.clientX, y: p.clientY });
+  }), x = se(null), { screenToCanvas: g } = he(), l = i(
+    (d) => {
+      if ("touches" in d) {
+        const y = d.touches[0] || d.changedTouches[0];
+        return g({ x: y.clientX, y: y.clientY });
       }
-      return E({ x: y.clientX, y: y.clientY });
+      return g({ x: d.clientX, y: d.clientY });
     },
-    [E]
-  ), R = c(
-    (y) => {
-      if (!f.current)
+    [g]
+  ), R = i(
+    (d) => {
+      if (!x.current)
         return { x: 0, y: 0, width: 0, height: 0 };
-      const { position: p, bounds: S, handle: T } = f.current, D = y.x - p.x, b = y.y - p.y;
-      let $ = S.x, P = S.y, L = S.width, A = S.height;
-      switch (T) {
+      const { position: y, bounds: k, handle: I } = x.current, C = d.x - y.x, M = d.y - y.y;
+      let B = k.x, $ = k.y, L = k.width, O = k.height;
+      switch (I) {
         case "nw":
-          $ = S.x + D, P = S.y + b, L = S.width - D, A = S.height - b;
+          B = k.x + C, $ = k.y + M, L = k.width - C, O = k.height - M;
           break;
         case "n":
-          P = S.y + b, A = S.height - b;
+          $ = k.y + M, O = k.height - M;
           break;
         case "ne":
-          P = S.y + b, L = S.width + D, A = S.height - b;
+          $ = k.y + M, L = k.width + C, O = k.height - M;
           break;
         case "e":
-          L = S.width + D;
+          L = k.width + C;
           break;
         case "se":
-          L = S.width + D, A = S.height + b;
+          L = k.width + C, O = k.height + M;
           break;
         case "s":
-          A = S.height + b;
+          O = k.height + M;
           break;
         case "sw":
-          $ = S.x + D, L = S.width - D, A = S.height + b;
+          B = k.x + C, L = k.width - C, O = k.height + M;
           break;
         case "w":
-          $ = S.x + D, L = S.width - D;
+          B = k.x + C, L = k.width - C;
           break;
       }
-      if (L < r && (T.includes("w") && ($ = S.x + S.width - r), L = r), A < a && (T.includes("n") && (P = S.y + S.height - a), A = a), L > l && (L = l), A > u && (A = u), g && f.current.aspectRatio) {
-        const X = f.current.aspectRatio;
-        L / A > X ? L = A * X : A = L / X;
+      if (L < r && (I.includes("w") && (B = k.x + k.width - r), L = r), O < a && (I.includes("n") && ($ = k.y + k.height - a), O = a), L > u && (L = u), O > m && (O = m), f && x.current.aspectRatio) {
+        const W = x.current.aspectRatio;
+        L / O > W ? L = O * W : O = L / W;
       }
-      return { x: $, y: P, width: L, height: A };
+      return { x: B, y: $, width: L, height: O };
     },
-    [r, a, l, u, g]
-  ), k = c(
-    (y) => {
-      if (!f.current) return;
-      const p = i(y), S = R(p);
-      w((T) => ({
-        ...T,
-        currentBounds: S
-      })), n?.(S);
+    [r, a, u, m, f]
+  ), v = i(
+    (d) => {
+      if (!x.current) return;
+      const y = l(d), k = R(y);
+      S((I) => ({
+        ...I,
+        currentBounds: k
+      })), n?.(k);
     },
-    [i, R, n]
-  ), d = c(
-    (y) => {
-      if (!f.current) return;
-      const p = i(y), S = R(p);
-      s?.(S), w({
+    [l, R, n]
+  ), c = i(
+    (d) => {
+      if (!x.current) return;
+      const y = l(d), k = R(y);
+      s?.(k), S({
         isResizing: !1,
         handle: null,
         startBounds: null,
         currentBounds: null
-      }), f.current = null, document.removeEventListener("mousemove", k), document.removeEventListener("mouseup", d), document.removeEventListener("touchmove", k), document.removeEventListener("touchend", d);
+      }), x.current = null, document.removeEventListener("mousemove", v), document.removeEventListener("mouseup", c), document.removeEventListener("touchmove", v), document.removeEventListener("touchend", c);
     },
-    [i, R, k, s]
-  ), I = c(
-    (y, p, S) => {
+    [l, R, v, s]
+  ), b = i(
+    (d, y, k) => {
       if (o) return;
-      S.preventDefault(), S.stopPropagation();
-      const T = "touches" in S ? S.touches[0].clientX : S.clientX, D = "touches" in S ? S.touches[0].clientY : S.clientY, b = E({ x: T, y: D });
-      f.current = {
-        position: b,
-        bounds: p,
-        handle: y,
-        aspectRatio: h ?? p.width / p.height
-      }, w({
+      k.preventDefault(), k.stopPropagation();
+      const I = "touches" in k ? k.touches[0].clientX : k.clientX, C = "touches" in k ? k.touches[0].clientY : k.clientY, M = g({ x: I, y: C });
+      x.current = {
+        position: M,
+        bounds: y,
+        handle: d,
+        aspectRatio: h ?? y.width / y.height
+      }, S({
         isResizing: !0,
-        handle: y,
-        startBounds: p,
-        currentBounds: p
-      }), t?.(y), document.addEventListener("mousemove", k), document.addEventListener("mouseup", d), document.addEventListener("touchmove", k, { passive: !1 }), document.addEventListener("touchend", d);
+        handle: d,
+        startBounds: y,
+        currentBounds: y
+      }), t?.(d), document.addEventListener("mousemove", v), document.addEventListener("mouseup", c), document.addEventListener("touchmove", v, { passive: !1 }), document.addEventListener("touchend", c);
     },
     [
       o,
-      E,
+      g,
       h,
       t,
-      k,
-      d
+      v,
+      c
     ]
   );
   return {
-    resizeState: x,
-    startResize: I,
-    isResizing: x.isResizing
+    resizeState: w,
+    startResize: b,
+    isResizing: w.isResizing
   };
-}, Be = (e = {}) => {
+}, Xe = (e = {}) => {
   const {
     onRotateStart: t,
     onRotate: n,
     onRotateEnd: s,
     disabled: o = !1,
     snapAngle: r
-  } = e, [a, l] = ve({
+  } = e, [a, u] = ue({
     isRotating: !1,
     startAngle: null,
     currentAngle: null,
     deltaAngle: 0
-  }), u = re(null), { screenToCanvas: g } = de(), h = c(
+  }), m = se(null), { screenToCanvas: f } = he(), h = i(
     (R) => {
       if ("touches" in R) {
-        const k = R.touches[0] || R.changedTouches[0];
-        return g({ x: k.clientX, y: k.clientY });
+        const v = R.touches[0] || R.changedTouches[0];
+        return f({ x: v.clientX, y: v.clientY });
       }
-      return g({ x: R.clientX, y: R.clientY });
+      return f({ x: R.clientX, y: R.clientY });
     },
-    [g]
-  ), x = c((R, k) => {
-    const d = k.x - R.x, I = k.y - R.y;
-    return Math.atan2(I, d) * (180 / Math.PI);
-  }, []), w = c(
+    [f]
+  ), w = i((R, v) => {
+    const c = v.x - R.x, b = v.y - R.y;
+    return Math.atan2(b, c) * (180 / Math.PI);
+  }, []), S = i(
     (R) => r ? Math.round(R / r) * r : R,
     [r]
-  ), f = c(
+  ), x = i(
     (R) => {
-      if (!u.current || o) return;
-      const k = h(R), { center: d, startMouseAngle: I, initialRotation: y } = u.current;
-      let S = x(d, k) - I, T = y + S;
-      T = (T % 360 + 360) % 360, R.shiftKey && r && (T = w(T)), l({
+      if (!m.current || o) return;
+      const v = h(R), { center: c, startMouseAngle: b, initialRotation: d } = m.current;
+      let k = w(c, v) - b, I = d + k;
+      I = (I % 360 + 360) % 360, R.shiftKey && r && (I = S(I)), u({
         isRotating: !0,
-        startAngle: y,
-        currentAngle: T,
-        deltaAngle: T - y
-      }), n?.(T, T - y);
+        startAngle: d,
+        currentAngle: I,
+        deltaAngle: I - d
+      }), n?.(I, I - d);
     },
-    [o, h, x, r, w, n]
-  ), E = c(
+    [o, h, w, r, S, n]
+  ), g = i(
     (R) => {
-      if (!u.current) return;
-      const k = h(R), { center: d, startMouseAngle: I, initialRotation: y } = u.current;
-      let S = x(d, k) - I, T = y + S;
-      T = (T % 360 + 360) % 360, R.shiftKey && r && (T = w(T)), s?.(T), l({
+      if (!m.current) return;
+      const v = h(R), { center: c, startMouseAngle: b, initialRotation: d } = m.current;
+      let k = w(c, v) - b, I = d + k;
+      I = (I % 360 + 360) % 360, R.shiftKey && r && (I = S(I)), s?.(I), u({
         isRotating: !1,
         startAngle: null,
         currentAngle: null,
         deltaAngle: 0
-      }), u.current = null, document.removeEventListener("mousemove", f), document.removeEventListener("mouseup", E), document.removeEventListener("touchmove", f), document.removeEventListener("touchend", E);
+      }), m.current = null, document.removeEventListener("mousemove", x), document.removeEventListener("mouseup", g), document.removeEventListener("touchmove", x), document.removeEventListener("touchend", g);
     },
     [
       h,
-      x,
-      r,
       w,
+      r,
+      S,
       s,
-      f
+      x
     ]
-  ), i = c(
-    (R, k, d) => {
+  ), l = i(
+    (R, v, c) => {
       if (o) return;
-      d.stopPropagation(), d.preventDefault();
-      const I = h(
-        d.nativeEvent
-      ), y = x(R, I);
-      u.current = {
+      c.stopPropagation(), c.preventDefault();
+      const b = h(
+        c.nativeEvent
+      ), d = w(R, b);
+      m.current = {
         center: R,
-        startMouseAngle: y,
-        initialRotation: k
-      }, l({
+        startMouseAngle: d,
+        initialRotation: v
+      }, u({
         isRotating: !0,
-        startAngle: k,
-        currentAngle: k,
+        startAngle: v,
+        currentAngle: v,
         deltaAngle: 0
-      }), t?.(k), document.addEventListener("mousemove", f), document.addEventListener("mouseup", E), document.addEventListener("touchmove", f), document.addEventListener("touchend", E);
+      }), t?.(v), document.addEventListener("mousemove", x), document.addEventListener("mouseup", g), document.addEventListener("touchmove", x), document.addEventListener("touchend", g);
     },
     [
       o,
       h,
-      x,
+      w,
       t,
-      f,
-      E
+      x,
+      g
     ]
   );
   return {
     rotateState: a,
-    startRotate: i,
+    startRotate: l,
     isRotating: a.isRotating
   };
-}, We = (e) => {
+}, He = (e) => {
   const { id: t, disabled: n = !1, onSelect: s } = e, {
     isSelected: o,
     select: r,
     addToSelection: a,
-    removeFromSelection: l,
-    toggleSelection: u,
-    clearSelection: g
-  } = we(), h = o(t), x = c(() => {
+    removeFromSelection: u,
+    toggleSelection: m,
+    clearSelection: f
+  } = we(), h = o(t), w = i(() => {
     n || (r(t), s?.(!0));
-  }, [n, t, r, s]), w = c(() => {
-    n || (l(t), s?.(!1));
-  }, [n, t, l, s]), f = c(() => {
+  }, [n, t, r, s]), S = i(() => {
+    n || (u(t), s?.(!1));
+  }, [n, t, u, s]), x = i(() => {
     if (n) return;
-    const i = !h;
-    u(t), s?.(i);
-  }, [n, t, h, u, s]), E = c(
-    (i) => {
-      n || (i.stopPropagation(), i.ctrlKey || i.metaKey ? (u(t), s?.(!h)) : i.shiftKey ? (a(t), s?.(!0)) : (r(t), s?.(!0)));
+    const l = !h;
+    m(t), s?.(l);
+  }, [n, t, h, m, s]), g = i(
+    (l) => {
+      n || (l.stopPropagation(), l.ctrlKey || l.metaKey ? (m(t), s?.(!h)) : l.shiftKey ? (a(t), s?.(!0)) : (r(t), s?.(!0)));
     },
     [
       n,
       t,
       h,
-      u,
+      m,
       a,
       r,
       s
@@ -1329,142 +1360,142 @@ const sn = (e, t) => {
   return {
     isSelected: h,
     handlers: {
-      onClick: E
+      onClick: g
     },
-    select: x,
-    deselect: w,
-    toggle: f
+    select: w,
+    deselect: S,
+    toggle: x
   };
-}, Bt = (e, t) => {
+}, Ut = (e, t) => {
   const n = e.key.toLowerCase() === t.key.toLowerCase();
   t.ctrl ? e.ctrlKey : !e.ctrlKey || t.meta, t.meta ? e.metaKey : !e.metaKey || t.ctrl;
   const s = t.shift ? e.shiftKey : !e.shiftKey, o = t.alt ? e.altKey : !e.altKey, r = t.ctrl || t.meta ? !!(t.ctrl && (e.ctrlKey || e.metaKey)) || !!(t.meta && e.metaKey) : !e.ctrlKey && !e.metaKey;
   return n && r && s && o;
-}, Wt = (e = {}) => {
-  const { shortcuts: t = [], enabled: n = !0, targetRef: s } = e, o = re(t);
+}, Zt = (e = {}) => {
+  const { shortcuts: t = [], enabled: n = !0, targetRef: s } = e, o = se(t);
   o.current = t;
-  const r = c(
+  const r = i(
     (a) => {
       if (n) {
-        for (const l of o.current)
-          if (Bt(a, l)) {
-            l.preventDefault !== !1 && a.preventDefault(), l.action();
+        for (const u of o.current)
+          if (Ut(a, u)) {
+            u.preventDefault !== !1 && a.preventDefault(), u.action();
             return;
           }
       }
     },
     [n]
   );
-  lt(() => {
+  De(() => {
     const a = s?.current ?? document;
     return a.addEventListener("keydown", r), () => {
       a.removeEventListener("keydown", r);
     };
   }, [r, s]);
-}, Zt = (e) => {
+}, Xt = (e) => {
   const t = [];
-  e.undo && t.push({ key: "z", ctrl: !0, action: e.undo }), e.redo && (t.push({ key: "z", ctrl: !0, shift: !0, action: e.redo }), t.push({ key: "y", ctrl: !0, action: e.redo })), e.delete && (t.push({ key: "Delete", action: e.delete }), t.push({ key: "Backspace", action: e.delete })), e.selectAll && t.push({ key: "a", ctrl: !0, action: e.selectAll }), e.copy && t.push({ key: "c", ctrl: !0, action: e.copy }), e.paste && t.push({ key: "v", ctrl: !0, action: e.paste }), e.cut && t.push({ key: "x", ctrl: !0, action: e.cut }), e.escape && t.push({ key: "Escape", action: e.escape }), e.zoomIn && (t.push({ key: "+", ctrl: !0, action: e.zoomIn }), t.push({ key: "=", ctrl: !0, action: e.zoomIn })), e.zoomOut && t.push({ key: "-", ctrl: !0, action: e.zoomOut }), e.resetZoom && t.push({ key: "0", ctrl: !0, action: e.resetZoom }), Wt({ shortcuts: t });
-}, Ut = () => {
-  const e = ge(), t = we(), n = Ct(), s = re(null), o = c(() => {
+  e.undo && t.push({ key: "z", ctrl: !0, action: e.undo }), e.redo && (t.push({ key: "z", ctrl: !0, shift: !0, action: e.redo }), t.push({ key: "y", ctrl: !0, action: e.redo })), e.delete && (t.push({ key: "Delete", action: e.delete }), t.push({ key: "Backspace", action: e.delete })), e.selectAll && t.push({ key: "a", ctrl: !0, action: e.selectAll }), e.copy && t.push({ key: "c", ctrl: !0, action: e.copy }), e.paste && t.push({ key: "v", ctrl: !0, action: e.paste }), e.cut && t.push({ key: "x", ctrl: !0, action: e.cut }), e.escape && t.push({ key: "Escape", action: e.escape }), e.zoomIn && (t.push({ key: "+", ctrl: !0, action: e.zoomIn }), t.push({ key: "=", ctrl: !0, action: e.zoomIn })), e.zoomOut && t.push({ key: "-", ctrl: !0, action: e.zoomOut }), e.resetZoom && t.push({ key: "0", ctrl: !0, action: e.resetZoom }), Zt({ shortcuts: t });
+}, Ht = () => {
+  const e = me(), t = we(), n = Lt(), s = se(null), o = i(() => {
     n.pushState(e.elements, e.connections);
-  }, [n, e.elements, e.connections]), r = c(
-    (d) => (o(), e.addElement(d)),
+  }, [n, e.elements, e.connections]), r = i(
+    (c) => (o(), e.addElement(c)),
     [e, o]
-  ), a = c(
-    (d, I) => {
-      o(), e.updateElement(d, I);
+  ), a = i(
+    (c, b) => {
+      o(), e.updateElement(c, b);
     },
     [e, o]
-  ), l = c(
-    (d) => {
-      o(), e.removeElement(d);
+  ), u = i(
+    (c) => {
+      o(), e.removeElement(c);
     },
     [e, o]
-  ), u = c(() => {
+  ), m = i(() => {
     t.selectedIds.length !== 0 && (o(), e.removeElements(t.selectedIds), t.clearSelection());
-  }, [e, t, o]), g = c(
-    (d, I) => {
-      t.selectedIds.length !== 0 && (o(), e.moveElements(t.selectedIds, d, I));
+  }, [e, t, o]), f = i(
+    (c, b) => {
+      t.selectedIds.length !== 0 && (o(), e.moveElements(t.selectedIds, c, b));
     },
     [e, t, o]
-  ), h = c(() => {
+  ), h = i(() => {
     if (t.selectedIds.length === 0) return [];
     o();
-    const I = e.elements.filter(
-      (p) => t.selectedIds.includes(p.id)
-    ).map((p) => ({
-      ...p,
+    const b = e.elements.filter(
+      (y) => t.selectedIds.includes(y.id)
+    ).map((y) => ({
+      ...y,
       id: void 0,
       // Will be auto-generated
-      x: p.x + 20,
-      y: p.y + 20
-    })), y = e.addElements(I);
-    return t.selectMultiple(y), y;
-  }, [e, t, o]), x = c(
-    (d) => (o(), e.addConnection(d)),
+      x: y.x + 20,
+      y: y.y + 20
+    })), d = e.addElements(b);
+    return t.selectMultiple(d), d;
+  }, [e, t, o]), w = i(
+    (c) => (o(), e.addConnection(c)),
     [e, o]
-  ), w = c(
-    (d) => {
-      o(), e.removeConnection(d);
+  ), S = i(
+    (c) => {
+      o(), e.removeConnection(c);
     },
     [e, o]
-  ), f = c(() => {
+  ), x = i(() => {
     if (t.selectedIds.length === 0) return;
-    const d = e.elements.filter(
-      (p) => t.selectedIds.includes(p.id)
-    ), I = new Set(t.selectedIds), y = e.connections.filter(
-      (p) => I.has(p.fromId) && I.has(p.toId)
+    const c = e.elements.filter(
+      (y) => t.selectedIds.includes(y.id)
+    ), b = new Set(t.selectedIds), d = e.connections.filter(
+      (y) => b.has(y.fromId) && b.has(y.toId)
     );
     s.current = {
-      elements: d,
-      connections: y
+      elements: c,
+      connections: d
     };
-  }, [e.elements, e.connections, t.selectedIds]), E = c(() => {
-    f(), u();
-  }, [f, u]), i = c(() => {
+  }, [e.elements, e.connections, t.selectedIds]), g = i(() => {
+    x(), m();
+  }, [x, m]), l = i(() => {
     if (!s.current) return;
     o();
-    const d = /* @__PURE__ */ new Map(), I = s.current.elements.map((p) => ({
-      ...p,
+    const c = /* @__PURE__ */ new Map(), b = s.current.elements.map((y) => ({
+      ...y,
       id: void 0,
-      x: p.x + 20,
-      y: p.y + 20
-    })), y = e.addElements(I);
-    s.current.elements.forEach((p, S) => {
-      d.set(p.id, y[S]);
-    }), s.current.connections.forEach((p) => {
-      const S = d.get(p.fromId), T = d.get(p.toId);
-      S && T && e.addConnection({
-        ...p,
+      x: y.x + 20,
+      y: y.y + 20
+    })), d = e.addElements(b);
+    s.current.elements.forEach((y, k) => {
+      c.set(y.id, d[k]);
+    }), s.current.connections.forEach((y) => {
+      const k = c.get(y.fromId), I = c.get(y.toId);
+      k && I && e.addConnection({
+        ...y,
         id: void 0,
-        fromId: S,
-        toId: T
+        fromId: k,
+        toId: I
       });
-    }), t.selectMultiple(y);
-  }, [e, t, o]), R = c(() => {
+    }), t.selectMultiple(d);
+  }, [e, t, o]), R = i(() => {
     n.canUndo && (n.undo(), e.loadState(n.present.elements, n.present.connections));
-  }, [n, e]), k = c(() => {
+  }, [n, e]), v = i(() => {
     n.canRedo && (n.redo(), e.loadState(n.present.elements, n.present.connections));
   }, [n, e]);
   return {
     addElement: r,
     updateElement: a,
-    removeElement: l,
-    removeSelected: u,
-    moveSelected: g,
+    removeElement: u,
+    removeSelected: m,
+    moveSelected: f,
     duplicateSelected: h,
-    addConnection: x,
-    removeConnection: w,
-    copy: f,
-    cut: E,
-    paste: i,
+    addConnection: w,
+    removeConnection: S,
+    copy: x,
+    cut: g,
+    paste: l,
     hasCopied: s.current !== null,
     undo: R,
-    redo: k,
+    redo: v,
     canUndo: n.canUndo,
     canRedo: n.canRedo
   };
-}, fe = 8, Ze = ie(
+}, xe = 8, Te = ie(
   ({
     element: e,
     children: t,
@@ -1473,69 +1504,69 @@ const sn = (e, t) => {
     disabled: o = !1,
     showHandles: r = !0,
     enableRotation: a = !0,
-    onSelect: l,
-    onDragStart: u,
-    onDrag: g,
+    onSelect: u,
+    onDragStart: m,
+    onDrag: f,
     onDragEnd: h,
-    onResizeStart: x,
-    onResize: w,
-    onResizeEnd: f,
-    onRotateStart: E,
-    onRotate: i,
+    onResizeStart: w,
+    onResize: S,
+    onResizeEnd: x,
+    onRotateStart: g,
+    onRotate: l,
     onRotateEnd: R
-  }, k) => {
-    const { updateElement: d } = ge(), { theme: I } = F(), y = e.locked || o, { isSelected: p, handlers: S } = We({
+  }, v) => {
+    const { updateElement: c } = me(), { theme: b } = te(), d = e.locked || o, { isSelected: y, handlers: k } = He({
       id: e.id,
-      disabled: y,
-      onSelect: l
-    }), { isDragging: T, dragState: D, handlers: b } = $e({
-      disabled: y || !p,
+      disabled: d,
+      onSelect: u
+    }), { isDragging: I, dragState: C, handlers: M } = Ze({
+      disabled: d || !y,
       onDragStart: () => {
-        u?.();
+        m?.();
       },
-      onDrag: (z, B) => {
-        const N = e.x + B.x, C = e.y + B.y;
-        g?.(N, C);
+      onDrag: (N, D) => {
+        const z = e.x + D.x, A = e.y + D.y;
+        f?.(z, A);
       },
-      onDragEnd: (z, B) => {
-        const N = e.x + B.x, C = e.y + B.y;
-        d(e.id, { x: N, y: C }), h?.(N, C);
+      onDragEnd: (N, D) => {
+        const z = e.x + D.x, A = e.y + D.y;
+        c(e.id, { x: z, y: A }), h?.(z, A);
       }
-    }), { isResizing: $, resizeState: P, startResize: L } = $t({
-      disabled: y || !p,
+    }), { isResizing: B, resizeState: $, startResize: L } = Wt({
+      disabled: d || !y,
       minWidth: e.minWidth ?? 20,
       minHeight: e.minHeight ?? 20,
       maxWidth: e.maxWidth,
       maxHeight: e.maxHeight,
       onResizeStart: () => {
-        x?.();
+        w?.();
       },
-      onResize: (z) => {
-        w?.(z.width, z.height, z.x, z.y);
+      onResize: (N) => {
+        S?.(N.width, N.height, N.x, N.y);
       },
-      onResizeEnd: (z) => {
-        d(e.id, {
-          x: z.x,
-          y: z.y,
-          width: z.width,
-          height: z.height
-        }), f?.(z.width, z.height, z.x, z.y);
+      onResizeEnd: (N) => {
+        c(e.id, {
+          x: N.x,
+          y: N.y,
+          width: N.width,
+          height: N.height
+        }), x?.(N.width, N.height, N.x, N.y);
       }
-    }), { isRotating: A, rotateState: X, startRotate: K } = Be({
-      disabled: y || !p || !a,
+    }), { isRotating: O, rotateState: W, startRotate: F } = Xe({
+      disabled: d || !y || !a,
       snapAngle: 15,
       onRotateStart: () => {
-        E?.();
+        g?.();
       },
-      onRotate: (z) => {
-        i?.(z);
+      onRotate: (N) => {
+        l?.(N);
       },
-      onRotateEnd: (z) => {
-        d(e.id, { rotation: z }), R?.(z);
+      onRotateEnd: (N) => {
+        c(e.id, { rotation: N }), R?.(N);
       }
-    }), oe = Z(() => A && X.currentAngle !== null ? X.currentAngle : e.rotation ?? 0, [A, X.currentAngle, e.rotation]), m = Z(() => $ && P.currentBounds ? P.currentBounds : T ? {
-      x: e.x + D.delta.x,
-      y: e.y + D.delta.y,
+    }), Y = V(() => O && W.currentAngle !== null ? W.currentAngle : e.rotation ?? 0, [O, W.currentAngle, e.rotation]), p = V(() => B && $.currentBounds ? $.currentBounds : I ? {
+      x: e.x + C.delta.x,
+      y: e.y + C.delta.y,
       width: e.width,
       height: e.height
     } : {
@@ -1543,128 +1574,128 @@ const sn = (e, t) => {
       y: e.y,
       width: e.width,
       height: e.height
-    }, [$, P.currentBounds, T, D.delta, e.x, e.y, e.width, e.height]), M = Z(() => !$ || !P.currentBounds ? { x: 1, y: 1 } : {
-      x: P.currentBounds.width / e.width,
-      y: P.currentBounds.height / e.height
-    }, [$, P.currentBounds, e.width, e.height]), _ = Z(() => !p || !r || y ? [] : ht(
-      { x: 0, y: 0, width: m.width, height: m.height },
-      fe
-    ), [p, r, y, m.width, m.height]), U = c(
-      (z, B) => {
+    }, [B, $.currentBounds, I, C.delta, e.x, e.y, e.width, e.height]), T = V(() => !B || !$.currentBounds ? { x: 1, y: 1 } : {
+      x: $.currentBounds.width / e.width,
+      y: $.currentBounds.height / e.height
+    }, [B, $.currentBounds, e.width, e.height]), _ = V(() => !y || !r || d ? [] : pt(
+      { x: 0, y: 0, width: p.width, height: p.height },
+      xe
+    ), [y, r, d, p.width, p.height]), Z = i(
+      (N, D) => {
         L(
-          z,
+          N,
           { x: e.x, y: e.y, width: e.width, height: e.height },
-          B
+          D
         );
       },
       [L, e]
-    ), ne = c(
-      (z) => {
-        const B = m.x + m.width / 2, N = m.y + m.height / 2;
-        K(
-          { x: B, y: N },
+    ), G = i(
+      (N) => {
+        const D = p.x + p.width / 2, z = p.y + p.height / 2;
+        F(
+          { x: D, y: z },
           e.rotation ?? 0,
-          z
+          N
         );
       },
-      [K, m, e.rotation]
-    ), ue = c(
-      (z) => {
-        S.onClick(z), p && b.onMouseDown(z);
+      [F, p, e.rotation]
+    ), re = i(
+      (N) => {
+        k.onClick(N), y && M.onMouseDown(N);
       },
-      [S, b, p]
-    ), j = {
-      cursor: T ? "grabbing" : p ? "grab" : "pointer",
+      [k, M, y]
+    ), J = {
+      cursor: I ? "grabbing" : y ? "grab" : "pointer",
       opacity: e.visible === !1 ? 0.5 : 1,
       ...s
     };
-    return v.createElement(
+    return E.createElement(
       "g",
       {
-        ref: k,
-        className: pe("canvas-element", n, {
-          "canvas-element--selected": p,
-          "canvas-element--dragging": T,
-          "canvas-element--resizing": $,
-          "canvas-element--rotating": A,
+        ref: v,
+        className: fe("canvas-element", n, {
+          "canvas-element--selected": y,
+          "canvas-element--dragging": I,
+          "canvas-element--resizing": B,
+          "canvas-element--rotating": O,
           "canvas-element--locked": e.locked
         }),
-        transform: `translate(${m.x}, ${m.y})${oe ? ` rotate(${oe}, ${m.width / 2}, ${m.height / 2})` : ""}`,
-        style: j,
-        onMouseDown: ue,
-        onTouchStart: b.onTouchStart,
+        transform: `translate(${p.x}, ${p.y})${Y ? ` rotate(${Y}, ${p.width / 2}, ${p.height / 2})` : ""}`,
+        style: J,
+        onMouseDown: re,
+        onTouchStart: M.onTouchStart,
         "data-element-id": e.id,
         "data-element-type": e.type
       },
       // Element content - scale during resize for visual feedback
-      $ ? v.createElement(
+      B ? E.createElement(
         "g",
-        { transform: `scale(${M.x}, ${M.y})` },
+        { transform: `scale(${T.x}, ${T.y})` },
         t
       ) : t,
       // Selection outline - use display bounds for accurate sizing
-      p && v.createElement("rect", {
+      y && E.createElement("rect", {
         className: "canvas-element__selection",
         x: -2,
         y: -2,
-        width: m.width + 4,
-        height: m.height + 4,
+        width: p.width + 4,
+        height: p.height + 4,
         fill: "none",
-        stroke: I.colors.selection.stroke,
+        stroke: b.colors.selection.stroke,
         strokeWidth: 1,
         strokeDasharray: "4 2",
         pointerEvents: "none"
       }),
       // Resize handles
       _.map(
-        (z) => v.createElement("rect", {
-          key: z.position,
-          className: `canvas-element__handle canvas-element__handle--${z.position}`,
-          x: z.x,
-          y: z.y,
-          width: fe,
-          height: fe,
-          fill: I.colors.handle.fill,
-          stroke: I.colors.handle.stroke,
+        (N) => E.createElement("rect", {
+          key: N.position,
+          className: `canvas-element__handle canvas-element__handle--${N.position}`,
+          x: N.x,
+          y: N.y,
+          width: xe,
+          height: xe,
+          fill: b.colors.handle.fill,
+          stroke: b.colors.handle.stroke,
           strokeWidth: 1,
-          cursor: Xt(z.position),
-          onMouseDown: (B) => U(z.position, B)
+          cursor: Vt(N.position),
+          onMouseDown: (D) => Z(N.position, D)
         })
       ),
       // Rotation handle (circular, above the element)
-      p && r && a && !y && v.createElement(
+      y && r && a && !d && E.createElement(
         "g",
         {
           key: "rotation-handle",
           className: "canvas-element__rotation-handle"
         },
         // Line connecting to element
-        v.createElement("line", {
-          x1: m.width / 2,
+        E.createElement("line", {
+          x1: p.width / 2,
           y1: 0,
-          x2: m.width / 2,
+          x2: p.width / 2,
           y2: -25,
-          stroke: I.colors.selection.stroke,
+          stroke: b.colors.selection.stroke,
           strokeWidth: 1,
           pointerEvents: "none"
         }),
         // Rotation handle circle
-        v.createElement("circle", {
-          cx: m.width / 2,
+        E.createElement("circle", {
+          cx: p.width / 2,
           cy: -25,
-          r: fe / 2 + 2,
-          fill: I.colors.handle.fill,
-          stroke: I.colors.handle.stroke,
+          r: xe / 2 + 2,
+          fill: b.colors.handle.fill,
+          stroke: b.colors.handle.stroke,
           strokeWidth: 1,
           cursor: "grab",
-          onMouseDown: ne
+          onMouseDown: G
         })
       )
     );
   }
 );
-Ze.displayName = "ElementBase";
-function Xt(e) {
+Te.displayName = "ElementBase";
+function Vt(e) {
   return {
     nw: "nwse-resize",
     n: "ns-resize",
@@ -1676,78 +1707,78 @@ function Xt(e) {
     w: "ew-resize"
   }[e];
 }
-function ae(e) {
+function le(e) {
   const t = ie((n, s) => {
-    const o = n, r = o.element, a = o.disabled, l = o.showHandles, u = o.enableRotation, g = o.onSelect, h = o.onDragStart, x = o.onDrag, w = o.onDragEnd, f = o.onResizeStart, E = o.onResize, i = o.onResizeEnd, R = o.onRotateStart, k = o.onRotate, d = o.onRotateEnd, I = o.className, y = o.style, {
-      element: p,
-      disabled: S,
-      showHandles: T,
-      enableRotation: D,
-      onSelect: b,
-      onDragStart: $,
-      onDrag: P,
+    const o = n, r = o.element, a = o.disabled, u = o.showHandles, m = o.enableRotation, f = o.onSelect, h = o.onDragStart, w = o.onDrag, S = o.onDragEnd, x = o.onResizeStart, g = o.onResize, l = o.onResizeEnd, R = o.onRotateStart, v = o.onRotate, c = o.onRotateEnd, b = o.className, d = o.style, {
+      element: y,
+      disabled: k,
+      showHandles: I,
+      enableRotation: C,
+      onSelect: M,
+      onDragStart: B,
+      onDrag: $,
       onDragEnd: L,
-      onResizeStart: A,
-      onResize: X,
-      onResizeEnd: K,
-      onRotateStart: oe,
-      onRotate: m,
-      onRotateEnd: M,
+      onResizeStart: O,
+      onResize: W,
+      onResizeEnd: F,
+      onRotateStart: Y,
+      onRotate: p,
+      onRotateEnd: T,
       className: _,
-      style: U,
-      ...ne
-    } = o, [ue, j] = v.useState({
+      style: Z,
+      ...G
+    } = o, [re, J] = E.useState({
       isSelected: !1,
       isDragging: !1,
       isResizing: !1,
       isRotating: !1
-    }), z = v.useCallback((O) => {
-      j((H) => ({ ...H, isSelected: O })), g?.(O);
-    }, [g]), B = v.useCallback(() => {
-      j((O) => ({ ...O, isDragging: !0 })), h?.();
-    }, [h]), N = v.useCallback((O, H) => {
-      j((G) => ({ ...G, isDragging: !1 })), w?.(O, H);
-    }, [w]), C = v.useCallback(() => {
-      j((O) => ({ ...O, isResizing: !0 })), f?.();
-    }, [f]), W = v.useCallback((O, H, G, Q) => {
-      j((ee) => ({ ...ee, isResizing: !1 })), i?.(O, H, G, Q);
-    }, [i]), Y = v.useCallback(() => {
-      j((O) => ({ ...O, isRotating: !0 })), R?.();
-    }, [R]), q = v.useCallback((O) => {
-      j((H) => ({ ...H, isRotating: !1 })), d?.(O);
-    }, [d]), V = {
+    }), N = E.useCallback((P) => {
+      J((H) => ({ ...H, isSelected: P })), f?.(P);
+    }, [f]), D = E.useCallback(() => {
+      J((P) => ({ ...P, isDragging: !0 })), h?.();
+    }, [h]), z = E.useCallback((P, H) => {
+      J((Q) => ({ ...Q, isDragging: !1 })), S?.(P, H);
+    }, [S]), A = E.useCallback(() => {
+      J((P) => ({ ...P, isResizing: !0 })), x?.();
+    }, [x]), U = E.useCallback((P, H, Q, ee) => {
+      J((j) => ({ ...j, isResizing: !1 })), l?.(P, H, Q, ee);
+    }, [l]), X = E.useCallback(() => {
+      J((P) => ({ ...P, isRotating: !0 })), R?.();
+    }, [R]), q = E.useCallback((P) => {
+      J((H) => ({ ...H, isRotating: !1 })), c?.(P);
+    }, [c]), K = {
       element: r,
-      ...ue
+      ...re
     };
-    return /* @__PURE__ */ te(
-      Ze,
+    return /* @__PURE__ */ oe(
+      Te,
       {
         ref: s,
         element: r,
         disabled: a,
-        showHandles: l,
-        enableRotation: u,
-        className: I,
-        style: y,
-        onSelect: z,
-        onDragStart: B,
-        onDrag: x,
-        onDragEnd: N,
-        onResizeStart: C,
-        onResize: E,
-        onResizeEnd: W,
-        onRotateStart: Y,
-        onRotate: k,
+        showHandles: u,
+        enableRotation: m,
+        className: b,
+        style: d,
+        onSelect: N,
+        onDragStart: D,
+        onDrag: w,
+        onDragEnd: z,
+        onResizeStart: A,
+        onResize: g,
+        onResizeEnd: U,
+        onRotateStart: X,
+        onRotate: v,
         onRotateEnd: q,
-        children: /* @__PURE__ */ te(e, { ...V, ...ne })
+        children: /* @__PURE__ */ oe(e, { ...K, ...G })
       }
     );
   });
   return t.displayName = `withElementBehavior(${e.displayName || e.name || "Component"})`, t;
 }
-const Yt = ({ element: e }) => {
-  const { theme: t } = F(), { width: n, height: s, style: o } = e;
-  return v.createElement("rect", {
+const Ft = ({ element: e }) => {
+  const { theme: t } = te(), { width: n, height: s, style: o } = e;
+  return E.createElement("rect", {
     width: n,
     height: s,
     fill: o?.fill ?? t.colors.element.fill,
@@ -1757,91 +1788,221 @@ const Yt = ({ element: e }) => {
     ry: o?.cornerRadius ?? 0,
     opacity: o?.opacity ?? 1
   });
-}, Ie = ae(Yt);
-Ie.displayName = "Rectangle";
-const Ht = ({ element: e }) => {
-  const { theme: t } = F(), { width: n, height: s, style: o } = e, r = n / 2, a = s / 2, l = n / 2, u = s / 2;
-  return v.createElement("ellipse", {
+}, be = le(Ft);
+be.displayName = "Rectangle";
+const Yt = ({ element: e }) => {
+  const { theme: t } = te(), { width: n, height: s, style: o } = e, r = n / 2, a = s / 2, u = n / 2, m = s / 2;
+  return E.createElement("ellipse", {
     cx: r,
     cy: a,
-    rx: l,
-    ry: u,
+    rx: u,
+    ry: m,
     fill: o?.fill ?? t.colors.element.fill,
     stroke: o?.stroke ?? t.colors.element.stroke,
     strokeWidth: o?.strokeWidth ?? t.strokeWidth.normal,
     opacity: o?.opacity ?? 1
   });
-}, he = ae(Ht);
-he.displayName = "Ellipse";
-const Vt = he;
-Vt.displayName = "Circle";
-const Ft = he;
-Ft.displayName = "Oval";
-const Kt = ({ element: e }) => {
-  const { theme: t } = F(), { width: n, height: s, style: o } = e, r = [
+}, pe = le(Yt);
+pe.displayName = "Ellipse";
+const jt = pe;
+jt.displayName = "Circle";
+const Kt = pe;
+Kt.displayName = "Oval";
+const Gt = ({ element: e }) => {
+  const { theme: t } = te(), { width: n, height: s, style: o } = e, r = [
     `${n / 2},0`,
     `${n},${s / 2}`,
     `${n / 2},${s}`,
     `0,${s / 2}`
   ].join(" ");
-  return v.createElement("polygon", {
+  return E.createElement("polygon", {
     points: r,
     fill: o?.fill ?? t.colors.element.fill,
     stroke: o?.stroke ?? t.colors.element.stroke,
     strokeWidth: o?.strokeWidth ?? t.strokeWidth.normal,
     opacity: o?.opacity ?? 1
   });
-}, Ue = ae(Kt);
-Ue.displayName = "Diamond";
-const jt = ({ element: e }) => {
-  const { theme: t } = F(), { width: n, height: s, style: o, text: r = "", fontSize: a, fontFamily: l, fontWeight: u, textAlign: g } = e, h = () => {
-    switch (g) {
-      case "right":
-        return "end";
-      case "center":
-        return "middle";
-      default:
-        return "start";
-    }
-  }, x = () => {
-    switch (g) {
-      case "right":
-        return n;
-      case "center":
-        return n / 2;
-      default:
-        return 0;
-    }
-  };
-  return v.createElement(
-    "g",
-    null,
-    // Background (optional, for selection area)
-    v.createElement("rect", {
-      width: n,
-      height: s,
-      fill: "transparent"
-    }),
-    // Text
-    v.createElement(
-      "text",
+}, Ve = le(Gt);
+Ve.displayName = "Diamond";
+const Fe = ie(
+  ({
+    element: e,
+    disabled: t,
+    showHandles: n,
+    enableRotation: s,
+    onSelect: o,
+    onDragStart: r,
+    onDrag: a,
+    onDragEnd: u,
+    onResizeStart: m,
+    onResize: f,
+    onResizeEnd: h,
+    onRotateStart: w,
+    onRotate: S,
+    onRotateEnd: x,
+    onTextChange: g,
+    className: l,
+    style: R
+  }, v) => {
+    const { theme: c } = te(), { updateElement: b } = me(), [d, y] = ue(!1), [k, I] = ue(e.text ?? ""), C = se(null), { width: M, height: B, style: $, text: L = "", fontSize: O, fontFamily: W, fontWeight: F, textAlign: Y } = e, p = i((D) => {
+      const z = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      z.style.position = "absolute", z.style.visibility = "hidden", z.style.pointerEvents = "none", document.body.appendChild(z);
+      const A = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      A.setAttribute("font-size", String(O ?? c.fontSize.md)), A.setAttribute("font-family", W ?? "sans-serif"), A.setAttribute("font-weight", F ?? "normal");
+      const U = D.split(`
+`), X = (O ?? c.fontSize.md) * 1.2;
+      let q = 0;
+      U.forEach((Q, ee) => {
+        const j = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+        j.textContent = Q || " ", j.setAttribute("x", "0"), j.setAttribute("dy", ee === 0 ? "0" : String(X)), A.appendChild(j);
+      }), z.appendChild(A), q = A.getBBox().width;
+      const P = U.length * X;
+      document.body.removeChild(z);
+      const H = 16;
+      return {
+        width: Math.max(q + H, 40),
+        // Minimum width
+        height: Math.max(P + H, 24)
+        // Minimum height
+      };
+    }, [O, W, F, c.fontSize.md]), T = i(() => {
+      switch (Y) {
+        case "right":
+          return "end";
+        case "center":
+          return "middle";
+        default:
+          return "start";
+      }
+    }, [Y]), _ = i(() => {
+      switch (Y) {
+        case "right":
+          return M;
+        case "center":
+          return M / 2;
+        default:
+          return 0;
+      }
+    }, [Y, M]), Z = i((D) => {
+      e.locked || t || (D.stopPropagation(), D.preventDefault(), I(L), y(!0));
+    }, [e.locked, t, L]), G = i(() => {
+      const D = k.trim();
+      if (D !== L || D !== "") {
+        const z = p(D);
+        b(e.id, {
+          text: D,
+          width: z.width,
+          height: z.height
+        }), g?.(D);
+      }
+      y(!1);
+    }, [k, L, p, b, e.id, g]), re = i(() => {
+      I(L), y(!1);
+    }, [L]), J = i((D) => {
+      D.key === "Escape" ? (D.preventDefault(), re()) : D.key === "Enter" && !D.shiftKey && (D.preventDefault(), G()), D.stopPropagation();
+    }, [re, G]);
+    De(() => {
+      d && C.current && (C.current.focus(), C.current.select());
+    }, [d]);
+    const N = () => d ? E.createElement(
+      "foreignObject",
       {
-        x: x(),
-        y: s / 2,
-        dominantBaseline: "central",
-        textAnchor: h(),
-        fill: o?.fill ?? t.colors.text.primary,
-        fontSize: a ?? t.fontSize.md,
-        fontFamily: l ?? "sans-serif",
-        fontWeight: u ?? "normal",
-        opacity: o?.opacity ?? 1
+        x: 0,
+        y: 0,
+        width: M,
+        height: B
       },
-      r
-    )
-  );
-}, Xe = ae(jt);
-Xe.displayName = "TextElement";
-const Me = 8, ze = 25, Ye = ie(
+      E.createElement(
+        "div",
+        {
+          xmlns: "http://www.w3.org/1999/xhtml",
+          style: {
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: Y === "center" ? "center" : Y === "right" ? "flex-end" : "flex-start"
+          }
+        },
+        E.createElement("textarea", {
+          ref: C,
+          value: k,
+          onChange: (D) => I(D.target.value),
+          onBlur: G,
+          onKeyDown: J,
+          style: {
+            width: "100%",
+            height: "100%",
+            padding: "4px",
+            border: `2px solid ${c.colors.selection.stroke}`,
+            borderRadius: "2px",
+            outline: "none",
+            resize: "none",
+            backgroundColor: c.colors.background,
+            color: $?.fill ?? c.colors.text.primary,
+            fontSize: O ?? c.fontSize.md,
+            fontFamily: W ?? "sans-serif",
+            fontWeight: F ?? "normal",
+            textAlign: Y ?? "left",
+            boxSizing: "border-box"
+          }
+        })
+      )
+    ) : E.createElement(
+      "g",
+      { onDoubleClick: Z },
+      // Background (for selection area)
+      E.createElement("rect", {
+        width: M,
+        height: B,
+        fill: "transparent"
+      }),
+      // Text
+      E.createElement(
+        "text",
+        {
+          x: _(),
+          y: B / 2,
+          dominantBaseline: "central",
+          textAnchor: T(),
+          fill: $?.fill ?? c.colors.text.primary,
+          fontSize: O ?? c.fontSize.md,
+          fontFamily: W ?? "sans-serif",
+          fontWeight: F ?? "normal",
+          opacity: $?.opacity ?? 1,
+          style: { pointerEvents: "none" }
+        },
+        L
+      )
+    );
+    return E.createElement(
+      Te,
+      {
+        ref: v,
+        element: e,
+        children: N(),
+        disabled: t || d,
+        // Disable drag/resize while editing
+        showHandles: n && !d,
+        enableRotation: s,
+        className: l,
+        style: R,
+        onSelect: o,
+        onDragStart: r,
+        onDrag: a,
+        onDragEnd: u,
+        onResizeStart: m,
+        onResize: f,
+        onResizeEnd: h,
+        onRotateStart: w,
+        onRotate: S,
+        onRotateEnd: x
+      }
+    );
+  }
+);
+Fe.displayName = "TextElement";
+const ze = 8, Me = 25, Ye = ie(
   ({
     element: e,
     children: t,
@@ -1850,54 +2011,54 @@ const Me = 8, ze = 25, Ye = ie(
     style: o,
     disabled: r = !1,
     showHandles: a = !0,
-    enableRotation: l = !0,
-    onSelect: u,
-    onDragStart: g,
+    enableRotation: u = !0,
+    onSelect: m,
+    onDragStart: f,
     onDrag: h,
-    onDragEnd: x,
-    onPointsChange: w,
-    onRotateStart: f,
-    onRotate: E,
-    onRotateEnd: i
+    onDragEnd: w,
+    onPointsChange: S,
+    onRotateStart: x,
+    onRotate: g,
+    onRotateEnd: l
   }, R) => {
-    const { updateElement: k } = ge(), { theme: d } = F(), { screenToCanvas: I } = de(), y = e.locked || r, [p, S] = ve({
+    const { updateElement: v } = me(), { theme: c } = te(), { screenToCanvas: b } = he(), d = e.locked || r, [y, k] = ue({
       isDragging: !1,
       endpointIndex: null,
       startPosition: null,
       currentPoints: null
-    }), T = re(null), D = Z(() => e.points ?? [
+    }), I = se(null), C = V(() => e.points ?? [
       { x: 0, y: e.height / 2 },
       { x: e.width, y: e.height / 2 }
-    ], [e.points, e.width, e.height]), { isSelected: b, handlers: $ } = We({
+    ], [e.points, e.width, e.height]), { isSelected: M, handlers: B } = He({
       id: e.id,
-      disabled: y,
-      onSelect: u
-    }), { isDragging: P, dragState: L, handlers: A } = $e({
-      disabled: y || !b || p.isDragging,
+      disabled: d,
+      onSelect: m
+    }), { isDragging: $, dragState: L, handlers: O } = Ze({
+      disabled: d || !M || y.isDragging,
       onDragStart: () => {
-        g?.();
-      },
-      onDrag: (N, C) => {
-        const W = e.x + C.x, Y = e.y + C.y;
-        h?.(W, Y);
-      },
-      onDragEnd: (N, C) => {
-        const W = e.x + C.x, Y = e.y + C.y;
-        k(e.id, { x: W, y: Y }), x?.(W, Y);
-      }
-    }), { isRotating: X, rotateState: K, startRotate: oe } = Be({
-      disabled: y || !b || !l,
-      snapAngle: 15,
-      onRotateStart: () => {
         f?.();
       },
-      onRotate: (N) => {
-        E?.(N);
+      onDrag: (z, A) => {
+        const U = e.x + A.x, X = e.y + A.y;
+        h?.(U, X);
       },
-      onRotateEnd: (N) => {
-        k(e.id, { rotation: N }), i?.(N);
+      onDragEnd: (z, A) => {
+        const U = e.x + A.x, X = e.y + A.y;
+        v(e.id, { x: U, y: X }), w?.(U, X);
       }
-    }), m = Z(() => X && K.currentAngle !== null ? K.currentAngle : e.rotation ?? 0, [X, K.currentAngle, e.rotation]), M = Z(() => P ? {
+    }), { isRotating: W, rotateState: F, startRotate: Y } = Xe({
+      disabled: d || !M || !u,
+      snapAngle: 15,
+      onRotateStart: () => {
+        x?.();
+      },
+      onRotate: (z) => {
+        g?.(z);
+      },
+      onRotateEnd: (z) => {
+        v(e.id, { rotation: z }), l?.(z);
+      }
+    }), p = V(() => W && F.currentAngle !== null ? F.currentAngle : e.rotation ?? 0, [W, F.currentAngle, e.rotation]), T = V(() => $ ? {
       x: e.x + L.delta.x,
       y: e.y + L.delta.y,
       width: e.width,
@@ -1907,42 +2068,42 @@ const Me = 8, ze = 25, Ye = ie(
       y: e.y,
       width: e.width,
       height: e.height
-    }, [P, L.delta, e.x, e.y, e.width, e.height]), _ = Z(() => p.isDragging && p.currentPoints ? p.currentPoints : D, [p.isDragging, p.currentPoints, D]), U = c(
-      (N, C) => {
-        if (y || !b) return;
-        C.stopPropagation(), C.preventDefault();
-        const W = I({ x: C.clientX, y: C.clientY });
-        T.current = {
-          endpointIndex: N,
-          startMousePos: W,
-          originalPoints: [...D]
-        }, S({
+    }, [$, L.delta, e.x, e.y, e.width, e.height]), _ = V(() => y.isDragging && y.currentPoints ? y.currentPoints : C, [y.isDragging, y.currentPoints, C]), Z = i(
+      (z, A) => {
+        if (d || !M) return;
+        A.stopPropagation(), A.preventDefault();
+        const U = b({ x: A.clientX, y: A.clientY });
+        I.current = {
+          endpointIndex: z,
+          startMousePos: U,
+          originalPoints: [...C]
+        }, k({
           isDragging: !0,
-          endpointIndex: N,
-          startPosition: W,
-          currentPoints: [...D]
+          endpointIndex: z,
+          startPosition: U,
+          currentPoints: [...C]
         });
-        const Y = (V) => {
-          if (!T.current) return;
-          const O = I({ x: V.clientX, y: V.clientY }), { endpointIndex: H, startMousePos: G, originalPoints: Q } = T.current, ee = O.x - G.x, Se = O.y - G.y, ke = Q.map((se, Re) => Re === H ? { x: se.x + ee, y: se.y + Se } : { ...se });
-          S((se) => ({
-            ...se,
+        const X = (K) => {
+          if (!I.current) return;
+          const P = b({ x: K.clientX, y: K.clientY }), { endpointIndex: H, startMousePos: Q, originalPoints: ee } = I.current, j = P.x - Q.x, Se = P.y - Q.y, ke = ee.map((ae, Re) => Re === H ? { x: ae.x + j, y: ae.y + Se } : { ...ae });
+          k((ae) => ({
+            ...ae,
             currentPoints: ke
           }));
         }, q = () => {
-          T.current && (T.current, S((V) => {
-            if (V.currentPoints) {
-              const O = V.currentPoints, H = O.map((le) => le.x), G = O.map((le) => le.y), Q = Math.min(...H), ee = Math.min(...G), Se = Math.max(...H), ke = Math.max(...G), se = O.map((le) => ({
-                x: le.x - Q,
-                y: le.y - ee
-              })), Re = Math.max(Se - Q, 1), it = Math.max(ke - ee, 1);
-              k(e.id, {
-                x: e.x + Q,
-                y: e.y + ee,
+          I.current && (I.current, k((K) => {
+            if (K.currentPoints) {
+              const P = K.currentPoints, H = P.map((de) => de.x), Q = P.map((de) => de.y), ee = Math.min(...H), j = Math.min(...Q), Se = Math.max(...H), ke = Math.max(...Q), ae = P.map((de) => ({
+                x: de.x - ee,
+                y: de.y - j
+              })), Re = Math.max(Se - ee, 1), ut = Math.max(ke - j, 1);
+              v(e.id, {
+                x: e.x + ee,
+                y: e.y + j,
                 width: Re,
-                height: it,
-                points: se
-              }), w?.(se);
+                height: ut,
+                points: ae
+              }), S?.(ae);
             }
             return {
               isDragging: !1,
@@ -1950,111 +2111,111 @@ const Me = 8, ze = 25, Ye = ie(
               startPosition: null,
               currentPoints: null
             };
-          }), T.current = null, document.removeEventListener("mousemove", Y), document.removeEventListener("mouseup", q));
+          }), I.current = null, document.removeEventListener("mousemove", X), document.removeEventListener("mouseup", q));
         };
-        document.addEventListener("mousemove", Y), document.addEventListener("mouseup", q);
+        document.addEventListener("mousemove", X), document.addEventListener("mouseup", q);
       },
-      [y, b, D, I, k, e.id, e.x, e.y, w]
-    ), ne = c(
-      (N) => {
-        const C = _[0], W = _[_.length - 1], Y = (C.x + W.x) / 2, q = (C.y + W.y) / 2, V = M.x + Y, O = M.y + q;
-        oe(
-          { x: V, y: O },
+      [d, M, C, b, v, e.id, e.x, e.y, S]
+    ), G = i(
+      (z) => {
+        const A = _[0], U = _[_.length - 1], X = (A.x + U.x) / 2, q = (A.y + U.y) / 2, K = T.x + X, P = T.y + q;
+        Y(
+          { x: K, y: P },
           e.rotation ?? 0,
-          N
+          z
         );
       },
-      [oe, M, _, e.rotation]
-    ), ue = c(
-      (N) => {
-        $.onClick(N), b && !p.isDragging && A.onMouseDown(N);
+      [Y, T, _, e.rotation]
+    ), re = i(
+      (z) => {
+        B.onClick(z), M && !y.isDragging && O.onMouseDown(z);
       },
-      [$, A, b, p.isDragging]
-    ), j = {
-      cursor: P ? "grabbing" : b ? "grab" : "pointer",
+      [B, O, M, y.isDragging]
+    ), J = {
+      cursor: $ ? "grabbing" : M ? "grab" : "pointer",
       opacity: e.visible === !1 ? 0.5 : 1,
       ...o
-    }, z = Z(() => _.map((N) => ({ x: N.x, y: N.y })), [_]), B = Z(() => {
+    }, N = V(() => _.map((z) => ({ x: z.x, y: z.y })), [_]), D = V(() => {
       if (_.length < 2) return { cx: 0, cy: 0, x1: 0, y1: 0, x2: 0, y2: 0 };
-      const N = _[0], C = _[_.length - 1], W = (N.x + C.x) / 2, Y = (N.y + C.y) / 2, q = C.x - N.x, V = C.y - N.y, O = Math.sqrt(q * q + V * V) || 1, H = -V / O, G = q / O, Q = W + H * ze, ee = Y + G * ze;
+      const z = _[0], A = _[_.length - 1], U = (z.x + A.x) / 2, X = (z.y + A.y) / 2, q = A.x - z.x, K = A.y - z.y, P = Math.sqrt(q * q + K * K) || 1, H = -K / P, Q = q / P, ee = U + H * Me, j = X + Q * Me;
       return {
-        cx: Q,
-        cy: ee,
-        x1: W,
-        y1: Y,
-        x2: Q,
-        y2: ee
+        cx: ee,
+        cy: j,
+        x1: U,
+        y1: X,
+        x2: ee,
+        y2: j
       };
     }, [_]);
-    return v.createElement(
+    return E.createElement(
       "g",
       {
         ref: R,
-        className: pe("canvas-element canvas-line", s, {
-          "canvas-element--selected": b,
-          "canvas-element--dragging": P,
-          "canvas-element--endpoint-dragging": p.isDragging,
-          "canvas-element--rotating": X,
+        className: fe("canvas-element canvas-line", s, {
+          "canvas-element--selected": M,
+          "canvas-element--dragging": $,
+          "canvas-element--endpoint-dragging": y.isDragging,
+          "canvas-element--rotating": W,
           "canvas-element--locked": e.locked
         }),
-        transform: `translate(${M.x}, ${M.y})${m ? ` rotate(${m}, ${M.width / 2}, ${M.height / 2})` : ""}`,
-        style: j,
-        onMouseDown: ue,
-        onTouchStart: A.onTouchStart,
+        transform: `translate(${T.x}, ${T.y})${p ? ` rotate(${p}, ${T.width / 2}, ${T.height / 2})` : ""}`,
+        style: J,
+        onMouseDown: re,
+        onTouchStart: O.onTouchStart,
         "data-element-id": e.id,
         "data-element-type": e.type
       },
       // Render line with current points
-      n(_, p.isDragging),
+      n(_, y.isDragging),
       // Endpoint handles (only when selected)
-      b && a && !y && z.map(
-        (N, C) => v.createElement("circle", {
-          key: `endpoint-handle-${C}`,
+      M && a && !d && N.map(
+        (z, A) => E.createElement("circle", {
+          key: `endpoint-handle-${A}`,
           className: "canvas-line__endpoint-handle",
-          cx: N.x,
-          cy: N.y,
-          r: Me / 2 + 2,
-          fill: d.colors.handle.fill,
-          stroke: d.colors.handle.stroke,
+          cx: z.x,
+          cy: z.y,
+          r: ze / 2 + 2,
+          fill: c.colors.handle.fill,
+          stroke: c.colors.handle.stroke,
           strokeWidth: 1.5,
           cursor: "move",
-          onMouseDown: (W) => U(C, W)
+          onMouseDown: (U) => Z(A, U)
         })
       ),
       // Rotation handle (perpendicular to line direction)
-      b && a && l && !y && v.createElement(
+      M && a && u && !d && E.createElement(
         "g",
         {
           key: "rotation-handle",
           className: "canvas-line__rotation-handle"
         },
         // Line connecting to element center
-        v.createElement("line", {
-          x1: B.x1,
-          y1: B.y1,
-          x2: B.x2,
-          y2: B.y2,
-          stroke: d.colors.selection.stroke,
+        E.createElement("line", {
+          x1: D.x1,
+          y1: D.y1,
+          x2: D.x2,
+          y2: D.y2,
+          stroke: c.colors.selection.stroke,
           strokeWidth: 1,
           pointerEvents: "none"
         }),
         // Rotation handle circle
-        v.createElement("circle", {
-          cx: B.cx,
-          cy: B.cy,
-          r: Me / 2 + 2,
-          fill: d.colors.handle.fill,
-          stroke: d.colors.handle.stroke,
+        E.createElement("circle", {
+          cx: D.cx,
+          cy: D.cy,
+          r: ze / 2 + 2,
+          fill: c.colors.handle.fill,
+          stroke: c.colors.handle.stroke,
           strokeWidth: 1,
           cursor: "grab",
-          onMouseDown: ne
+          onMouseDown: G
         })
       )
     );
   }
 );
 Ye.displayName = "LineBase";
-const He = ie(
+const je = ie(
   ({
     element: e,
     disabled: t,
@@ -2063,16 +2224,16 @@ const He = ie(
     onSelect: o,
     onDragStart: r,
     onDrag: a,
-    onDragEnd: l,
-    onPointsChange: u,
-    onRotateStart: g,
+    onDragEnd: u,
+    onPointsChange: m,
+    onRotateStart: f,
     onRotate: h,
-    onRotateEnd: x,
-    className: w,
-    style: f
-  }, E) => {
-    const { theme: i } = F(), { style: R, lineType: k = "solid" } = e, d = c(() => {
-      switch (k) {
+    onRotateEnd: w,
+    className: S,
+    style: x
+  }, g) => {
+    const { theme: l } = te(), { style: R, lineType: v = "solid" } = e, c = i(() => {
+      switch (v) {
         case "dashed":
           return "8 4";
         case "dotted":
@@ -2080,14 +2241,14 @@ const He = ie(
         default:
           return;
       }
-    }, [k]), I = R?.stroke ?? i.colors.element.stroke, y = R?.strokeWidth ?? i.strokeWidth.normal, p = c((S, T) => {
-      const D = S.map((b, $) => $ === 0 ? `M ${b.x} ${b.y}` : `L ${b.x} ${b.y}`).join(" ");
-      return v.createElement(
+    }, [v]), b = R?.stroke ?? l.colors.element.stroke, d = R?.strokeWidth ?? l.strokeWidth.normal, y = i((k, I) => {
+      const C = k.map((M, B) => B === 0 ? `M ${M.x} ${M.y}` : `L ${M.x} ${M.y}`).join(" ");
+      return E.createElement(
         "g",
         null,
         // Invisible wider path for easier selection (follows the line shape)
-        v.createElement("path", {
-          d: D,
+        E.createElement("path", {
+          d: C,
           fill: "none",
           stroke: "transparent",
           strokeWidth: 20,
@@ -2095,101 +2256,101 @@ const He = ie(
           strokeLinecap: "round"
         }),
         // Visible line
-        v.createElement("path", {
-          d: D,
+        E.createElement("path", {
+          d: C,
           fill: "none",
-          stroke: I,
-          strokeWidth: y,
-          strokeDasharray: d(),
+          stroke: b,
+          strokeWidth: d,
+          strokeDasharray: c(),
           strokeLinecap: "round",
           strokeLinejoin: "round",
           opacity: R?.opacity ?? 1
         })
       );
-    }, [I, y, d, R?.opacity]);
-    return v.createElement(Ye, {
-      ref: E,
+    }, [b, d, c, R?.opacity]);
+    return E.createElement(Ye, {
+      ref: g,
       element: e,
       disabled: t,
       showHandles: n,
       enableRotation: s,
-      className: w,
-      style: f,
+      className: S,
+      style: x,
       onSelect: o,
       onDragStart: r,
       onDrag: a,
-      onDragEnd: l,
-      onPointsChange: u,
-      onRotateStart: g,
+      onDragEnd: u,
+      onPointsChange: m,
+      onRotateStart: f,
       onRotate: h,
-      onRotateEnd: x,
-      renderLine: p
+      onRotateEnd: w,
+      renderLine: y
     });
   }
 );
-He.displayName = "Line";
-const Gt = ({ element: e }) => {
-  const { theme: t } = F(), { width: n, height: s, style: o, label: r } = e, a = Math.min(n, s) * 0.15, l = n / 2, u = a * 2 + 4, g = s * 0.6, h = u + (g - u) * 0.3, x = n * 0.4, w = n * 0.35, f = s - 4, E = o?.stroke ?? t.colors.element.stroke, i = o?.strokeWidth ?? t.strokeWidth.normal;
-  return v.createElement(
+je.displayName = "Line";
+const Jt = ({ element: e }) => {
+  const { theme: t } = te(), { width: n, height: s, style: o, label: r } = e, a = Math.min(n, s) * 0.15, u = n / 2, m = a * 2 + 4, f = s * 0.6, h = m + (f - m) * 0.3, w = n * 0.4, S = n * 0.35, x = s - 4, g = o?.stroke ?? t.colors.element.stroke, l = o?.strokeWidth ?? t.strokeWidth.normal;
+  return E.createElement(
     "g",
     null,
     // Invisible background for selection
-    v.createElement("rect", {
+    E.createElement("rect", {
       width: n,
       height: s,
       fill: "transparent"
     }),
     // Head (circle)
-    v.createElement("circle", {
-      cx: l,
+    E.createElement("circle", {
+      cx: u,
       cy: a + 2,
       r: a,
       fill: o?.fill ?? "none",
-      stroke: E,
-      strokeWidth: i
+      stroke: g,
+      strokeWidth: l
     }),
     // Body (vertical line)
-    v.createElement("line", {
-      x1: l,
-      y1: u,
-      x2: l,
-      y2: g,
-      stroke: E,
-      strokeWidth: i
+    E.createElement("line", {
+      x1: u,
+      y1: m,
+      x2: u,
+      y2: f,
+      stroke: g,
+      strokeWidth: l
     }),
     // Arms (horizontal line)
-    v.createElement("line", {
-      x1: l - x,
+    E.createElement("line", {
+      x1: u - w,
       y1: h,
-      x2: l + x,
+      x2: u + w,
       y2: h,
-      stroke: E,
-      strokeWidth: i
+      stroke: g,
+      strokeWidth: l
     }),
     // Left leg
-    v.createElement("line", {
-      x1: l,
-      y1: g,
-      x2: l - w,
+    E.createElement("line", {
+      x1: u,
+      y1: f,
+      x2: u - S,
       y2: s * 0.85,
-      stroke: E,
-      strokeWidth: i
+      stroke: g,
+      strokeWidth: l
     }),
     // Right leg
-    v.createElement("line", {
-      x1: l,
-      y1: g,
-      x2: l + w,
+    E.createElement("line", {
+      x1: u,
+      y1: f,
+      x2: u + S,
       y2: s * 0.85,
-      stroke: E,
-      strokeWidth: i
+      stroke: g,
+      strokeWidth: l
     }),
     // Label
-    r && v.createElement(
+    r && E.createElement(
       "text",
       {
-        x: l,
-        y: f,
+        x: u,
+        y: x,
         textAnchor: "middle",
         dominantBaseline: "text-bottom",
         fill: o?.fill ?? t.colors.text.primary,
@@ -2199,29 +2360,29 @@ const Gt = ({ element: e }) => {
       r
     )
   );
-}, Ve = ae(Gt);
-Ve.displayName = "Actor";
-const Jt = ({ element: e }) => {
-  const { theme: t } = F(), { width: n, height: s, style: o, label: r } = e, a = n / 2, l = 40, u = o?.stroke ?? t.colors.element.stroke, g = o?.strokeWidth ?? t.strokeWidth.normal;
-  return v.createElement(
+}, Ke = le(Jt);
+Ke.displayName = "Actor";
+const qt = ({ element: e }) => {
+  const { theme: t } = te(), { width: n, height: s, style: o, label: r } = e, a = n / 2, u = 40, m = o?.stroke ?? t.colors.element.stroke, f = o?.strokeWidth ?? t.strokeWidth.normal;
+  return E.createElement(
     "g",
     null,
     // Header box
-    v.createElement("rect", {
+    E.createElement("rect", {
       x: 0,
       y: 0,
       width: n,
-      height: l,
+      height: u,
       fill: o?.fill ?? t.colors.element.fill,
-      stroke: u,
-      strokeWidth: g
+      stroke: m,
+      strokeWidth: f
     }),
     // Label in header
-    r && v.createElement(
+    r && E.createElement(
       "text",
       {
         x: a,
-        y: l / 2,
+        y: u / 2,
         textAnchor: "middle",
         dominantBaseline: "central",
         fill: t.colors.text.primary,
@@ -2231,20 +2392,20 @@ const Jt = ({ element: e }) => {
       r
     ),
     // Dashed lifeline
-    v.createElement("line", {
+    E.createElement("line", {
       x1: a,
-      y1: l,
+      y1: u,
       x2: a,
       y2: s,
-      stroke: u,
-      strokeWidth: g,
+      stroke: m,
+      strokeWidth: f,
       strokeDasharray: "8 4"
     })
   );
-}, Fe = ae(Jt);
-Fe.displayName = "Lifeline";
-const qt = ({ element: e }) => {
-  const { theme: t } = F(), { width: n, height: s, style: o, label: r, messageType: a = "sync" } = e, l = o?.stroke ?? t.colors.connection.line, u = o?.strokeWidth ?? t.strokeWidth.normal, g = 10, h = s / 2, x = () => {
+}, Ge = le(qt);
+Ge.displayName = "Lifeline";
+const Qt = ({ element: e }) => {
+  const { theme: t } = te(), { width: n, height: s, style: o, label: r, messageType: a = "sync" } = e, u = o?.stroke ?? t.colors.connection.line, m = o?.strokeWidth ?? t.strokeWidth.normal, f = 10, h = s / 2, w = () => {
     switch (a) {
       case "return":
         return "8 4";
@@ -2253,40 +2414,40 @@ const qt = ({ element: e }) => {
       default:
         return;
     }
-  }, w = () => a === "async" ? v.createElement("polyline", {
-    points: `${n - g},${h - g / 2} ${n},${h} ${n - g},${h + g / 2}`,
+  }, S = () => a === "async" ? E.createElement("polyline", {
+    points: `${n - f},${h - f / 2} ${n},${h} ${n - f},${h + f / 2}`,
     fill: "none",
-    stroke: l,
-    strokeWidth: u
-  }) : v.createElement("polygon", {
-    points: `${n},${h} ${n - g},${h - g / 2} ${n - g},${h + g / 2}`,
-    fill: l,
-    stroke: l,
+    stroke: u,
+    strokeWidth: m
+  }) : E.createElement("polygon", {
+    points: `${n},${h} ${n - f},${h - f / 2} ${n - f},${h + f / 2}`,
+    fill: u,
+    stroke: u,
     strokeWidth: 1
   });
-  return v.createElement(
+  return E.createElement(
     "g",
     null,
     // Invisible background for selection
-    v.createElement("rect", {
+    E.createElement("rect", {
       width: n,
       height: s,
       fill: "transparent"
     }),
     // Main line
-    v.createElement("line", {
+    E.createElement("line", {
       x1: 0,
       y1: h,
-      x2: n - (a === "async" ? 0 : g / 2),
+      x2: n - (a === "async" ? 0 : f / 2),
       y2: h,
-      stroke: l,
-      strokeWidth: u,
-      strokeDasharray: x()
+      stroke: u,
+      strokeWidth: m,
+      strokeDasharray: w()
     }),
     // Arrow head
-    w(),
+    S(),
     // Label above the line
-    r && v.createElement(
+    r && E.createElement(
       "text",
       {
         x: n / 2,
@@ -2300,11 +2461,11 @@ const qt = ({ element: e }) => {
       r
     )
   );
-}, Ke = ae(qt);
-Ke.displayName = "Message";
-const Qt = ({ element: e }) => {
-  const { theme: t } = F(), { width: n, height: s, style: o } = e;
-  return v.createElement("rect", {
+}, Je = le(Qt);
+Je.displayName = "Message";
+const en = ({ element: e }) => {
+  const { theme: t } = te(), { width: n, height: s, style: o } = e;
+  return E.createElement("rect", {
     width: n || 12,
     // Default narrow width
     height: s,
@@ -2312,22 +2473,22 @@ const Qt = ({ element: e }) => {
     stroke: o?.stroke ?? t.colors.element.stroke,
     strokeWidth: o?.strokeWidth ?? t.strokeWidth.normal
   });
-}, je = ae(Qt);
-je.displayName = "ActivationBar";
-const be = {
-  rectangle: Ie,
-  ellipse: he,
-  circle: he,
-  diamond: Ue,
-  text: Xe,
-  line: He,
-  actor: Ve,
-  lifeline: Fe,
-  message: Ke,
-  activationBar: je,
+}, qe = le(en);
+qe.displayName = "ActivationBar";
+const Ce = {
+  rectangle: be,
+  ellipse: pe,
+  circle: pe,
+  diamond: Ve,
+  text: Fe,
+  line: je,
+  actor: Ke,
+  lifeline: Ge,
+  message: Je,
+  activationBar: qe,
   // Default fallback for custom types
-  custom: Ie
-}, Ge = ie(
+  custom: be
+}, Qe = ie(
   ({
     width: e,
     height: t,
@@ -2336,87 +2497,96 @@ const be = {
     showGrid: o,
     gridSize: r,
     onCanvasClick: a,
-    onCanvasDoubleClick: l,
-    children: u
-  }, g) => {
-    const { elements: h, config: x } = ge(), { clearSelection: w } = we(), { viewport: f } = de(), { theme: E } = F(), i = e ?? x.width, R = t ?? x.height, k = o ?? x.grid?.visible, d = r ?? x.grid?.size ?? 20, I = Z(() => Te(h), [h]), y = c(
-      (T) => {
-        T.target === T.currentTarget && (w(), a?.(T));
+    onCanvasDoubleClick: u,
+    children: m
+  }, f) => {
+    const { elements: h, config: w } = me(), { clearSelection: S } = we(), { viewport: x } = he(), { theme: g } = te(), l = e ?? w.width, R = t ?? w.height, v = o ?? w.grid?.visible, c = r ?? w.grid?.size ?? 20, b = V(() => Ie(h), [h]), d = i(
+      (C) => {
+        S(), a?.(C);
       },
-      [w, a]
-    ), p = () => {
-      if (!k) return null;
-      const T = "canvas-grid-pattern";
-      return v.createElement(
-        v.Fragment,
+      [S, a]
+    ), y = () => {
+      if (!v) return null;
+      const C = "canvas-grid-pattern";
+      return E.createElement(
+        E.Fragment,
         null,
-        v.createElement(
+        E.createElement(
           "defs",
           null,
-          v.createElement(
+          E.createElement(
             "pattern",
             {
-              id: T,
-              width: d,
-              height: d,
+              id: C,
+              width: c,
+              height: c,
               patternUnits: "userSpaceOnUse"
             },
-            v.createElement("path", {
-              d: `M ${d} 0 L 0 0 0 ${d}`,
+            E.createElement("path", {
+              d: `M ${c} 0 L 0 0 0 ${c}`,
               fill: "none",
-              stroke: E.colors.grid.line,
+              stroke: g.colors.grid.line,
               strokeWidth: 0.5
             })
           )
         ),
-        v.createElement("rect", {
+        E.createElement("rect", {
           width: "100%",
           height: "100%",
-          fill: `url(#${T})`
+          fill: `url(#${C})`,
+          pointerEvents: "none"
+          // Let clicks pass through to background
         })
       );
-    }, S = (T) => {
-      const D = be[T.type] ?? be.custom;
-      return v.createElement(D, {
-        key: T.id,
-        element: T
+    }, k = () => E.createElement("rect", {
+      className: "canvas-background",
+      width: "100%",
+      height: "100%",
+      fill: "transparent",
+      onMouseDown: d
+    }), I = (C) => {
+      const M = Ce[C.type] ?? Ce.custom;
+      return E.createElement(M, {
+        key: C.id,
+        element: C
       });
     };
-    return v.createElement(
+    return E.createElement(
       "svg",
       {
-        ref: g,
-        className: pe("canvas-drawing", n),
-        width: i,
+        ref: f,
+        className: fe("canvas-drawing", n),
+        width: l,
         height: R,
-        viewBox: `0 0 ${i} ${R}`,
+        viewBox: `0 0 ${l} ${R}`,
         style: {
-          backgroundColor: E.colors.background,
+          backgroundColor: g.colors.background,
           cursor: "default",
           userSelect: "none",
           ...s
         },
-        onClick: y,
-        onDoubleClick: l
+        onDoubleClick: u
       },
       // Transform group for zoom and pan
-      v.createElement(
+      E.createElement(
         "g",
         {
-          transform: `translate(${f.pan.x}, ${f.pan.y}) scale(${f.zoom})`
+          transform: `translate(${x.pan.x}, ${x.pan.y}) scale(${x.zoom})`
         },
-        // Grid
-        p(),
+        // Background rect for capturing clicks on empty areas
+        k(),
+        // Grid (pointer-events: none, so clicks pass through)
+        y(),
         // Elements
-        I.map(S),
+        b.map(I),
         // Additional children (e.g., selection boxes, connection handles)
-        u
+        m
       )
     );
   }
 );
-Ge.displayName = "DrawingCanvas";
-const Je = ie(
+Qe.displayName = "DrawingCanvas";
+const et = ie(
   ({
     width: e,
     height: t,
@@ -2425,66 +2595,75 @@ const Je = ie(
     gridSize: o,
     enableKeyboardShortcuts: r = !0,
     className: a,
-    style: l,
-    children: u
-  }, g) => {
-    const h = re(null), x = ge(), w = we(), f = de(), E = Ut();
-    return Zt(
+    style: u,
+    children: m
+  }, f) => {
+    const h = se(null), w = me(), S = we(), x = he(), g = Ht();
+    return Xt(
       r ? {
-        undo: E.undo,
-        redo: E.redo,
-        delete: E.removeSelected,
-        selectAll: () => w.selectAll(x.elements.map((i) => i.id)),
-        copy: E.copy,
-        paste: E.paste,
-        cut: E.cut,
-        escape: w.clearSelection,
-        zoomIn: f.zoomIn,
-        zoomOut: f.zoomOut,
-        resetZoom: f.resetViewport
+        undo: g.undo,
+        redo: g.redo,
+        delete: g.removeSelected,
+        selectAll: () => S.selectAll(w.elements.map((l) => l.id)),
+        copy: g.copy,
+        paste: g.paste,
+        cut: g.cut,
+        escape: S.clearSelection,
+        zoomIn: x.zoomIn,
+        zoomOut: x.zoomOut,
+        resetZoom: x.resetViewport
       } : {}
-    ), dt(
-      g,
+    ), ht(
+      f,
       () => ({
-        addElement: E.addElement,
-        updateElement: E.updateElement,
-        removeElement: E.removeElement,
-        getElement: x.getElementById,
-        getElementsByType: x.getElementsByType,
-        select: w.select,
-        selectMultiple: w.selectMultiple,
-        clearSelection: w.clearSelection,
-        getSelectedIds: () => w.selectedIds,
-        zoomIn: f.zoomIn,
-        zoomOut: f.zoomOut,
-        setZoom: f.setZoom,
-        resetViewport: f.resetViewport,
-        undo: E.undo,
-        redo: E.redo,
-        canUndo: E.canUndo,
-        canRedo: E.canRedo,
+        addElement: g.addElement,
+        updateElement: g.updateElement,
+        removeElement: g.removeElement,
+        getElement: w.getElementById,
+        getElementsByType: w.getElementsByType,
+        select: S.select,
+        selectMultiple: S.selectMultiple,
+        clearSelection: S.clearSelection,
+        getSelectedIds: () => S.selectedIds,
+        zoomIn: x.zoomIn,
+        zoomOut: x.zoomOut,
+        setZoom: x.setZoom,
+        resetViewport: x.resetViewport,
+        undo: g.undo,
+        redo: g.redo,
+        canUndo: g.canUndo,
+        canRedo: g.canRedo,
         toJSON: () => ({
-          elements: x.elements,
-          connections: x.connections
+          elements: w.elements,
+          connections: w.connections
         }),
-        toSVG: () => h.current?.outerHTML ?? ""
+        toSVG: () => h.current?.outerHTML ?? "",
+        toImage: async (l) => {
+          if (!h.current)
+            throw new Error("SVG element not available");
+          return Oe(h.current, l);
+        },
+        fromJSON: (l) => {
+          const R = bt(l);
+          return w.setElements(R.elements), w.setConnections(R.connections), S.clearSelection(), R;
+        }
       }),
-      [x, w, f, E]
-    ), /* @__PURE__ */ ut(
+      [w, S, x, g]
+    ), /* @__PURE__ */ mt(
       "div",
       {
-        className: pe("canvas-container", a, {
+        className: fe("canvas-container", a, {
           "canvas-container--readonly": n
         }),
         style: {
           position: "relative",
           overflow: "hidden",
-          ...l
+          ...u
         },
         tabIndex: 0,
         children: [
-          /* @__PURE__ */ te(
-            Ge,
+          /* @__PURE__ */ oe(
+            Qe,
             {
               ref: h,
               width: e,
@@ -2493,14 +2672,14 @@ const Je = ie(
               gridSize: o
             }
           ),
-          u
+          m
         ]
       }
     );
   }
 );
-Je.displayName = "CanvasInner";
-const en = ie(
+et.displayName = "CanvasInner";
+const tn = ie(
   ({
     elements: e,
     connections: t,
@@ -2509,13 +2688,13 @@ const en = ie(
     defaultConnections: o = [],
     config: r,
     theme: a = "light",
-    initialViewport: l,
-    maxHistorySize: u,
-    onChange: g,
+    initialViewport: u,
+    maxHistorySize: m,
+    onChange: f,
     onSelectionChange: h,
-    ...x
-  }, w) => /* @__PURE__ */ te(
-    Pt,
+    ...w
+  }, S) => /* @__PURE__ */ oe(
+    Bt,
     {
       initialElements: s,
       initialConnections: o,
@@ -2524,15 +2703,15 @@ const en = ie(
       selectedIds: n,
       config: r,
       theme: a,
-      initialViewport: l,
-      maxHistorySize: u,
-      onElementsChange: g,
+      initialViewport: u,
+      maxHistorySize: m,
+      onElementsChange: f,
       onSelectionChange: h,
-      children: /* @__PURE__ */ te(Je, { ...x, ref: w })
+      children: /* @__PURE__ */ oe(et, { ...w, ref: S })
     }
   )
 );
-en.displayName = "Canvas";
+tn.displayName = "Canvas";
 const Ne = {
   rectangle: { width: 120, height: 80 },
   ellipse: { width: 120, height: 80 },
@@ -2545,7 +2724,7 @@ const Ne = {
   message: { width: 150, height: 30 },
   activationBar: { width: 12, height: 60 },
   custom: { width: 100, height: 100 }
-}, J = (e, t = {}) => {
+}, ne = (e, t = {}) => {
   const n = Ne[e] ?? Ne.custom;
   return {
     id: t.id ?? Ee(),
@@ -2560,13 +2739,13 @@ const Ne = {
     visible: t.visible ?? !0,
     data: t.data
   };
-}, qe = (e = {}) => J("rectangle", e), Qe = (e = {}) => J("ellipse", e), et = (e = {}) => {
+}, tt = (e = {}) => ne("rectangle", e), nt = (e = {}) => ne("ellipse", e), ot = (e = {}) => {
   const t = e.width ?? e.height ?? 80;
-  return J("circle", { ...e, width: t, height: t });
-}, tt = (e = {}) => J("diamond", e), nt = (e = {}) => {
+  return ne("circle", { ...e, width: t, height: t });
+}, st = (e = {}) => ne("diamond", e), rt = (e = {}) => {
   const { text: t, fontSize: n, fontFamily: s, fontWeight: o, textAlign: r, ...a } = e;
   return {
-    ...J("text", a),
+    ...ne("text", a),
     type: "text",
     text: t ?? "",
     fontSize: n,
@@ -2574,157 +2753,159 @@ const Ne = {
     fontWeight: o,
     textAlign: r
   };
-}, ot = (e = {}) => {
+}, at = (e = {}) => {
   const { points: t, lineType: n, x: s, y: o, ...r } = e, a = r.width ?? 100;
-  let l = t ?? [
+  let u = t ?? [
     { x: s ?? 0, y: o ?? 0 },
     { x: (s ?? 0) + a, y: o ?? 0 }
   ];
-  const u = l.map((y) => y.x), g = l.map((y) => y.y), h = Math.min(...u), x = Math.min(...g), w = Math.max(...u), f = Math.max(...g), E = l.map((y) => ({
-    x: y.x - h,
-    y: y.y - x
-  })), i = w - h, R = f - x, k = Math.max(i, 10), d = Math.max(R, 10), I = E.map((y) => ({
-    x: i < 10 ? y.x + (10 - i) / 2 : y.x,
-    y: R < 10 ? y.y + (10 - R) / 2 : y.y
+  const m = u.map((d) => d.x), f = u.map((d) => d.y), h = Math.min(...m), w = Math.min(...f), S = Math.max(...m), x = Math.max(...f), g = u.map((d) => ({
+    x: d.x - h,
+    y: d.y - w
+  })), l = S - h, R = x - w, v = Math.max(l, 10), c = Math.max(R, 10), b = g.map((d) => ({
+    x: l < 10 ? d.x + (10 - l) / 2 : d.x,
+    y: R < 10 ? d.y + (10 - R) / 2 : d.y
   }));
   return {
-    ...J("line", {
+    ...ne("line", {
       ...r,
-      x: i < 10 ? h - (10 - i) / 2 : h,
-      y: R < 10 ? x - (10 - R) / 2 : x,
-      width: k,
-      height: d
+      x: l < 10 ? h - (10 - l) / 2 : h,
+      y: R < 10 ? w - (10 - R) / 2 : w,
+      width: v,
+      height: c
     }),
     type: "line",
-    points: I,
+    points: b,
     lineType: n ?? "solid"
   };
-}, st = (e = {}) => {
+}, it = (e = {}) => {
   const { label: t, ...n } = e;
   return {
-    ...J("actor", n),
+    ...ne("actor", n),
     type: "actor",
     label: t
   };
-}, rt = (e = {}) => {
+}, ct = (e = {}) => {
   const { label: t, ...n } = e;
   return {
-    ...J("lifeline", n),
+    ...ne("lifeline", n),
     type: "lifeline",
     label: t
   };
-}, at = (e = {}) => {
+}, lt = (e = {}) => {
   const { label: t, messageType: n, fromId: s, toId: o, ...r } = e;
   return {
-    ...J("message", r),
+    ...ne("message", r),
     type: "message",
     label: t,
     messageType: n ?? "sync",
     fromId: s,
     toId: o
   };
-}, ct = (e = {}) => J("activationBar", e), tn = (e, t = {}) => {
+}, dt = (e = {}) => ne("activationBar", e), nn = (e, t = {}) => {
   switch (e) {
     case "rectangle":
-      return qe(t);
-    case "ellipse":
-      return Qe(t);
-    case "circle":
-      return et(t);
-    case "diamond":
       return tt(t);
-    case "text":
+    case "ellipse":
       return nt(t);
-    case "line":
+    case "circle":
       return ot(t);
-    case "actor":
+    case "diamond":
       return st(t);
-    case "lifeline":
+    case "text":
       return rt(t);
-    case "message":
+    case "line":
       return at(t);
-    case "activationBar":
+    case "actor":
+      return it(t);
+    case "lifeline":
       return ct(t);
+    case "message":
+      return lt(t);
+    case "activationBar":
+      return dt(t);
     default:
-      return J(e, t);
+      return ne(e, t);
   }
 }, yn = {
-  create: tn,
-  rectangle: qe,
-  ellipse: Qe,
-  circle: et,
-  diamond: tt,
-  text: nt,
-  line: ot,
-  actor: st,
-  lifeline: rt,
-  message: at,
-  activationBar: ct
+  create: nn,
+  rectangle: tt,
+  ellipse: nt,
+  circle: ot,
+  diamond: st,
+  text: rt,
+  line: at,
+  actor: it,
+  lifeline: ct,
+  message: lt,
+  activationBar: dt
 };
 export {
-  je as ActivationBar,
-  Ve as Actor,
-  en as Canvas,
-  Lt as CanvasProvider,
-  Vt as Circle,
-  Pt as CombinedCanvasProvider,
-  Ue as Diamond,
-  Ge as DrawingCanvas,
-  Ze as ElementBase,
+  qe as ActivationBar,
+  Ke as Actor,
+  tn as Canvas,
+  $t as CanvasProvider,
+  jt as Circle,
+  Bt as CombinedCanvasProvider,
+  Ve as Diamond,
+  Qe as DrawingCanvas,
+  Te as ElementBase,
   yn as ElementFactory,
-  he as Ellipse,
-  At as HistoryProvider,
-  Fe as Lifeline,
-  He as Line,
-  Ke as Message,
-  Ft as Oval,
-  Ie as Rectangle,
-  Nt as SelectionProvider,
-  Xe as TextElement,
-  It as ThemeProvider,
+  pe as Ellipse,
+  Ot as HistoryProvider,
+  Ge as Lifeline,
+  je as Line,
+  Je as Message,
+  Kt as Oval,
+  be as Rectangle,
+  Dt as SelectionProvider,
+  Fe as TextElement,
+  Tt as ThemeProvider,
   Mt as ViewportProvider,
-  an as boundsIntersect,
-  pt as bringToFront,
-  ct as createActivationBar,
-  st as createActor,
-  et as createCircle,
-  tt as createDiamond,
-  tn as createElement,
-  Qe as createEllipse,
-  rt as createLifeline,
-  ot as createLine,
-  at as createMessage,
-  qe as createRectangle,
-  nt as createText,
-  pe as cx,
-  Rt as darkTheme,
-  De as deepMerge,
-  dn as deserializeFromJSON,
-  sn as distance,
+  cn as boundsIntersect,
+  ft as bringToFront,
+  dt as createActivationBar,
+  it as createActor,
+  ot as createCircle,
+  st as createDiamond,
+  nn as createElement,
+  nt as createEllipse,
+  ct as createLifeline,
+  at as createLine,
+  lt as createMessage,
+  tt as createRectangle,
+  rt as createText,
+  fe as cx,
+  It as darkTheme,
+  Ae as deepMerge,
+  bt as deserializeFromJSON,
+  rn as distance,
   hn as downloadAsFile,
+  mn as downloadAsImage,
+  Oe as exportToImage,
   un as exportToSVG,
   Ee as generateId,
-  ht as getResizeHandles,
-  mn as getThemeCSSVariables,
-  rn as isPointInBounds,
+  pt as getResizeHandles,
+  pn as getThemeCSSVariables,
+  an as isPointInBounds,
   ce as lightTheme,
-  gt as sendToBack,
-  ln as serializeToJSON,
-  cn as snapToGrid,
-  Te as sortByZIndex,
-  ge as useCanvas,
-  Ut as useCanvasActions,
-  Zt as useCanvasKeyboardShortcuts,
-  $e as useDraggable,
-  Ct as useHistory,
-  Wt as useKeyboard,
-  $t as useResizable,
-  Be as useRotatable,
-  We as useSelectable,
+  xt as sendToBack,
+  dn as serializeToJSON,
+  ln as snapToGrid,
+  Ie as sortByZIndex,
+  me as useCanvas,
+  Ht as useCanvasActions,
+  Xt as useCanvasKeyboardShortcuts,
+  Ze as useDraggable,
+  Lt as useHistory,
+  Zt as useKeyboard,
+  Wt as useResizable,
+  Xe as useRotatable,
+  He as useSelectable,
   we as useSelection,
-  F as useTheme,
-  de as useViewport,
-  xt as validateCanvasData,
-  ae as withElementBehavior
+  te as useTheme,
+  he as useViewport,
+  wt as validateCanvasData,
+  le as withElementBehavior
 };
 //# sourceMappingURL=index.js.map

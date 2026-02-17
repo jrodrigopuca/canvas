@@ -75,6 +75,10 @@ interface CanvasRef {
 	// Export
 	toJSON: () => { elements: CanvasElement[]; connections: Connection[] };
 	toSVG: () => string;
+	toImage: (options?: ExportImageOptions) => Promise<Blob>;
+
+	// Import
+	fromJSON: (json: string) => CanvasData;
 }
 ```
 
@@ -448,13 +452,34 @@ sendToBack(elements: CanvasElement[], elementId: string): CanvasElement[]
 serializeToJSON(elements: CanvasElement[], connections: Connection[]): string
 
 // Deserialize from JSON string
-deserializeFromJSON(json: string): { elements: CanvasElement[]; connections: Connection[] }
+deserializeFromJSON(json: string): CanvasData
 
 // Export canvas to SVG string
 exportToSVG(svgElement: SVGSVGElement): string
 
+// Export canvas to PNG or JPEG image
+exportToImage(svgElement: SVGSVGElement, options?: ExportImageOptions): Promise<Blob>
+
 // Download content as file
 downloadAsFile(content: string, filename: string, mimeType: string): void
+
+// Download canvas as image file
+downloadAsImage(svgElement: SVGSVGElement, filename: string, options?: ExportImageOptions): Promise<void>
+```
+
+#### ExportImageOptions
+
+```typescript
+interface ExportImageOptions {
+  /** Image format: 'png' or 'jpeg' */
+  format?: 'png' | 'jpeg';
+  /** Quality for JPEG format (0-1), default 0.92 */
+  quality?: number;
+  /** Background color (default: transparent for PNG, white for JPEG) */
+  backgroundColor?: string;
+  /** Scale factor for higher resolution (default: 1) */
+  scale?: number;
+}
 ```
 
 ### Other

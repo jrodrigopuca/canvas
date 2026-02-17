@@ -94,7 +94,7 @@ declare interface CanvasContextValue {
     loadState: (elements: CanvasElement[], connections: Connection[]) => void;
 }
 
-declare interface CanvasData {
+export declare interface CanvasData {
     version: string;
     elements: CanvasElement[];
     connections: Connection[];
@@ -192,6 +192,8 @@ export declare interface CanvasRef {
         connections: Connection[];
     };
     toSVG: () => string;
+    toImage: (options?: ExportImageOptions) => Promise<Blob>;
+    fromJSON: (json: string) => CanvasData;
 }
 
 declare interface CanvasSnapshot {
@@ -382,6 +384,11 @@ export declare const distance: (p1: Point, p2: Point) => number;
 export declare const downloadAsFile: (content: string, filename: string, mimeType: string) => void;
 
 /**
+ * Download canvas as image file
+ */
+export declare const downloadAsImage: (svgElement: SVGSVGElement, filename: string, options?: ExportImageOptions) => Promise<void>;
+
+/**
  * Drag event
  */
 declare interface DragEvent_2 extends CanvasEvent {
@@ -490,6 +497,23 @@ export declare const Ellipse: default_2.ForwardRefExoticComponent<WithElementBeh
 declare interface EllipseProps extends ElementRenderProps {
 }
 
+export declare interface ExportImageOptions {
+    /** Image format: 'png' or 'jpeg' */
+    format?: ImageFormat;
+    /** Quality for JPEG format (0-1), default 0.92 */
+    quality?: number;
+    /** Background color (default: transparent for PNG, white for JPEG) */
+    backgroundColor?: string;
+    /** Scale factor for higher resolution (default: 1) */
+    scale?: number;
+}
+
+/**
+ * Export SVG canvas as PNG or JPEG image
+ * Returns a Promise with the image as a data URL or Blob
+ */
+export declare const exportToImage: (svgElement: SVGSVGElement, options?: ExportImageOptions) => Promise<Blob>;
+
 /**
  * Export canvas as SVG string
  */
@@ -541,6 +565,8 @@ declare interface HistoryProviderProps {
     maxHistorySize?: number;
     onStateChange?: (elements: CanvasElement[], connections: Connection[]) => void;
 }
+
+export declare type ImageFormat = "png" | "jpeg";
 
 /**
  * Check if a point is inside bounds
@@ -762,7 +788,7 @@ export declare const snapToGrid: (value: number, gridSize: number) => number;
  */
 export declare const sortByZIndex: (elements: CanvasElement[]) => CanvasElement[];
 
-export declare const TextElement: default_2.ForwardRefExoticComponent<WithElementBehaviorProps & Omit<TextProps, keyof ElementRenderProps> & default_2.RefAttributes<SVGGElement>>;
+export declare const TextElement: default_2.ForwardRefExoticComponent<TextProps & default_2.RefAttributes<SVGGElement>>;
 
 /**
  * Text element
@@ -776,8 +802,24 @@ export declare interface TextElementType extends CanvasElement {
     textAlign?: "left" | "center" | "right";
 }
 
-declare interface TextProps extends ElementRenderProps {
+declare interface TextProps {
     element: TextElementType;
+    disabled?: boolean;
+    showHandles?: boolean;
+    enableRotation?: boolean;
+    onSelect?: (selected: boolean) => void;
+    onDragStart?: () => void;
+    onDrag?: (x: number, y: number) => void;
+    onDragEnd?: (x: number, y: number) => void;
+    onResizeStart?: () => void;
+    onResize?: (width: number, height: number, x: number, y: number) => void;
+    onResizeEnd?: (width: number, height: number, x: number, y: number) => void;
+    onRotateStart?: () => void;
+    onRotate?: (rotation: number) => void;
+    onRotateEnd?: (rotation: number) => void;
+    onTextChange?: (text: string) => void;
+    className?: string;
+    style?: default_2.CSSProperties;
 }
 
 /**
