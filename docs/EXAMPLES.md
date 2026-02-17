@@ -6,6 +6,7 @@ Practical examples showing how to use `@jrodrigopuca/canvas`.
 
 - [Basic Usage](#basic-usage)
 - [Controlled Mode](#controlled-mode)
+- [Working with Lines](#working-with-lines)
 - [Custom Theme](#custom-theme)
 - [Imperative API](#imperative-api)
 - [UML Sequence Diagram](#uml-sequence-diagram)
@@ -147,6 +148,119 @@ function ControlledCanvas() {
 	);
 }
 ```
+
+---
+
+## Working with Lines
+
+Lines have special behavior compared to other elements:
+
+- **Endpoint handles**: Lines use endpoint handles instead of 8-point resize
+- **Horizontal by default**: Created without explicit points, lines are horizontal
+- **Auto-calculated bounds**: x, y, width, height are calculated from points
+- **Perpendicular rotation**: Rotation handle follows line direction
+
+### Creating Lines
+
+```tsx
+import { Canvas, createLine } from "@jrodrigopuca/canvas";
+
+function LineExamples() {
+	const lines = [
+		// Horizontal line (default when no points specified)
+		createLine({
+			id: "horizontal",
+			x: 50,
+			y: 50,
+			width: 200,
+			lineType: "solid",
+		}),
+
+		// Diagonal line with explicit points
+		createLine({
+			id: "diagonal",
+			points: [
+				{ x: 50, y: 150 },
+				{ x: 250, y: 250 },
+			],
+			lineType: "dashed",
+		}),
+
+		// Dotted vertical line
+		createLine({
+			id: "vertical",
+			points: [
+				{ x: 300, y: 50 },
+				{ x: 300, y: 200 },
+			],
+			lineType: "dotted",
+		}),
+	];
+
+	return <Canvas width={400} height={300} defaultElements={lines} />;
+}
+```
+
+### Handling Point Changes
+
+```tsx
+import { Canvas, CanvasRef, createLine } from "@jrodrigopuca/canvas";
+import { useRef, useState } from "react";
+
+function LineWithPointTracking() {
+	const canvasRef = useRef<CanvasRef>(null);
+	const [lineInfo, setLineInfo] = useState<string>("");
+
+	const handleChange = (state) => {
+		const line = state.elements.find((el) => el.type === "line");
+		if (line?.points) {
+			const p1 = line.points[0];
+			const p2 = line.points[1];
+			setLineInfo(
+				`Line from (${p1.x.toFixed(0)}, ${p1.y.toFixed(0)}) to (${p2.x.toFixed(0)}, ${p2.y.toFixed(0)})`,
+			);
+		}
+	};
+
+	return (
+		<div>
+			<Canvas
+				ref={canvasRef}
+				width={400}
+				height={200}
+				defaultElements={[
+					createLine({
+						id: "tracked-line",
+						x: 50,
+						y: 100,
+						width: 200,
+					}),
+				]}
+				onChange={handleChange}
+			/>
+			<p>{lineInfo}</p>
+		</div>
+	);
+}
+```
+
+### Line Rotation
+
+Lines can be rotated using the rotation handle, which is positioned perpendicular to the line direction and moves as the line changes orientation.
+
+```tsx
+// Line with initial rotation
+createLine({
+	id: "rotated-line",
+	x: 100,
+	y: 100,
+	width: 150,
+	rotation: 45, // 45 degrees
+	style: { stroke: "#ef4444", strokeWidth: 3 },
+});
+```
+
+**Tip**: Hold **Shift** while rotating to snap to 15° increments.
 
 ---
 

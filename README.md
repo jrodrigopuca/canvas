@@ -62,14 +62,14 @@ function App() {
 
 ### Shapes
 
-| Element   | Type        | Description                                    |
-| --------- | ----------- | ---------------------------------------------- |
-| Rectangle | `rectangle` | Basic rectangle with optional rounded corners  |
-| Ellipse   | `ellipse`   | Ellipse/oval shape                             |
-| Circle    | `circle`    | Perfect circle (ellipse with equal dimensions) |
-| Diamond   | `diamond`   | Rhombus/diamond shape                          |
-| Text      | `text`      | Text element with font customization           |
-| Line      | `line`      | Line with multiple points, solid/dashed/dotted |
+| Element   | Type        | Description                                     |
+| --------- | ----------- | ----------------------------------------------- |
+| Rectangle | `rectangle` | Basic rectangle with optional rounded corners   |
+| Ellipse   | `ellipse`   | Ellipse/oval shape                              |
+| Circle    | `circle`    | Perfect circle (ellipse with equal dimensions)  |
+| Diamond   | `diamond`   | Rhombus/diamond shape                           |
+| Text      | `text`      | Text element with font customization            |
+| Line      | `line`      | Line with endpoint handles, solid/dashed/dotted |
 
 ### UML Elements
 
@@ -92,8 +92,10 @@ graph TD
     B --> G[CanvasProvider]
     G --> H[DrawingCanvas]
     H --> I[ElementBase]
+    H --> L[LineBase]
     I --> J[Shape Elements]
     I --> K[UML Elements]
+    L --> M[Line]
 ```
 
 ## Documentation

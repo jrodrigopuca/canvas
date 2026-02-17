@@ -19,6 +19,7 @@ Detailed documentation for all components in `@jrodrigopuca/canvas`.
   - [ActivationBar](#activationbar)
 - [Base Components](#base-components)
   - [ElementBase](#elementbase)
+  - [LineBase](#linebase)
   - [withElementBehavior](#withelementbehavior)
 
 ---
@@ -401,14 +402,23 @@ Editable text element with font customization.
 
 ### Line
 
-Line with multiple points and line styles.
+Line element with endpoint-based manipulation. Unlike other elements that use standard 8-handle resize, Line uses specialized endpoint handles that allow extending/contracting the line along any direction.
+
+#### Behavior
+
+- **Default orientation**: Horizontal (when created without explicit points)
+- **Selection**: Shows circular handles at each endpoint
+- **Resize**: Drag an endpoint to extend/contract the line in any direction
+- **Rotation**: Handle positioned perpendicular to line direction, moves with line orientation
+- **Drag**: Move the entire line by dragging its body
+- **Hit area**: 20px wide invisible stroke for easy selection
 
 #### SVG Output
 
 ```xml
-<g transform="translate({x}, {y})">
+<g transform="translate({x}, {y}) rotate({rotation}, {centerX}, {centerY})">
   <!-- Invisible wider path for selection -->
-  <path d="{pathData}" stroke="transparent" stroke-width="10" />
+  <path d="{pathData}" stroke="transparent" stroke-width="20" />
 
   <!-- Visible line -->
   <path
@@ -418,32 +428,67 @@ Line with multiple points and line styles.
     stroke-dasharray="{dasharray}"
     stroke-linecap="round"
   />
+
+  <!-- Endpoint handles (when selected) -->
+  <circle cx="{p1.x}" cy="{p1.y}" r="6" class="endpoint-handle" />
+  <circle cx="{p2.x}" cy="{p2.y}" r="6" class="endpoint-handle" />
+
+  <!-- Rotation handle (perpendicular to line) -->
+  <line x1="{centerX}" y1="{centerY}" x2="{rotHandleX}" y2="{rotHandleY}" />
+  <circle cx="{rotHandleX}" cy="{rotHandleY}" r="6" class="rotation-handle" />
 </g>
 ```
 
 #### Element Properties
 
-| Property   | Type                              | Default   | Description |
-| ---------- | --------------------------------- | --------- | ----------- |
-| `points`   | `Point[]`                         | diagonal  | Line points |
-| `lineType` | `'solid' \| 'dashed' \| 'dotted'` | `'solid'` | Line style  |
+| Property   | Type                              | Default    | Description                   |
+| ---------- | --------------------------------- | ---------- | ----------------------------- |
+| `points`   | `Point[]`                         | horizontal | Line points (auto-normalized) |
+| `lineType` | `'solid' \| 'dashed' \| 'dotted'` | `'solid'`  | Line style                    |
+
+#### Component Props
+
+| Prop             | Type          | Description                          |
+| ---------------- | ------------- | ------------------------------------ |
+| `element`        | `LineElement` | Line element data                    |
+| `onPointsChange` | `Function`    | Callback when endpoints are modified |
+| `showHandles`    | `boolean`     | Show endpoint and rotation handles   |
+| `enableRotation` | `boolean`     | Enable rotation handle               |
 
 #### Example
 
 ```tsx
+// Create a horizontal line (default)
 <Line
 	element={{
-		id: "6",
+		id: "line1",
 		type: "line",
-		x: 0,
-		y: 0,
+		x: 100,
+		y: 100,
+		width: 150,
+		height: 10,
+		zIndex: 0,
+		points: [
+			{ x: 0, y: 5 },
+			{ x: 150, y: 5 },
+		],
+		lineType: "solid",
+	}}
+/>
+
+// Create a diagonal dashed line
+<Line
+	element={{
+		id: "line2",
+		type: "line",
+		x: 50,
+		y: 50,
 		width: 200,
 		height: 100,
 		zIndex: 0,
 		points: [
-			{ x: 50, y: 50 },
-			{ x: 150, y: 100 },
-			{ x: 250, y: 50 },
+			{ x: 0, y: 0 },
+			{ x: 200, y: 100 },
 		],
 		lineType: "dashed",
 	}}
@@ -680,9 +725,65 @@ Base wrapper component for all canvas elements.
 
 ---
 
+### LineBase
+
+Specialized base wrapper component for line elements with endpoint-based manipulation.
+
+#### Purpose
+
+- Provides endpoint drag handles (instead of standard 8-handle resize)
+- Handles rotation with perpendicular handle positioning
+- Automatically recalculates bounding box when endpoints move
+- Normalizes points relative to element origin
+
+#### Props
+
+| Prop             | Type          | Required | Description                                         |
+| ---------------- | ------------- | -------- | --------------------------------------------------- |
+| `element`        | `LineElement` | Yes      | Line element data                                   |
+| `renderLine`     | `Function`    | Yes      | Render callback `(points, isDragging) => ReactNode` |
+| `disabled`       | `boolean`     | No       | Disable interactions                                |
+| `showHandles`    | `boolean`     | No       | Show endpoint/rotation handles                      |
+| `enableRotation` | `boolean`     | No       | Enable rotation handle                              |
+| `onSelect`       | `Function`    | No       | Selection callback                                  |
+| `onDragStart`    | `Function`    | No       | Drag start callback                                 |
+| `onDrag`         | `Function`    | No       | Drag callback                                       |
+| `onDragEnd`      | `Function`    | No       | Drag end callback                                   |
+| `onPointsChange` | `Function`    | No       | Points change callback                              |
+| `onRotateStart`  | `Function`    | No       | Rotate start callback                               |
+| `onRotate`       | `Function`    | No       | Rotate callback                                     |
+| `onRotateEnd`    | `Function`    | No       | Rotate end callback                                 |
+
+#### Usage
+
+```tsx
+import { LineBase } from "@jrodrigopuca/canvas";
+
+const CustomLine = ({ element }) => {
+	const renderLine = (points, isEndpointDragging) => (
+		<path
+			d={points.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`).join(" ")}
+			stroke="blue"
+			strokeWidth={2}
+		/>
+	);
+
+	return (
+		<LineBase
+			element={element}
+			renderLine={renderLine}
+			showHandles={true}
+			enableRotation={true}
+		/>
+	);
+};
+```
+
+---
+
 ### withElementBehavior
 
-Higher-Order Component that wraps a render function with element behavior.
+Higher-Order Component that wraps a render function with standard element behavior (8-handle resize). **Note**: Line elements use `LineBase` instead for endpoint-based manipulation.
 
 #### Signature
 

@@ -153,13 +153,24 @@ interface TextElement extends CanvasElement {
 
 #### LineElement
 
+Line elements use endpoint-based manipulation instead of standard resize handles.
+
 ```typescript
 interface LineElement extends CanvasElement {
 	type: "line";
-	points?: Point[];
+	points?: Point[]; // Auto-normalized relative to (0,0)
 	lineType?: "solid" | "dashed" | "dotted";
 }
 ```
+
+**Behavior notes:**
+
+- Default orientation is horizontal when created without explicit points
+- Dragging endpoints extends/contracts the line in any direction
+- Bounding box (x, y, width, height) is auto-calculated from points
+- Rotation handle is positioned perpendicular to line direction
+
+````
 
 #### ActorElement
 
@@ -168,7 +179,7 @@ interface ActorElement extends CanvasElement {
 	type: "actor";
 	label?: string;
 }
-```
+````
 
 #### LifelineElement
 
@@ -483,12 +494,21 @@ createActivationBar(options: Partial<CanvasElement>): CanvasElement
 
 ### createLine
 
-`createLine` automatically calculates bounds from points:
+`createLine` automatically calculates bounds from points and creates a horizontal line by default:
 
 ```typescript
+// Create horizontal line (default)
+const horizontalLine = createLine({
+	x: 100,
+	y: 100,
+	width: 150, // Line will be 150px wide, horizontal
+});
+// Result: points=[{x:0, y:5}, {x:150, y:5}]
+
+// Create line with explicit points - bounding box auto-calculated
 // Points are normalized to be relative to (0,0)
 // Element x,y is set to the bounding box origin
-const line = createLine({
+const diagonalLine = createLine({
 	points: [
 		{ x: 100, y: 100 },
 		{ x: 200, y: 150 },
@@ -496,6 +516,14 @@ const line = createLine({
 });
 // Result: x=100, y=100, width=100, height=50
 // points: [{x:0, y:0}, {x:100, y:50}]
+
+// Create dashed line
+const dashedLine = createLine({
+	x: 50,
+	y: 50,
+	width: 200,
+	lineType: "dashed",
+});
 ```
 
 ---
