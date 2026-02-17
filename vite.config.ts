@@ -16,7 +16,7 @@ export default defineConfig(({ command }) => {
 							insertTypesEntry: true,
 							rollupTypes: true,
 						}),
-				  ]
+					]
 				: []),
 		],
 		// Library build configuration
