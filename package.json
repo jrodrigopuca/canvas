@@ -1,5 +1,5 @@
 {
-  "name": "@jrodrigopuca/canvas",
+  "name": "react-diagram-canvas",
   "version": "0.1.0",
   "description": "React component library for drawing diagrams, shapes, and interactive SVG elements",
   "type": "module",

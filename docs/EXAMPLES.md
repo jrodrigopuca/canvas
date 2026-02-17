@@ -1,6 +1,6 @@
 # Examples
 
-Practical examples showing how to use `@jrodrigopuca/canvas`.
+Practical examples showing how to use `react-diagram-canvas`.
 
 ## Table of Contents
 
@@ -22,7 +22,7 @@ Practical examples showing how to use `@jrodrigopuca/canvas`.
 Simple canvas with default elements (uncontrolled mode).
 
 ```tsx
-import { Canvas } from "@jrodrigopuca/canvas";
+import { Canvas } from "react-diagram-canvas";
 
 function BasicCanvas() {
 	const initialElements = [
@@ -83,7 +83,7 @@ Full control over canvas state with React state management.
 
 ```tsx
 import { useState, useCallback } from "react";
-import { Canvas, CanvasElement, Connection } from "@jrodrigopuca/canvas";
+import { Canvas, CanvasElement, Connection } from "react-diagram-canvas";
 
 function ControlledCanvas() {
 	const [elements, setElements] = useState<CanvasElement[]>([
@@ -163,7 +163,7 @@ Lines have special behavior compared to other elements:
 ### Creating Lines
 
 ```tsx
-import { Canvas, createLine } from "@jrodrigopuca/canvas";
+import { Canvas, createLine } from "react-diagram-canvas";
 
 function LineExamples() {
 	const lines = [
@@ -204,7 +204,7 @@ function LineExamples() {
 ### Handling Point Changes
 
 ```tsx
-import { Canvas, CanvasRef, createLine } from "@jrodrigopuca/canvas";
+import { Canvas, CanvasRef, createLine } from "react-diagram-canvas";
 import { useRef, useState } from "react";
 
 function LineWithPointTracking() {
@@ -269,7 +269,7 @@ createLine({
 Create a custom color theme.
 
 ```tsx
-import { Canvas, Theme } from "@jrodrigopuca/canvas";
+import { Canvas, Theme } from "react-diagram-canvas";
 
 const cyberpunkTheme: Theme = {
 	name: "cyberpunk",
@@ -375,7 +375,7 @@ import {
 	createRectangle,
 	createEllipse,
 	createText,
-} from "@jrodrigopuca/canvas";
+} from "react-diagram-canvas";
 
 function ImperativeCanvas() {
 	const canvasRef = useRef<CanvasRef>(null);
@@ -513,7 +513,7 @@ import {
 	createLifeline,
 	createMessage,
 	createActivationBar,
-} from "@jrodrigopuca/canvas";
+} from "react-diagram-canvas";
 
 function SequenceDiagram() {
 	const elements = [
@@ -632,7 +632,7 @@ import {
 	createEllipse,
 	createLine,
 	createText,
-} from "@jrodrigopuca/canvas";
+} from "react-diagram-canvas";
 
 function Flowchart() {
 	const elements = [
@@ -791,7 +791,7 @@ import {
 	ElementRenderProps,
 	CanvasElement,
 	Canvas,
-} from "@jrodrigopuca/canvas";
+} from "react-diagram-canvas";
 
 // Custom star shape
 interface StarProps extends ElementRenderProps {}
@@ -894,7 +894,7 @@ import {
 	deserializeFromJSON,
 	downloadAsFile,
 	downloadAsImage,
-} from "@jrodrigopuca/canvas";
+} from "react-diagram-canvas";
 
 function ExportImportDemo() {
 	const canvasRef = useRef<CanvasRef>(null);
@@ -1060,7 +1060,7 @@ function ExportImportDemo() {
 Customizing keyboard shortcuts.
 
 ```tsx
-import { Canvas, useKeyboard } from "@jrodrigopuca/canvas";
+import { Canvas, useKeyboard } from "react-diagram-canvas";
 
 function KeyboardShortcutsDemo() {
 	// Custom shortcuts (outside Canvas)
@@ -1130,7 +1130,7 @@ function KeyboardShortcutsDemo() {
 
 ```tsx
 import { createContext, useContext, useState, ReactNode } from "react";
-import { Canvas, CanvasElement, Connection } from "@jrodrigopuca/canvas";
+import { Canvas, CanvasElement, Connection } from "react-diagram-canvas";
 
 interface DiagramContextType {
 	elements: CanvasElement[];
@@ -1182,7 +1182,7 @@ function DiagramEditor() {
 
 ```tsx
 import { create } from "zustand";
-import { Canvas, CanvasElement, Connection } from "@jrodrigopuca/canvas";
+import { Canvas, CanvasElement, Connection } from "react-diagram-canvas";
 
 interface DiagramStore {
 	elements: CanvasElement[];

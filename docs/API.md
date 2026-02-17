@@ -1,6 +1,6 @@
 # API Reference
 
-Complete API documentation for `@jrodrigopuca/canvas`.
+Complete API documentation for `react-diagram-canvas`.
 
 ## Table of Contents
 

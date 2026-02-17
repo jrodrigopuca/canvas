@@ -1,8 +1,8 @@
-# @jrodrigopuca/canvas
+# react-diagram-canvas
 
 A React component library for creating interactive SVG-based diagrams, shapes, and drawing applications.
 
-[![npm version](https://img.shields.io/npm/v/@jrodrigopuca/canvas.svg)](https://www.npmjs.com/package/@jrodrigopuca/canvas)
+[![npm version](https://img.shields.io/npm/v/react-diagram-canvas.svg)](https://www.npmjs.com/package/react-diagram-canvas)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18+-61dafb.svg)](https://reactjs.org/)
 
@@ -21,17 +21,17 @@ A React component library for creating interactive SVG-based diagrams, shapes, a
 ## Installation
 
 ```bash
-npm install @jrodrigopuca/canvas
+npm install react-diagram-canvas
 # or
-yarn add @jrodrigopuca/canvas
+yarn add react-diagram-canvas
 # or
-pnpm add @jrodrigopuca/canvas
+pnpm add react-diagram-canvas
 ```
 
 ## Quick Start
 
 ```tsx
-import { Canvas } from "@jrodrigopuca/canvas";
+import { Canvas } from "react-diagram-canvas";
 
 function App() {
 	return (
@@ -176,7 +176,7 @@ canvasRef.current?.fromJSON(jsonString);
 ### Custom Theme
 
 ```tsx
-import { Canvas, Theme } from "@jrodrigopuca/canvas";
+import { Canvas, Theme } from "react-diagram-canvas";
 
 const customTheme: Theme = {
 	name: "custom",
@@ -212,7 +212,7 @@ const customTheme: Theme = {
 Elements can be used independently outside the Canvas:
 
 ```tsx
-import { Rectangle, withElementBehavior } from "@jrodrigopuca/canvas";
+import { Rectangle, withElementBehavior } from "react-diagram-canvas";
 
 // Create custom element
 const MyCustomShape = withElementBehavior(({ element }) => (
@@ -228,7 +228,7 @@ const MyCustomShape = withElementBehavior(({ element }) => (
 Create elements with proper defaults:
 
 ```tsx
-import { createRectangle, createActor } from "@jrodrigopuca/canvas";
+import { createRectangle, createActor } from "react-diagram-canvas";
 
 const rect = createRectangle({ x: 100, y: 100, width: 80, height: 60 });
 const actor = createActor({ x: 200, y: 100, label: "User" });

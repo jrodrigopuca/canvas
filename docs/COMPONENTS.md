@@ -1,6 +1,6 @@
 # Component Documentation
 
-Detailed documentation for all components in `@jrodrigopuca/canvas`.
+Detailed documentation for all components in `react-diagram-canvas`.
 
 ## Table of Contents
 
@@ -90,7 +90,7 @@ stateDiagram-v2
 ### Example
 
 ```tsx
-import { Canvas, CanvasRef } from "@jrodrigopuca/canvas";
+import { Canvas, CanvasRef } from "react-diagram-canvas";
 import { useRef } from "react";
 
 function App() {
@@ -167,7 +167,7 @@ SVG container that renders all canvas elements.
 ### Example
 
 ```tsx
-import { DrawingCanvas, CanvasProvider } from "@jrodrigopuca/canvas";
+import { DrawingCanvas, CanvasProvider } from "react-diagram-canvas";
 
 function CustomCanvas() {
 	return (
@@ -830,7 +830,7 @@ Specialized base wrapper component for line elements with endpoint-based manipul
 #### Usage
 
 ```tsx
-import { LineBase } from "@jrodrigopuca/canvas";
+import { LineBase } from "react-diagram-canvas";
 
 const CustomLine = ({ element }) => {
 	const renderLine = (points, isEndpointDragging) => (
@@ -871,7 +871,7 @@ function withElementBehavior<P extends ElementRenderProps>(
 #### Usage
 
 ```tsx
-import { withElementBehavior, ElementRenderProps } from "@jrodrigopuca/canvas";
+import { withElementBehavior, ElementRenderProps } from "react-diagram-canvas";
 
 interface MyShapeProps extends ElementRenderProps {}
 
