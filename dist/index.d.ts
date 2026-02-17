@@ -315,6 +315,8 @@ declare interface CreateLifelineElementOptions extends CreateElementOptions {
 
 /**
  * Create a line element
+ * Points are automatically normalized to be relative to (0,0)
+ * and element x,y is set to the bounding box origin
  */
 export declare const createLine: (options?: CreateLineElementOptions) => LineElement;
 
@@ -421,6 +423,7 @@ export declare interface ElementBaseProps {
     style?: default_2.CSSProperties;
     disabled?: boolean;
     showHandles?: boolean;
+    enableRotation?: boolean;
     onSelect?: (selected: boolean) => void;
     onDragStart?: () => void;
     onDrag?: (x: number, y: number) => void;
@@ -428,6 +431,9 @@ export declare interface ElementBaseProps {
     onResizeStart?: () => void;
     onResize?: (width: number, height: number, x: number, y: number) => void;
     onResizeEnd?: (width: number, height: number, x: number, y: number) => void;
+    onRotateStart?: () => void;
+    onRotate?: (rotation: number) => void;
+    onRotateEnd?: (rotation: number) => void;
 }
 
 /**
@@ -460,6 +466,7 @@ export declare interface ElementRenderProps {
     isSelected: boolean;
     isDragging: boolean;
     isResizing: boolean;
+    isRotating: boolean;
 }
 
 /**
@@ -566,7 +573,7 @@ declare interface LifelineProps extends ElementRenderProps {
 
 export declare const lightTheme: Theme;
 
-export declare const Line: default_2.ForwardRefExoticComponent<WithElementBehaviorProps & Omit<LineProps, keyof ElementRenderProps> & default_2.RefAttributes<SVGGElement>>;
+export declare const Line: default_2.ForwardRefExoticComponent<LineProps & default_2.RefAttributes<SVGGElement>>;
 
 /**
  * Line element
@@ -577,8 +584,21 @@ export declare interface LineElement extends CanvasElement {
     lineType?: LineType;
 }
 
-declare interface LineProps extends ElementRenderProps {
+declare interface LineProps {
     element: LineElement;
+    disabled?: boolean;
+    showHandles?: boolean;
+    enableRotation?: boolean;
+    onSelect?: (selected: boolean) => void;
+    onDragStart?: () => void;
+    onDrag?: (x: number, y: number) => void;
+    onDragEnd?: (x: number, y: number) => void;
+    onPointsChange?: (points: Point[]) => void;
+    onRotateStart?: () => void;
+    onRotate?: (rotation: number) => void;
+    onRotateEnd?: (rotation: number) => void;
+    className?: string;
+    style?: default_2.CSSProperties;
 }
 
 /**
@@ -681,6 +701,13 @@ declare interface ResizeState {
         width: number;
         height: number;
     } | null;
+}
+
+declare interface RotateState {
+    isRotating: boolean;
+    startAngle: number | null;
+    currentAngle: number | null;
+    deltaAngle: number;
 }
 
 declare interface SelectionContextValue {
@@ -975,6 +1002,23 @@ declare interface UseResizableReturn {
     isResizing: boolean;
 }
 
+export declare const useRotatable: (options?: UseRotatableOptions) => UseRotatableReturn;
+
+declare interface UseRotatableOptions {
+    onRotateStart?: (angle: number) => void;
+    onRotate?: (angle: number, deltaAngle: number) => void;
+    onRotateEnd?: (angle: number) => void;
+    disabled?: boolean;
+    snapAngle?: number;
+    center?: Point;
+}
+
+declare interface UseRotatableReturn {
+    rotateState: RotateState;
+    startRotate: (center: Point, initialRotation: number, e: React.MouseEvent | React.TouchEvent) => void;
+    isRotating: boolean;
+}
+
 export declare const useSelectable: (options: UseSelectableOptions) => UseSelectableReturn;
 
 declare interface UseSelectableOptions {
@@ -1064,6 +1108,7 @@ export declare interface WithElementBehaviorProps {
     element: CanvasElement;
     disabled?: boolean;
     showHandles?: boolean;
+    enableRotation?: boolean;
     onSelect?: (selected: boolean) => void;
     onDragStart?: () => void;
     onDrag?: (x: number, y: number) => void;
@@ -1071,6 +1116,9 @@ export declare interface WithElementBehaviorProps {
     onResizeStart?: () => void;
     onResize?: (width: number, height: number, x: number, y: number) => void;
     onResizeEnd?: (width: number, height: number, x: number, y: number) => void;
+    onRotateStart?: () => void;
+    onRotate?: (rotation: number) => void;
+    onRotateEnd?: (rotation: number) => void;
     className?: string;
     style?: default_2.CSSProperties;
 }

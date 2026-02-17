@@ -3,7 +3,7 @@
 
 import React, { forwardRef, useCallback, useMemo } from 'react';
 import type { CanvasElement } from '@/types/elements';
-import { useSelectable, useDraggable, useResizable } from '@/core/hooks';
+import { useSelectable, useDraggable, useResizable, useRotatable } from '@/core/hooks';
 import { useCanvas, useTheme } from '@/core/context';
 import { cx, getResizeHandles } from '@/core/utils';
 import type { ResizeHandle } from '@/core/utils/geometry';
@@ -15,6 +15,7 @@ export interface ElementBaseProps {
   style?: React.CSSProperties;
   disabled?: boolean;
   showHandles?: boolean;
+  enableRotation?: boolean;
   onSelect?: (selected: boolean) => void;
   onDragStart?: () => void;
   onDrag?: (x: number, y: number) => void;
@@ -22,9 +23,13 @@ export interface ElementBaseProps {
   onResizeStart?: () => void;
   onResize?: (width: number, height: number, x: number, y: number) => void;
   onResizeEnd?: (width: number, height: number, x: number, y: number) => void;
+  onRotateStart?: () => void;
+  onRotate?: (rotation: number) => void;
+  onRotateEnd?: (rotation: number) => void;
 }
 
 const HANDLE_SIZE = 8;
+const ROTATION_HANDLE_OFFSET = 25; // Distance above the element
 
 export const ElementBase = forwardRef<SVGGElement, ElementBaseProps>(
   (
@@ -35,6 +40,7 @@ export const ElementBase = forwardRef<SVGGElement, ElementBaseProps>(
       style,
       disabled = false,
       showHandles = true,
+      enableRotation = true,
       onSelect,
       onDragStart,
       onDrag,
@@ -42,6 +48,9 @@ export const ElementBase = forwardRef<SVGGElement, ElementBaseProps>(
       onResizeStart,
       onResize,
       onResizeEnd,
+      onRotateStart,
+      onRotate,
+      onRotateEnd,
     },
     ref
   ) => {
@@ -57,7 +66,7 @@ export const ElementBase = forwardRef<SVGGElement, ElementBaseProps>(
     });
 
     // Dragging
-    const { isDragging, handlers: dragHandlers } = useDraggable({
+    const { isDragging, dragState, handlers: dragHandlers } = useDraggable({
       disabled: isReadonly || !isSelected,
       onDragStart: () => {
         onDragStart?.();
@@ -76,7 +85,7 @@ export const ElementBase = forwardRef<SVGGElement, ElementBaseProps>(
     });
 
     // Resizing
-    const { isResizing, startResize } = useResizable({
+    const { isResizing, resizeState, startResize } = useResizable({
       disabled: isReadonly || !isSelected,
       minWidth: element.minWidth ?? 20,
       minHeight: element.minHeight ?? 20,
@@ -99,14 +108,68 @@ export const ElementBase = forwardRef<SVGGElement, ElementBaseProps>(
       },
     });
 
-    // Resize handles
+    // Rotation
+    const { isRotating, rotateState, startRotate } = useRotatable({
+      disabled: isReadonly || !isSelected || !enableRotation,
+      snapAngle: 15,
+      onRotateStart: () => {
+        onRotateStart?.();
+      },
+      onRotate: (angle) => {
+        onRotate?.(angle);
+      },
+      onRotateEnd: (angle) => {
+        updateElement(element.id, { rotation: angle });
+        onRotateEnd?.(angle);
+      },
+    });
+
+    // Current rotation (accounting for live rotation)
+    const displayRotation = useMemo(() => {
+      if (isRotating && rotateState.currentAngle !== null) {
+        return rotateState.currentAngle;
+      }
+      return element.rotation ?? 0;
+    }, [isRotating, rotateState.currentAngle, element.rotation]);
+
+    // Calculate display bounds (accounting for drag and resize)
+    const displayBounds = useMemo(() => {
+      if (isResizing && resizeState.currentBounds) {
+        return resizeState.currentBounds;
+      }
+      if (isDragging) {
+        return {
+          x: element.x + dragState.delta.x,
+          y: element.y + dragState.delta.y,
+          width: element.width,
+          height: element.height,
+        };
+      }
+      return {
+        x: element.x,
+        y: element.y,
+        width: element.width,
+        height: element.height,
+      };
+    }, [isResizing, resizeState.currentBounds, isDragging, dragState.delta, element.x, element.y, element.width, element.height]);
+
+    // Calculate scale for resize preview
+    const resizeScale = useMemo(() => {
+      if (!isResizing || !resizeState.currentBounds) return { x: 1, y: 1 };
+      return {
+        x: resizeState.currentBounds.width / element.width,
+        y: resizeState.currentBounds.height / element.height,
+      };
+    }, [isResizing, resizeState.currentBounds, element.width, element.height]);
+
+    // Resize handles - use display bounds for correct positioning during resize
     const handles = useMemo(() => {
       if (!isSelected || !showHandles || isReadonly) return [];
       return getResizeHandles(
-        { x: 0, y: 0, width: element.width, height: element.height },
+        { x: 0, y: 0, width: displayBounds.width, height: displayBounds.height },
         HANDLE_SIZE
       );
-    }, [isSelected, showHandles, isReadonly, element.width, element.height]);
+    }, [isSelected, showHandles, isReadonly, displayBounds.width, displayBounds.height]);
 
     // Handle resize start
     const handleResizeStart = useCallback(
@@ -118,6 +181,21 @@ export const ElementBase = forwardRef<SVGGElement, ElementBaseProps>(
         );
       },
       [startResize, element]
+    );
+
+    // Handle rotation start
+    const handleRotateStart = useCallback(
+      (e: React.MouseEvent) => {
+        // Center point for rotation (in canvas coordinates)
+        const centerX = displayBounds.x + displayBounds.width / 2;
+        const centerY = displayBounds.y + displayBounds.height / 2;
+        startRotate(
+          { x: centerX, y: centerY },
+          element.rotation ?? 0,
+          e
+        );
+      },
+      [startRotate, displayBounds, element.rotation]
     );
 
     // Combined mouse handlers
@@ -146,10 +224,11 @@ export const ElementBase = forwardRef<SVGGElement, ElementBaseProps>(
           'canvas-element--selected': isSelected,
           'canvas-element--dragging': isDragging,
           'canvas-element--resizing': isResizing,
+          'canvas-element--rotating': isRotating,
           'canvas-element--locked': element.locked,
         }),
-        transform: `translate(${element.x}, ${element.y})${
-          element.rotation ? ` rotate(${element.rotation}, ${element.width / 2}, ${element.height / 2})` : ''
+        transform: `translate(${displayBounds.x}, ${displayBounds.y})${
+          displayRotation ? ` rotate(${displayRotation}, ${displayBounds.width / 2}, ${displayBounds.height / 2})` : ''
         }`,
         style: groupStyle,
         onMouseDown: handleMouseDown,
@@ -157,17 +236,23 @@ export const ElementBase = forwardRef<SVGGElement, ElementBaseProps>(
         'data-element-id': element.id,
         'data-element-type': element.type,
       },
-      // Element content
-      children,
+      // Element content - scale during resize for visual feedback
+      isResizing
+        ? React.createElement(
+            'g',
+            { transform: `scale(${resizeScale.x}, ${resizeScale.y})` },
+            children
+          )
+        : children,
 
-      // Selection outline
+      // Selection outline - use display bounds for accurate sizing
       isSelected &&
         React.createElement('rect', {
           className: 'canvas-element__selection',
           x: -2,
           y: -2,
-          width: element.width + 4,
-          height: element.height + 4,
+          width: displayBounds.width + 4,
+          height: displayBounds.height + 4,
           fill: 'none',
           stroke: theme.colors.selection.stroke,
           strokeWidth: 1,
@@ -190,7 +275,36 @@ export const ElementBase = forwardRef<SVGGElement, ElementBaseProps>(
           cursor: getCursorForHandle(handle.position),
           onMouseDown: (e: React.MouseEvent) => handleResizeStart(handle.position, e),
         })
-      )
+      ),
+
+      // Rotation handle (circular, above the element)
+      isSelected && showHandles && enableRotation && !isReadonly &&
+        React.createElement('g', {
+          key: 'rotation-handle',
+          className: 'canvas-element__rotation-handle',
+        },
+          // Line connecting to element
+          React.createElement('line', {
+            x1: displayBounds.width / 2,
+            y1: 0,
+            x2: displayBounds.width / 2,
+            y2: -ROTATION_HANDLE_OFFSET,
+            stroke: theme.colors.selection.stroke,
+            strokeWidth: 1,
+            pointerEvents: 'none',
+          }),
+          // Rotation handle circle
+          React.createElement('circle', {
+            cx: displayBounds.width / 2,
+            cy: -ROTATION_HANDLE_OFFSET,
+            r: HANDLE_SIZE / 2 + 2,
+            fill: theme.colors.handle.fill,
+            stroke: theme.colors.handle.stroke,
+            strokeWidth: 1,
+            cursor: 'grab',
+            onMouseDown: handleRotateStart,
+          })
+        )
     );
   }
 );

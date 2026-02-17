@@ -113,6 +113,7 @@ export {
 export {
 	useDraggable,
 	useResizable,
+	useRotatable,
 	useSelectable,
 	useCanvasActions,
 	useKeyboard,

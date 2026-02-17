@@ -3,6 +3,8 @@
 // Base components
 export { ElementBase } from "./ElementBase";
 export type { ElementBaseProps } from "./ElementBase";
+export { LineBase } from "./LineBase";
+export type { LineBaseProps } from "./LineBase";
 export { withElementBehavior } from "./withElementBehavior";
 export type {
 	ElementRenderProps,

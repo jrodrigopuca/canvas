@@ -13,6 +13,7 @@ export interface ElementRenderProps {
   isSelected: boolean;
   isDragging: boolean;
   isResizing: boolean;
+  isRotating: boolean;
 }
 
 /**
@@ -22,6 +23,7 @@ export interface WithElementBehaviorProps {
   element: CanvasElement;
   disabled?: boolean;
   showHandles?: boolean;
+  enableRotation?: boolean;
   onSelect?: (selected: boolean) => void;
   onDragStart?: () => void;
   onDrag?: (x: number, y: number) => void;
@@ -29,6 +31,9 @@ export interface WithElementBehaviorProps {
   onResizeStart?: () => void;
   onResize?: (width: number, height: number, x: number, y: number) => void;
   onResizeEnd?: (width: number, height: number, x: number, y: number) => void;
+  onRotateStart?: () => void;
+  onRotate?: (rotation: number) => void;
+  onRotateEnd?: (rotation: number) => void;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -56,6 +61,7 @@ export function withElementBehavior<P extends ElementRenderProps>(
     const element = typedProps.element;
     const disabled = typedProps.disabled;
     const showHandles = typedProps.showHandles;
+    const enableRotation = typedProps.enableRotation;
     const onSelect = typedProps.onSelect;
     const onDragStart = typedProps.onDragStart;
     const onDrag = typedProps.onDrag;
@@ -63,14 +69,18 @@ export function withElementBehavior<P extends ElementRenderProps>(
     const onResizeStart = typedProps.onResizeStart;
     const onResize = typedProps.onResize;
     const onResizeEnd = typedProps.onResizeEnd;
+    const onRotateStart = typedProps.onRotateStart;
+    const onRotate = typedProps.onRotate;
+    const onRotateEnd = typedProps.onRotateEnd;
     const className = typedProps.className;
     const style = typedProps.style;
     
     // Remove WithElementBehaviorProps keys to get remaining props for RenderComponent
     const {
-      element: _e, disabled: _d, showHandles: _sh, onSelect: _os,
+      element: _e, disabled: _d, showHandles: _sh, enableRotation: _er, onSelect: _os,
       onDragStart: _ods, onDrag: _od, onDragEnd: _ode,
       onResizeStart: _ors, onResize: _or, onResizeEnd: _ore,
+      onRotateStart: _orts, onRotate: _ort, onRotateEnd: _orte,
       className: _c, style: _s,
       ...rest
     } = typedProps;
@@ -80,6 +90,7 @@ export function withElementBehavior<P extends ElementRenderProps>(
       isSelected: false,
       isDragging: false,
       isResizing: false,
+      isRotating: false,
     });
 
     const handleSelect = React.useCallback((selected: boolean) => {
@@ -107,6 +118,16 @@ export function withElementBehavior<P extends ElementRenderProps>(
       onResizeEnd?.(w, h, x, y);
     }, [onResizeEnd]);
 
+    const handleRotateStart = React.useCallback(() => {
+      setInteractionState((prev) => ({ ...prev, isRotating: true }));
+      onRotateStart?.();
+    }, [onRotateStart]);
+
+    const handleRotateEnd = React.useCallback((rotation: number) => {
+      setInteractionState((prev) => ({ ...prev, isRotating: false }));
+      onRotateEnd?.(rotation);
+    }, [onRotateEnd]);
+
     const renderProps = {
       element,
       ...interactionState,
@@ -118,6 +139,7 @@ export function withElementBehavior<P extends ElementRenderProps>(
         element={element}
         disabled={disabled}
         showHandles={showHandles}
+        enableRotation={enableRotation}
         className={className}
         style={style}
         onSelect={handleSelect}
@@ -127,6 +149,9 @@ export function withElementBehavior<P extends ElementRenderProps>(
         onResizeStart={handleResizeStart}
         onResize={onResize}
         onResizeEnd={handleResizeEnd}
+        onRotateStart={handleRotateStart}
+        onRotate={onRotate}
+        onRotateEnd={handleRotateEnd}
       >
         <RenderComponent {...renderProps as P} {...rest} />
       </ElementBase>

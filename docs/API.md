@@ -481,6 +481,23 @@ createMessage(options: Partial<MessageElement>): MessageElement
 createActivationBar(options: Partial<CanvasElement>): CanvasElement
 ```
 
+### createLine
+
+`createLine` automatically calculates bounds from points:
+
+```typescript
+// Points are normalized to be relative to (0,0)
+// Element x,y is set to the bounding box origin
+const line = createLine({
+	points: [
+		{ x: 100, y: 100 },
+		{ x: 200, y: 150 },
+	],
+});
+// Result: x=100, y=100, width=100, height=50
+// points: [{x:0, y:0}, {x:100, y:50}]
+```
+
 ---
 
 ## Types

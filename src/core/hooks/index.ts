@@ -14,6 +14,13 @@ export type {
 	UseResizableReturn,
 } from "./useResizable";
 
+export { useRotatable } from "./useRotatable";
+export type {
+	RotateState,
+	UseRotatableOptions,
+	UseRotatableReturn,
+} from "./useRotatable";
+
 export { useSelectable } from "./useSelectable";
 export type {
 	UseSelectableOptions,

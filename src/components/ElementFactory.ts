@@ -156,16 +156,58 @@ export const createText = (
 
 /**
  * Create a line element
+ * Points are automatically normalized to be relative to (0,0)
+ * and element x,y is set to the bounding box origin
  */
 export const createLine = (
 	options: CreateLineElementOptions = {},
 ): LineElement => {
-	const { points, lineType, ...baseOptions } = options;
+	const { points: inputPoints, lineType, x, y, ...baseOptions } = options;
+
+	// Default HORIZONTAL line if no points specified
+	const defaultWidth = baseOptions.width ?? 100;
+	let points = inputPoints ?? [
+		{ x: x ?? 0, y: y ?? 0 },
+		{ x: (x ?? 0) + defaultWidth, y: y ?? 0 },
+	];
+
+	// Calculate bounding box from points
+	const xs = points.map((p) => p.x);
+	const ys = points.map((p) => p.y);
+	const minX = Math.min(...xs);
+	const minY = Math.min(...ys);
+	const maxX = Math.max(...xs);
+	const maxY = Math.max(...ys);
+
+	// Normalize points to be relative to (0,0)
+	const normalizedPoints = points.map((p) => ({
+		x: p.x - minX,
+		y: p.y - minY,
+	}));
+
+	// Calculate dimensions
+	// For horizontal/vertical lines, ensure minimum size for selection
+	const rawWidth = maxX - minX;
+	const rawHeight = maxY - minY;
+	const width = Math.max(rawWidth, 10);
+	const height = Math.max(rawHeight, 10);
+
+	// Adjust normalized points if we expanded the bounding box
+	const adjustedPoints = normalizedPoints.map((p) => ({
+		x: rawWidth < 10 ? p.x + (10 - rawWidth) / 2 : p.x,
+		y: rawHeight < 10 ? p.y + (10 - rawHeight) / 2 : p.y,
+	}));
 
 	return {
-		...createBaseElement("line", baseOptions),
+		...createBaseElement("line", {
+			...baseOptions,
+			x: rawWidth < 10 ? minX - (10 - rawWidth) / 2 : minX,
+			y: rawHeight < 10 ? minY - (10 - rawHeight) / 2 : minY,
+			width,
+			height,
+		}),
 		type: "line",
-		points,
+		points: adjustedPoints,
 		lineType: lineType ?? "solid",
 	};
 };

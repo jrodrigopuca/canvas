@@ -621,13 +621,9 @@ function Flowchart() {
 			style: { fill: "white" },
 		}),
 
-		// Connecting lines
+		// Connecting lines (points auto-normalize, x/y calculated from bounding box)
 		createLine({
 			id: "line1",
-			x: 0,
-			y: 0,
-			width: 1,
-			height: 1,
 			points: [
 				{ x: 250, y: 70 },
 				{ x: 250, y: 100 },
@@ -635,10 +631,6 @@ function Flowchart() {
 		}),
 		createLine({
 			id: "line2",
-			x: 0,
-			y: 0,
-			width: 1,
-			height: 1,
 			points: [
 				{ x: 250, y: 160 },
 				{ x: 250, y: 200 },
@@ -646,10 +638,6 @@ function Flowchart() {
 		}),
 		createLine({
 			id: "line3",
-			x: 0,
-			y: 0,
-			width: 1,
-			height: 1,
 			points: [
 				{ x: 300, y: 240 },
 				{ x: 350, y: 240 },
@@ -657,10 +645,6 @@ function Flowchart() {
 		}),
 		createLine({
 			id: "line4",
-			x: 0,
-			y: 0,
-			width: 1,
-			height: 1,
 			points: [
 				{ x: 250, y: 280 },
 				{ x: 250, y: 320 },

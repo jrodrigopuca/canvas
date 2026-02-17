@@ -145,14 +145,13 @@ function ShapesDemo() {
   };
 
   const addLine = () => {
-    const startX = 100 + Math.random() * 200;
-    const startY = 100 + Math.random() * 200;
+    const startX = 50 + Math.random() * 300;
+    const startY = 100 + Math.random() * 250;
+    // Create horizontal line by default
     const element = createLine({
-      x: 0,
-      y: 0,
       points: [
         { x: startX, y: startY },
-        { x: startX + 150, y: startY + 100 },
+        { x: startX + 150, y: startY },
       ],
       style: { stroke: '#3b82f6', strokeWidth: 2 },
     });
@@ -427,8 +426,6 @@ function ThemeDemo() {
     }),
     createLine({
       id: 'line1',
-      x: 0,
-      y: 0,
       points: [
         { x: 100, y: 280 },
         { x: 500, y: 280 },
