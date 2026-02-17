@@ -1,0 +1,396 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background: #f5f5f5;
+  color: #1a1a1a;
+}
+
+.demo-app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.demo-header {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  color: white;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.demo-header h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.demo-header p {
+  opacity: 0.9;
+  font-size: 0.9rem;
+}
+
+/* Tabs */
+.demo-tabs {
+  display: flex;
+  gap: 0;
+  background: white;
+  border-bottom: 1px solid #e5e5e5;
+  padding: 0 2rem;
+}
+
+.demo-tab {
+  padding: 1rem 1.5rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.demo-tab:hover {
+  color: #3b82f6;
+  background: #f8fafc;
+}
+
+.demo-tab.active {
+  color: #3b82f6;
+  border-bottom-color: #3b82f6;
+  font-weight: 500;
+}
+
+/* Main content */
+.demo-content {
+  flex: 1;
+  padding: 1.5rem 2rem;
+}
+
+.demo-section {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.demo-section-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e5e5e5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.demo-section-header h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.demo-canvas-container {
+  padding: 1rem;
+  background: #fafafa;
+}
+
+/* Toolbar */
+.demo-toolbar {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.demo-toolbar-group {
+  display: flex;
+  gap: 0.25rem;
+  padding-right: 0.75rem;
+  border-right: 1px solid #e5e5e5;
+}
+
+.demo-toolbar-group:last-child {
+  border-right: none;
+}
+
+.demo-btn {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #e5e5e5;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #333;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.demo-btn:hover {
+  background: #f5f5f5;
+  border-color: #d5d5d5;
+}
+
+.demo-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.demo-btn.primary {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.demo-btn.primary:hover {
+  background: #2563eb;
+}
+
+.demo-btn.danger {
+  color: #dc2626;
+}
+
+.demo-btn.danger:hover {
+  background: #fee2e2;
+}
+
+/* Status bar */
+.demo-status-bar {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  background: #f8fafc;
+  border-top: 1px solid #e5e5e5;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.demo-status-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.demo-status-item strong {
+  color: #333;
+}
+
+/* Theme selector */
+.demo-theme-selector {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.demo-theme-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.demo-theme-btn:hover {
+  transform: scale(1.1);
+}
+
+.demo-theme-btn.active {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+.demo-theme-btn.light {
+  background: linear-gradient(135deg, #ffffff 50%, #f5f5f5 50%);
+  border: 1px solid #e5e5e5;
+}
+
+.demo-theme-btn.dark {
+  background: linear-gradient(135deg, #1a1a2e 50%, #16213e 50%);
+}
+
+.demo-theme-btn.blue {
+  background: linear-gradient(135deg, #1e3a5f 50%, #0d47a1 50%);
+}
+
+/* Property panel */
+.demo-properties {
+  width: 280px;
+  background: white;
+  border-left: 1px solid #e5e5e5;
+  padding: 1rem;
+}
+
+.demo-properties h3 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.demo-property-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.demo-property-row label {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.demo-property-row input {
+  width: 80px;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.demo-property-row input[type='color'] {
+  width: 40px;
+  height: 28px;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Export panel */
+.demo-export-preview {
+  background: #1a1a2e;
+  color: #e5e5e5;
+  padding: 1rem;
+  border-radius: 8px;
+  font-family: 'Monaco', 'Menlo', monospace;
+  font-size: 0.75rem;
+  max-height: 200px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* Layout helpers */
+.demo-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.demo-col {
+  flex: 1;
+}
+
+/* Info boxes */
+.demo-info {
+  padding: 0.75rem 1rem;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  color: #1e40af;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.demo-info code {
+  background: rgba(59, 130, 246, 0.1);
+  padding: 0.15rem 0.35rem;
+  border-radius: 3px;
+  font-family: monospace;
+}
+
+/* Keyboard hints */
+.demo-shortcuts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+.demo-shortcut {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.demo-shortcut kbd {
+  background: #f5f5f5;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  font-family: monospace;
+  font-size: 0.8rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* UML Demo specific */
+.demo-uml-info {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.demo-uml-legend {
+  flex: 1;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 8px;
+}
+
+.demo-uml-legend h4 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #666;
+}
+
+.demo-uml-legend ul {
+  list-style: none;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.demo-uml-legend li {
+  padding: 0.25rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.demo-uml-legend li::before {
+  content: '';
+  width: 16px;
+  height: 2px;
+  background: #3b82f6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .demo-header {
+    padding: 1rem;
+  }
+  
+  .demo-tabs {
+    padding: 0 1rem;
+    overflow-x: auto;
+  }
+  
+  .demo-tab {
+    padding: 0.75rem 1rem;
+    white-space: nowrap;
+  }
+  
+  .demo-content {
+    padding: 1rem;
+  }
+  
+  .demo-toolbar {
+    flex-wrap: wrap;
+  }
+}
