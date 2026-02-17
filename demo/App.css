@@ -118,6 +118,15 @@ body {
   border-right: none;
 }
 
+.demo-toolbar-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #666;
+  margin-right: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
 .demo-btn {
   padding: 0.5rem 0.75rem;
   border: 1px solid #e5e5e5;

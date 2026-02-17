@@ -6,7 +6,7 @@ export declare const ActivationBar: default_2.ForwardRefExoticComponent<WithElem
 declare interface ActivationBarProps extends ElementRenderProps {
 }
 
-export declare const Actor: default_2.ForwardRefExoticComponent<WithElementBehaviorProps & Omit<ActorProps, keyof ElementRenderProps> & default_2.RefAttributes<SVGGElement>>;
+export declare const Actor: default_2.ForwardRefExoticComponent<ActorProps & default_2.RefAttributes<SVGGElement>>;
 
 /**
  * Actor element (UML stick figure)
@@ -16,8 +16,24 @@ export declare interface ActorElement extends CanvasElement {
     label?: string;
 }
 
-declare interface ActorProps extends ElementRenderProps {
+declare interface ActorProps {
     element: ActorElement;
+    disabled?: boolean;
+    showHandles?: boolean;
+    enableRotation?: boolean;
+    onSelect?: (selected: boolean) => void;
+    onDragStart?: () => void;
+    onDrag?: (x: number, y: number) => void;
+    onDragEnd?: (x: number, y: number) => void;
+    onResizeStart?: () => void;
+    onResize?: (width: number, height: number, x: number, y: number) => void;
+    onResizeEnd?: (width: number, height: number, x: number, y: number) => void;
+    onRotateStart?: () => void;
+    onRotate?: (rotation: number) => void;
+    onRotateEnd?: (rotation: number) => void;
+    onLabelChange?: (label: string) => void;
+    className?: string;
+    style?: default_2.CSSProperties;
 }
 
 /**
@@ -583,7 +599,7 @@ declare type KeyboardShortcut = {
     preventDefault?: boolean;
 };
 
-export declare const Lifeline: default_2.ForwardRefExoticComponent<WithElementBehaviorProps & Omit<LifelineProps, keyof ElementRenderProps> & default_2.RefAttributes<SVGGElement>>;
+export declare const Lifeline: default_2.ForwardRefExoticComponent<LifelineProps & default_2.RefAttributes<SVGGElement>>;
 
 /**
  * Lifeline element (UML sequence diagram)
@@ -593,8 +609,24 @@ export declare interface LifelineElement extends CanvasElement {
     label?: string;
 }
 
-declare interface LifelineProps extends ElementRenderProps {
+declare interface LifelineProps {
     element: LifelineElement;
+    disabled?: boolean;
+    showHandles?: boolean;
+    enableRotation?: boolean;
+    onSelect?: (selected: boolean) => void;
+    onDragStart?: () => void;
+    onDrag?: (x: number, y: number) => void;
+    onDragEnd?: (x: number, y: number) => void;
+    onResizeStart?: () => void;
+    onResize?: (width: number, height: number, x: number, y: number) => void;
+    onResizeEnd?: (width: number, height: number, x: number, y: number) => void;
+    onRotateStart?: () => void;
+    onRotate?: (rotation: number) => void;
+    onRotateEnd?: (rotation: number) => void;
+    onLabelChange?: (label: string) => void;
+    className?: string;
+    style?: default_2.CSSProperties;
 }
 
 export declare const lightTheme: Theme;
@@ -632,7 +664,7 @@ declare interface LineProps {
  */
 declare type LineType = "solid" | "dashed" | "dotted";
 
-export declare const Message: default_2.ForwardRefExoticComponent<WithElementBehaviorProps & Omit<MessageProps, keyof ElementRenderProps> & default_2.RefAttributes<SVGGElement>>;
+export declare const Message: default_2.ForwardRefExoticComponent<MessageProps & default_2.RefAttributes<SVGGElement>>;
 
 /**
  * Message element (UML sequence diagram arrow)
@@ -645,8 +677,24 @@ export declare interface MessageElement extends CanvasElement {
     toId?: string;
 }
 
-declare interface MessageProps extends ElementRenderProps {
+declare interface MessageProps {
     element: MessageElement;
+    disabled?: boolean;
+    showHandles?: boolean;
+    enableRotation?: boolean;
+    onSelect?: (selected: boolean) => void;
+    onDragStart?: () => void;
+    onDrag?: (x: number, y: number) => void;
+    onDragEnd?: (x: number, y: number) => void;
+    onResizeStart?: () => void;
+    onResize?: (width: number, height: number, x: number, y: number) => void;
+    onResizeEnd?: (width: number, height: number, x: number, y: number) => void;
+    onRotateStart?: () => void;
+    onRotate?: (rotation: number) => void;
+    onRotateEnd?: (rotation: number) => void;
+    onLabelChange?: (label: string) => void;
+    className?: string;
+    style?: default_2.CSSProperties;
 }
 
 /**

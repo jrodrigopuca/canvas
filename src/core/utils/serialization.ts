@@ -124,7 +124,12 @@ export const exportToImage = async (
 	svgElement: SVGSVGElement,
 	options: ExportImageOptions = {},
 ): Promise<Blob> => {
-	const { format = "png", quality = 0.92, backgroundColor, scale = 1 } = options;
+	const {
+		format = "png",
+		quality = 0.92,
+		backgroundColor,
+		scale = 1,
+	} = options;
 
 	// Get SVG dimensions
 	const svgRect = svgElement.getBoundingClientRect();
@@ -137,7 +142,10 @@ export const exportToImage = async (
 	clone.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
 
 	// Add inline styles
-	const styleEl = document.createElementNS("http://www.w3.org/2000/svg", "style");
+	const styleEl = document.createElementNS(
+		"http://www.w3.org/2000/svg",
+		"style",
+	);
 	styleEl.textContent = getComputedStyles(svgElement);
 	clone.insertBefore(styleEl, clone.firstChild);
 
@@ -146,7 +154,9 @@ export const exportToImage = async (
 	const svgString = serializer.serializeToString(clone);
 
 	// Create a Blob from SVG string
-	const svgBlob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
+	const svgBlob = new Blob([svgString], {
+		type: "image/svg+xml;charset=utf-8",
+	});
 	const svgUrl = URL.createObjectURL(svgBlob);
 
 	return new Promise((resolve, reject) => {
@@ -166,7 +176,8 @@ export const exportToImage = async (
 			}
 
 			// Apply background color
-			const bgColor = backgroundColor ?? (format === "jpeg" ? "#ffffff" : "transparent");
+			const bgColor =
+				backgroundColor ?? (format === "jpeg" ? "#ffffff" : "transparent");
 			if (bgColor !== "transparent") {
 				ctx.fillStyle = bgColor;
 				ctx.fillRect(0, 0, width, height);

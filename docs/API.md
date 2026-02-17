@@ -471,14 +471,14 @@ downloadAsImage(svgElement: SVGSVGElement, filename: string, options?: ExportIma
 
 ```typescript
 interface ExportImageOptions {
-  /** Image format: 'png' or 'jpeg' */
-  format?: 'png' | 'jpeg';
-  /** Quality for JPEG format (0-1), default 0.92 */
-  quality?: number;
-  /** Background color (default: transparent for PNG, white for JPEG) */
-  backgroundColor?: string;
-  /** Scale factor for higher resolution (default: 1) */
-  scale?: number;
+	/** Image format: 'png' or 'jpeg' */
+	format?: "png" | "jpeg";
+	/** Quality for JPEG format (0-1), default 0.92 */
+	quality?: number;
+	/** Background color (default: transparent for PNG, white for JPEG) */
+	backgroundColor?: string;
+	/** Scale factor for higher resolution (default: 1) */
+	scale?: number;
 }
 ```
 

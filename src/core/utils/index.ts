@@ -39,7 +39,11 @@ export {
 	downloadAsFile,
 	downloadAsImage,
 } from "./serialization";
-export type { CanvasData, ImageFormat, ExportImageOptions } from "./serialization";
+export type {
+	CanvasData,
+	ImageFormat,
+	ExportImageOptions,
+} from "./serialization";
 export {
 	validateCanvasData,
 	validateElement,

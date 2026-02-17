@@ -17,6 +17,7 @@ import {
   createActivationBar,
   serializeToJSON,
   downloadAsFile,
+  ImageFormat,
 } from '../src';
 
 type TabType = 'shapes' | 'uml' | 'theme' | 'export';
@@ -96,7 +97,7 @@ function ShapesDemo() {
   const [elementCount, setElementCount] = useState(0);
   const [selectedCount, setSelectedCount] = useState(0);
 
-  const addShape = (type: 'rectangle' | 'ellipse' | 'diamond' | 'text') => {
+  const addShape = (type: 'rectangle' | 'ellipse' | 'diamond' | 'text' | 'actor' | 'lifeline' | 'message' | 'activationBar') => {
     const x = 50 + Math.random() * 500;
     const y = 50 + Math.random() * 300;
     const colors = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ef4444', '#06b6d4'];
@@ -139,6 +140,42 @@ function ShapesDemo() {
           fontSize: 16,
         });
         break;
+      case 'actor':
+        element = createActor({
+          x,
+          y,
+          width: 60,
+          height: 100,
+          label: 'Actor',
+        });
+        break;
+      case 'lifeline':
+        element = createLifeline({
+          x,
+          y,
+          width: 100,
+          height: 200,
+          label: 'Lifeline',
+        });
+        break;
+      case 'message':
+        element = createMessage({
+          x,
+          y,
+          width: 150,
+          height: 30,
+          label: 'message()',
+          messageType: 'sync',
+        });
+        break;
+      case 'activationBar':
+        element = createActivationBar({
+          x,
+          y,
+          width: 12,
+          height: 80,
+        });
+        break;
     }
 
     canvasRef.current?.addElement(element);
@@ -177,23 +214,39 @@ function ShapesDemo() {
   return (
     <div className="demo-section">
       <div className="demo-section-header">
-        <h2>Basic Shapes</h2>
+        <h2>All Elements</h2>
         <div className="demo-toolbar">
           <div className="demo-toolbar-group">
+            <span className="demo-toolbar-label">Shapes:</span>
             <button className="demo-btn primary" onClick={() => addShape('rectangle')}>
-              + Rectangle
+              Rectangle
             </button>
             <button className="demo-btn primary" onClick={() => addShape('ellipse')}>
-              + Ellipse
+              Ellipse
             </button>
             <button className="demo-btn primary" onClick={() => addShape('diamond')}>
-              + Diamond
+              Diamond
             </button>
             <button className="demo-btn primary" onClick={() => addShape('text')}>
-              + Text
+              Text
             </button>
             <button className="demo-btn primary" onClick={addLine}>
-              + Line
+              Line
+            </button>
+          </div>
+          <div className="demo-toolbar-group">
+            <span className="demo-toolbar-label">UML:</span>
+            <button className="demo-btn primary" onClick={() => addShape('actor')}>
+              Actor
+            </button>
+            <button className="demo-btn primary" onClick={() => addShape('lifeline')}>
+              Lifeline
+            </button>
+            <button className="demo-btn primary" onClick={() => addShape('message')}>
+              Message
+            </button>
+            <button className="demo-btn primary" onClick={() => addShape('activationBar')}>
+              ActivationBar
             </button>
           </div>
           <div className="demo-toolbar-group">
@@ -486,8 +539,11 @@ function ThemeDemo() {
 // Export Demo
 function ExportDemo() {
   const canvasRef = useRef<CanvasRef>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [exportData, setExportData] = useState<string>('');
-  const [exportType, setExportType] = useState<'json' | 'svg'>('json');
+  const [exportType, setExportType] = useState<'json' | 'svg' | 'png' | 'jpeg'>('json');
+  const [imageBlob, setImageBlob] = useState<Blob | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
 
   const demoElements: CanvasElement[] = [
     createRectangle({
@@ -521,6 +577,7 @@ function ExportDemo() {
       const json = serializeToJSON(data.elements, data.connections);
       setExportData(json);
       setExportType('json');
+      setImageBlob(null);
     }
   };
 
@@ -529,46 +586,145 @@ function ExportDemo() {
     if (svg) {
       setExportData(svg);
       setExportType('svg');
+      setImageBlob(null);
+    }
+  };
+
+  const handleExportImage = async (format: ImageFormat) => {
+    setIsExporting(true);
+    try {
+      const blob = await canvasRef.current?.toImage({
+        format,
+        quality: 0.92,
+        backgroundColor: format === 'jpeg' ? '#ffffff' : undefined,
+      });
+      if (blob) {
+        setImageBlob(blob);
+        setExportType(format);
+        setExportData(`Image exported: ${(blob.size / 1024).toFixed(2)} KB`);
+      }
+    } catch (error) {
+      console.error('Export error:', error);
+      alert('Failed to export image');
+    } finally {
+      setIsExporting(false);
     }
   };
 
   const handleDownload = () => {
-    if (!exportData) return;
-
-    if (exportType === 'json') {
-      downloadAsFile(exportData, 'canvas-export.json', 'application/json');
-    } else {
-      downloadAsFile(exportData, 'canvas-export.svg', 'image/svg+xml');
+    if (exportType === 'png' || exportType === 'jpeg') {
+      if (!imageBlob) return;
+      const url = URL.createObjectURL(imageBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `canvas-export.${exportType === 'jpeg' ? 'jpg' : 'png'}`;
+      link.click();
+      URL.revokeObjectURL(url);
+    } else if (exportData) {
+      if (exportType === 'json') {
+        downloadAsFile(exportData, 'canvas-export.json', 'application/json');
+      } else {
+        downloadAsFile(exportData, 'canvas-export.svg', 'image/svg+xml');
+      }
     }
   };
 
   const handleCopy = async () => {
-    if (exportData) {
+    if (exportType === 'png' || exportType === 'jpeg') {
+      if (imageBlob) {
+        try {
+          await navigator.clipboard.write([
+            new ClipboardItem({ [imageBlob.type]: imageBlob })
+          ]);
+          alert('Image copied to clipboard!');
+        } catch {
+          alert('Failed to copy image. Try downloading instead.');
+        }
+      }
+    } else if (exportData) {
       await navigator.clipboard.writeText(exportData);
       alert('Copied to clipboard!');
     }
   };
 
+  const handleImportClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const json = event.target?.result as string;
+      try {
+        canvasRef.current?.fromJSON(json);
+        setExportData('');
+        setImageBlob(null);
+        alert('Import successful!');
+      } catch (error) {
+        console.error('Import error:', error);
+        alert('Invalid JSON file');
+      }
+    };
+    reader.readAsText(file);
+    // Reset input
+    e.target.value = '';
+  };
+
   return (
     <div className="demo-section">
       <div className="demo-section-header">
-        <h2>Export</h2>
+        <h2>Export & Import</h2>
         <div className="demo-toolbar">
           <div className="demo-toolbar-group">
             <button className="demo-btn primary" onClick={handleExportJSON}>
-              Export JSON
+              JSON
             </button>
             <button className="demo-btn primary" onClick={handleExportSVG}>
-              Export SVG
+              SVG
+            </button>
+            <button 
+              className="demo-btn primary" 
+              onClick={() => handleExportImage('png')}
+              disabled={isExporting}
+            >
+              PNG
+            </button>
+            <button 
+              className="demo-btn primary" 
+              onClick={() => handleExportImage('jpeg')}
+              disabled={isExporting}
+            >
+              JPEG
             </button>
           </div>
           <div className="demo-toolbar-group">
-            <button className="demo-btn" onClick={handleDownload} disabled={!exportData}>
+            <button 
+              className="demo-btn" 
+              onClick={handleDownload} 
+              disabled={!exportData && !imageBlob}
+            >
               Download
             </button>
-            <button className="demo-btn" onClick={handleCopy} disabled={!exportData}>
+            <button 
+              className="demo-btn" 
+              onClick={handleCopy} 
+              disabled={!exportData && !imageBlob}
+            >
               Copy
             </button>
+            <button className="demo-btn" onClick={handleImportClick}>
+              Import JSON
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json"
+              style={{ display: 'none' }}
+              onChange={handleFileImport}
+            />
           </div>
         </div>
       </div>
@@ -590,10 +746,20 @@ function ExportDemo() {
         <div className="demo-col">
           <div style={{ padding: '1rem' }}>
             <h3 style={{ marginBottom: '0.5rem', fontSize: '0.9rem', color: '#666' }}>
-              {exportType === 'json' ? 'JSON Output' : 'SVG Output'}
+              {exportType === 'json' ? 'JSON Output' : 
+               exportType === 'svg' ? 'SVG Output' : 
+               `${exportType.toUpperCase()} Image`}
             </h3>
             <div className="demo-export-preview">
-              {exportData || 'Click "Export JSON" or "Export SVG" to preview output'}
+              {(exportType === 'png' || exportType === 'jpeg') && imageBlob ? (
+                <img 
+                  src={URL.createObjectURL(imageBlob)} 
+                  alt="Canvas export"
+                  style={{ maxWidth: '100%', maxHeight: '200px', objectFit: 'contain' }}
+                />
+              ) : (
+                exportData || 'Click an export button to preview output'
+              )}
             </div>
           </div>
         </div>
@@ -604,8 +770,19 @@ function ExportDemo() {
           Format: <strong>{exportType.toUpperCase()}</strong>
         </div>
         <div className="demo-status-item">
-          Size: <strong>{exportData ? `${(exportData.length / 1024).toFixed(2)} KB` : '-'}</strong>
+          Size: <strong>
+            {imageBlob 
+              ? `${(imageBlob.size / 1024).toFixed(2)} KB`
+              : exportData 
+                ? `${(exportData.length / 1024).toFixed(2)} KB` 
+                : '-'}
+          </strong>
         </div>
+        {isExporting && (
+          <div className="demo-status-item">
+            <em>Exporting...</em>
+          </div>
+        )}
       </div>
     </div>
   );
