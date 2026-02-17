@@ -73,12 +73,12 @@ function App() {
 
 ### UML Elements
 
-| Element       | Type            | Description                                 |
-| ------------- | --------------- | ------------------------------------------- |
-| Actor         | `actor`         | Stick figure for use case diagrams          |
-| Lifeline      | `lifeline`      | Participant in sequence diagrams            |
-| Message       | `message`       | Arrow between lifelines (sync/async/return) |
-| ActivationBar | `activationBar` | Execution occurrence on lifeline            |
+| Element       | Type            | Description                                             |
+| ------------- | --------------- | ------------------------------------------------------- |
+| Actor         | `actor`         | Stick figure with editable label (double-click to edit) |
+| Lifeline      | `lifeline`      | Participant with editable label (double-click to edit)  |
+| Message       | `message`       | Arrow with editable label (sync/async/return)           |
+| ActivationBar | `activationBar` | Execution occurrence on lifeline                        |
 
 ## Architecture
 
@@ -150,6 +150,16 @@ canvasRef.current?.redo();
 // Export
 const json = canvasRef.current?.toJSON();
 const svg = canvasRef.current?.toSVG();
+
+// Export to image (PNG/JPEG)
+const pngBlob = await canvasRef.current?.toImage({ format: "png" });
+const jpegBlob = await canvasRef.current?.toImage({
+	format: "jpeg",
+	quality: 0.9,
+});
+
+// Import from JSON
+canvasRef.current?.fromJSON(jsonString);
 
 <Canvas ref={canvasRef} />;
 ```

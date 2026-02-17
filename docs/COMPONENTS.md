@@ -526,7 +526,14 @@ Line element with endpoint-based manipulation. Unlike other elements that use st
 
 ### Actor
 
-Stick figure for use case diagrams.
+Stick figure for use case diagrams with inline label editing.
+
+#### Behavior
+
+- **Double-click to edit**: Double-click on the actor to edit its label
+- **Save**: Press **Enter** to save changes
+- **Cancel**: Press **Escape** to cancel editing
+- **Auto-save**: Click outside to save and exit editing mode
 
 #### SVG Output
 
@@ -559,6 +566,14 @@ Stick figure for use case diagrams.
 | -------- | -------- | ------- | ----------- |
 | `label`  | `string` | `''`    | Actor name  |
 
+#### Component Props
+
+| Prop            | Type           | Description                    |
+| --------------- | -------------- | ------------------------------ |
+| `element`       | `ActorElement` | Actor element data             |
+| `onLabelChange` | `Function`     | Callback when label is changed |
+| `showHandles`   | `boolean`      | Show resize handles            |
+
 #### Example
 
 ```tsx
@@ -573,6 +588,7 @@ Stick figure for use case diagrams.
 		zIndex: 0,
 		label: "User",
 	}}
+	onLabelChange={(newLabel) => console.log("Label changed:", newLabel)}
 />
 ```
 
@@ -580,7 +596,14 @@ Stick figure for use case diagrams.
 
 ### Lifeline
 
-Participant in sequence diagrams.
+Participant in sequence diagrams with inline label editing.
+
+#### Behavior
+
+- **Double-click to edit**: Double-click on the lifeline header to edit its label
+- **Save**: Press **Enter** to save changes
+- **Cancel**: Press **Escape** to cancel editing
+- **Auto-save**: Click outside to save and exit editing mode
 
 #### SVG Output
 
@@ -607,6 +630,14 @@ Participant in sequence diagrams.
 | -------- | -------- | ------- | ---------------- |
 | `label`  | `string` | `''`    | Participant name |
 
+#### Component Props
+
+| Prop            | Type              | Description                    |
+| --------------- | ----------------- | ------------------------------ |
+| `element`       | `LifelineElement` | Lifeline element data          |
+| `onLabelChange` | `Function`        | Callback when label is changed |
+| `showHandles`   | `boolean`         | Show resize handles            |
+
 #### Example
 
 ```tsx
@@ -621,6 +652,7 @@ Participant in sequence diagrams.
 		zIndex: 0,
 		label: "Client",
 	}}
+	onLabelChange={(newLabel) => console.log("Label changed:", newLabel)}
 />
 ```
 
@@ -628,7 +660,14 @@ Participant in sequence diagrams.
 
 ### Message
 
-Arrow between lifelines for sequence diagrams.
+Arrow between lifelines for sequence diagrams with inline label editing.
+
+#### Behavior
+
+- **Double-click to edit**: Double-click on the message to edit its label
+- **Save**: Press **Enter** to save changes
+- **Cancel**: Press **Escape** to cancel editing
+- **Auto-save**: Click outside to save and exit editing mode
 
 #### SVG Output
 
@@ -654,6 +693,14 @@ Arrow between lifelines for sequence diagrams.
 | `fromId`      | `string`                                    | -        | Source lifeline ID |
 | `toId`        | `string`                                    | -        | Target lifeline ID |
 
+#### Component Props
+
+| Prop            | Type             | Description                    |
+| --------------- | ---------------- | ------------------------------ |
+| `element`       | `MessageElement` | Message element data           |
+| `onLabelChange` | `Function`       | Callback when label is changed |
+| `showHandles`   | `boolean`        | Show resize handles            |
+
 #### Message Types
 
 | Type     | Visual                        |
@@ -678,6 +725,7 @@ Arrow between lifelines for sequence diagrams.
 		label: "request()",
 		messageType: "sync",
 	}}
+	onLabelChange={(newLabel) => console.log("Label changed:", newLabel)}
 />
 ```
 
